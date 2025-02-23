@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
@@ -26,6 +27,9 @@ public class PlayerController : MonoBehaviour
     private const float CLOSE_TURRET_X = (float) 0.07;
     private const float FAR_TURRET_X = (float) 0.09;
 
+    // Collider to use collision physics
+    private Collider2D playerCollider;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +40,8 @@ public class PlayerController : MonoBehaviour
         previousX = x;
 
         playerAnimator = GetComponent<Animator>();
+
+        playerCollider = GetComponent<Collider2D>();
     }
 
     // Update is called once per frame
@@ -57,14 +63,58 @@ public class PlayerController : MonoBehaviour
     // Move player with arrow keys
     public void MovePlayer() {
         if (Input.GetKey(KeyCode.RightArrow))
-            transform.position += new Vector3(speed, 0, 0);
+            transform.position += MoveWithCollision(new Vector3(speed, 0, 0));
         if (Input.GetKey(KeyCode.LeftArrow))
-            transform.position += new Vector3(-1 * speed, 0, 0);
+            transform.position += MoveWithCollision(new Vector3(-1 * speed, 0, 0));
         if (Input.GetKey(KeyCode.UpArrow))
-            transform.position += new Vector3(0, speed, 0);
+            transform.position += MoveWithCollision(new Vector3(0, speed, 0));
         if (Input.GetKey(KeyCode.DownArrow))
-            transform.position += new Vector3(0, -1 * speed, 0);
+            transform.position += MoveWithCollision(new Vector3(0, -1 * speed, 0));
     }
+
+
+    // Move with respect to collision
+    public Vector3 MoveWithCollision(Vector3 direction) {
+        Vector3 result = direction;
+
+        // Check for UI object in the way of current movement
+        float playerBoundX = transform.position.x + direction.x + MathF.Sign(direction.x) * playerCollider.bounds.extents.x;
+        float playerBoundY = transform.position.y + direction.y + MathF.Sign(direction.y) * playerCollider.bounds.extents.y;
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(new Vector2(playerBoundX, playerBoundY), 0.0001f);
+        
+        foreach (Collider2D c in colliders) {
+            // Check if it is a barrier
+            if (c.gameObject.CompareTag("Barrier")) {
+
+                // If so, snap to position next to it instead of going into it
+                result = new Vector3(0, 0, 0);
+
+                if (direction.x != 0) { // Horizontal
+                    int sign = MathF.Sign(direction.x);
+                    float wall = c.bounds.center.x - sign * c.bounds.extents.x;     // x value of colliding wall
+                    float playerWall = transform.position.x + sign * playerCollider.bounds.extents.x; // x value of hitbox wall
+
+                    // Distance between colliders
+                    float distance = Math.Abs(wall - playerWall);
+                    result += new Vector3(sign * distance, 0, 0);
+                }
+                
+                if (direction.y != 0) { // Vertical
+                    int sign = MathF.Sign(direction.y);
+                    float wall = c.bounds.center.y - sign * c.bounds.extents.y;     // y value of colliding wall
+                    float playerWall = transform.position.y + sign * playerCollider.bounds.extents.y; // y value of hitbox wall
+
+                    // Distance between colliders
+                    float distance = Math.Abs(wall - playerWall);
+                    result += new Vector3(0, sign * distance, 0);
+                }
+            }
+        }
+        
+
+        return result;
+    }
+
 
     // Tilt the ship if it's going in a certain direction
     public void AnimatePlayer() {
