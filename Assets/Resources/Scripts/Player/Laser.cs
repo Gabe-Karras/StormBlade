@@ -12,7 +12,7 @@ public class Laser : MonoBehaviour
     void Start()
     {
         // Dividing for vector math
-        speed /= 1000;
+        speed /= 50;
     }
 
     // Update is called once per frame

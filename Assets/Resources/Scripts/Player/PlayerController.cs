@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     // Player projectiles
     [SerializeField]
     private GameObject laser0;
+    [SerializeField]
+    private GameObject laser1;
 
     // X coordinates for animation
     private float x;
@@ -30,11 +32,14 @@ public class PlayerController : MonoBehaviour
     // Collider to use collision physics
     private Collider2D playerCollider;
 
+    // Game manager
+    private GameObject gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
         // Divide for vector math
-        speed = speed / 1000;
+        speed = speed / 50;
 
         x = transform.position.x;
         previousX = x;
@@ -42,6 +47,8 @@ public class PlayerController : MonoBehaviour
         playerAnimator = GetComponent<Animator>();
 
         playerCollider = GetComponent<Collider2D>();
+
+        gameManager = GameObject.Find("GameManager");
     }
 
     // Update is called once per frame
@@ -57,7 +64,7 @@ public class PlayerController : MonoBehaviour
         // Get current animation
         currentAnimation = playerAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
 
-        shoot();
+        Shoot();
     }
 
     // Move player with arrow keys
@@ -74,7 +81,7 @@ public class PlayerController : MonoBehaviour
 
 
     // Move with respect to collision
-    public Vector3 MoveWithCollision(Vector3 direction) {
+    private Vector3 MoveWithCollision(Vector3 direction) {
         Vector3 result = direction;
 
         // Check for UI object in the way of current movement
@@ -128,19 +135,67 @@ public class PlayerController : MonoBehaviour
     }
 
     // Shoot lasers with spacebar
-    public void shoot() {
+    public void Shoot() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            // Check animation to spawn lasers at correct positions
-            if (currentAnimation.Equals("PlayerIdle")) {
-                Instantiate(laser0, transform.position + new Vector3(-1 * TURRET_X, TURRET_Y), transform.rotation);
-                Instantiate(laser0, transform.position + new Vector3(TURRET_X, TURRET_Y), transform.rotation);
-            } else if (currentAnimation.Equals("PlayerLeft")) {
-                Instantiate(laser0, transform.position + new Vector3(-1 * CLOSE_TURRET_X, TURRET_Y), transform.rotation);
-                Instantiate(laser0, transform.position + new Vector3(FAR_TURRET_X, TURRET_Y), transform.rotation);
-            } else if (currentAnimation.Equals("PlayerRight")) {
-                Instantiate(laser0, transform.position + new Vector3(-1 * FAR_TURRET_X, TURRET_Y), transform.rotation);
-                Instantiate(laser0, transform.position + new Vector3(CLOSE_TURRET_X, TURRET_Y), transform.rotation);
-            }
+            // Decide how to shoot based on BP
+            if (gameManager.GetComponent<GameManager>().bp == 1)
+                SpawnLasers(laser0);
+            else if (gameManager.GetComponent<GameManager>().bp == 2)
+                SpawnLasers(laser1);
+            else if (gameManager.GetComponent<GameManager>().bp == 3)
+                SpawnLasers(laser1, laser0);
+            else if (gameManager.GetComponent<GameManager>().bp == 4 || gameManager.GetComponent<GameManager>().bp == 5)
+                SpawnLasers(laser1, laser1);
         }
+    }
+
+    // Spawn lasers out of turrets
+    private void SpawnLasers (GameObject laser) {
+        Vector3 leftTurret = transform.position;
+        Vector3 rightTurret = transform.position;
+
+        // Check animation to get correct positions
+        if (currentAnimation.Equals("PlayerIdle")) {
+            leftTurret += new Vector3(-1 * TURRET_X, TURRET_Y);
+            rightTurret += new Vector3(TURRET_X, TURRET_Y);
+        } else if (currentAnimation.Equals("PlayerLeft")) {
+            leftTurret += new Vector3(-1 * CLOSE_TURRET_X, TURRET_Y);
+            rightTurret += new Vector3(FAR_TURRET_X, TURRET_Y);
+        } else if (currentAnimation.Equals("PlayerRight")) {
+            leftTurret += new Vector3(-1 * FAR_TURRET_X, TURRET_Y);
+            rightTurret += new Vector3(CLOSE_TURRET_X, TURRET_Y);
+        }
+
+        // Spawn lasers
+        Instantiate(laser, leftTurret, transform.rotation);
+        Instantiate(laser, rightTurret, transform.rotation);
+    }
+
+    // Spawn lasers out of turrets (with spreadshot)
+    private void SpawnLasers (GameObject forwardLaser, GameObject spreadLaser) {
+        Vector3 leftTurret = transform.position;
+        Vector3 rightTurret = transform.position;
+        float angle1 = 30;
+        float angle2 = 60;
+
+        // Check animation to get correct positions
+        if (currentAnimation.Equals("PlayerIdle")) {
+            leftTurret += new Vector3(-1 * TURRET_X, TURRET_Y);
+            rightTurret += new Vector3(TURRET_X, TURRET_Y);
+        } else if (currentAnimation.Equals("PlayerLeft")) {
+            leftTurret += new Vector3(-1 * CLOSE_TURRET_X, TURRET_Y);
+            rightTurret += new Vector3(FAR_TURRET_X, TURRET_Y);
+        } else if (currentAnimation.Equals("PlayerRight")) {
+            leftTurret += new Vector3(-1 * FAR_TURRET_X, TURRET_Y);
+            rightTurret += new Vector3(CLOSE_TURRET_X, TURRET_Y);
+        }
+
+        // Spawn lasers
+        Instantiate(forwardLaser, leftTurret, transform.rotation);
+        Instantiate(forwardLaser, rightTurret, transform.rotation);
+        Instantiate(spreadLaser, leftTurret, Quaternion.Euler(0, 0, transform.rotation.z + angle1));
+        Instantiate(spreadLaser, rightTurret, Quaternion.Euler(0, 0, transform.rotation.z - angle1));
+        Instantiate(spreadLaser, leftTurret, Quaternion.Euler(0, 0, transform.rotation.z + angle2));
+        Instantiate(spreadLaser, rightTurret, Quaternion.Euler(0, 0, transform.rotation.z - angle2));
     }
 }

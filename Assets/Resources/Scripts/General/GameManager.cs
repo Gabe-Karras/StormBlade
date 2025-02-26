@@ -22,6 +22,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Set framerate
+        Application.targetFrameRate = 60;
+
         // Get UI elements
         healthCells = GameObject.Find("HealthCells");
         blasterCells = GameObject.Find("BlasterCells");
@@ -30,7 +33,9 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Return)) {
+            UpdateBP(1);
+        }
     }
 
     // Method to update all references of player hp
@@ -49,7 +54,7 @@ public class GameManager : MonoBehaviour
         img.sprite = (Sprite) Resources.LoadAll<Sprite>("Sprites/UI/HealthCells")[hp];
     }
 
-    public void UpdateBlaster(int bpChange) {
+    public void UpdateBP(int bpChange) {
         bp += bpChange;
 
         // Make sure bp stays within bounds
