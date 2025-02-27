@@ -9,7 +9,7 @@ public class Laser : MonoBehaviour
     private float speed;
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         // Dividing for vector math
         speed /= 50;
@@ -18,7 +18,11 @@ public class Laser : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Move laser forward
+        MoveForward();
+    }
+
+    // Move laser forward at speed
+    protected void MoveForward() {
         transform.position += transform.up * speed;
     }
 

@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     private GameObject laser0;
     [SerializeField]
     private GameObject laser1;
+    [SerializeField]
+    private GameObject laser2;
 
     // X coordinates for animation
     private float x;
@@ -142,15 +144,20 @@ public class PlayerController : MonoBehaviour
                 SpawnLasers(laser0);
             else if (gameManager.GetComponent<GameManager>().bp == 2)
                 SpawnLasers(laser1);
-            else if (gameManager.GetComponent<GameManager>().bp == 3)
-                SpawnLasers(laser1, laser0);
-            else if (gameManager.GetComponent<GameManager>().bp == 4 || gameManager.GetComponent<GameManager>().bp == 5)
-                SpawnLasers(laser1, laser1);
+            else if (gameManager.GetComponent<GameManager>().bp == 3) {
+                SpawnLasers(laser1);
+                SpawnLasersWave(laser2);
+            }
+            else if (gameManager.GetComponent<GameManager>().bp == 4 || gameManager.GetComponent<GameManager>().bp == 5) {
+                SpawnLasers(laser1);
+                SpawnLasersSpreadshot(laser0);
+                SpawnLasersWave(laser2);
+            }
         }
     }
 
-    // Spawn lasers out of turrets
-    private void SpawnLasers (GameObject laser) {
+    // Get vectors for turret positions based on animation
+    private Vector3[] GetTurretPositions() {
         Vector3 leftTurret = transform.position;
         Vector3 rightTurret = transform.position;
 
@@ -165,37 +172,46 @@ public class PlayerController : MonoBehaviour
             leftTurret += new Vector3(-1 * FAR_TURRET_X, TURRET_Y);
             rightTurret += new Vector3(CLOSE_TURRET_X, TURRET_Y);
         }
+
+        Vector3[] result = {leftTurret, rightTurret};
+        return result;
+    }
+
+    // Spawn lasers out of turrets
+    private void SpawnLasers (GameObject laser) {
+        Vector3[] positions = GetTurretPositions();
+        Vector3 leftTurret = positions[0];
+        Vector3 rightTurret = positions[1];
 
         // Spawn lasers
         Instantiate(laser, leftTurret, transform.rotation);
         Instantiate(laser, rightTurret, transform.rotation);
     }
 
-    // Spawn lasers out of turrets (with spreadshot)
-    private void SpawnLasers (GameObject forwardLaser, GameObject spreadLaser) {
-        Vector3 leftTurret = transform.position;
-        Vector3 rightTurret = transform.position;
+    // Spawn lasers out of turrets (WaveLaser)
+    private void SpawnLasersWave (GameObject laser) {
+        Vector3[] positions = GetTurretPositions();
+        Vector3 leftTurret = positions[0];
+        Vector3 rightTurret = positions[1];
+
+        // Spawn lasers
+        WaveLaser temp = Instantiate(laser, leftTurret, transform.rotation).GetComponent<WaveLaser>();
+        temp.SetDirection(-1);
+        Instantiate(laser, rightTurret, transform.rotation);
+    }
+
+    // Spawn lasers out of turrets in spreadshot
+    private void SpawnLasersSpreadshot (GameObject laser) {
+        Vector3[] positions = GetTurretPositions();
+        Vector3 leftTurret = positions[0];
+        Vector3 rightTurret = positions[1];
         float angle1 = 30;
         float angle2 = 60;
 
-        // Check animation to get correct positions
-        if (currentAnimation.Equals("PlayerIdle")) {
-            leftTurret += new Vector3(-1 * TURRET_X, TURRET_Y);
-            rightTurret += new Vector3(TURRET_X, TURRET_Y);
-        } else if (currentAnimation.Equals("PlayerLeft")) {
-            leftTurret += new Vector3(-1 * CLOSE_TURRET_X, TURRET_Y);
-            rightTurret += new Vector3(FAR_TURRET_X, TURRET_Y);
-        } else if (currentAnimation.Equals("PlayerRight")) {
-            leftTurret += new Vector3(-1 * FAR_TURRET_X, TURRET_Y);
-            rightTurret += new Vector3(CLOSE_TURRET_X, TURRET_Y);
-        }
-
         // Spawn lasers
-        Instantiate(forwardLaser, leftTurret, transform.rotation);
-        Instantiate(forwardLaser, rightTurret, transform.rotation);
-        Instantiate(spreadLaser, leftTurret, Quaternion.Euler(0, 0, transform.rotation.z + angle1));
-        Instantiate(spreadLaser, rightTurret, Quaternion.Euler(0, 0, transform.rotation.z - angle1));
-        Instantiate(spreadLaser, leftTurret, Quaternion.Euler(0, 0, transform.rotation.z + angle2));
-        Instantiate(spreadLaser, rightTurret, Quaternion.Euler(0, 0, transform.rotation.z - angle2));
+        Instantiate(laser, leftTurret, Quaternion.Euler(0, 0, transform.rotation.z + angle1));
+        Instantiate(laser, rightTurret, Quaternion.Euler(0, 0, transform.rotation.z - angle1));
+        Instantiate(laser, leftTurret, Quaternion.Euler(0, 0, transform.rotation.z + angle2));
+        Instantiate(laser, rightTurret, Quaternion.Euler(0, 0, transform.rotation.z - angle2));
     }
 }

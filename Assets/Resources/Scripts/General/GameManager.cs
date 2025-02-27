@@ -28,6 +28,11 @@ public class GameManager : MonoBehaviour
         // Get UI elements
         healthCells = GameObject.Find("HealthCells");
         blasterCells = GameObject.Find("BlasterCells");
+
+        // Make sure key elements exist
+        if (bp == 5 && GameObject.Find("LaserRing") == null) {
+            Instantiate(Resources.Load("Prefabs/Player/LaserRing"));
+        }
     }
 
     // Update is called once per frame
@@ -67,5 +72,12 @@ public class GameManager : MonoBehaviour
         // Update display
         Image img = blasterCells.GetComponent<Image>();
         img.sprite = (Sprite) Resources.LoadAll<Sprite>("Sprites/UI/BlasterCells")[bp];
+
+        // Add/remove laser ring
+        if (bp == 5 && GameObject.Find("LaserRing") == null) {
+            Instantiate(Resources.Load("Prefabs/Player/LaserRing"));
+        } else if (bp != 5 && GameObject.Find("LaserRing") != null) {
+            Destroy(GameObject.Find("LaserRing"));
+        }
     }
 }
