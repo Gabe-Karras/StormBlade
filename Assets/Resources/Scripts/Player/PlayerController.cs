@@ -140,15 +140,15 @@ public class PlayerController : MonoBehaviour
     public void Shoot() {
         if (Input.GetKeyDown(KeyCode.Space)) {
             // Decide how to shoot based on BP
-            if (gameManager.GetComponent<GameManager>().bp == 1)
+            if (gameManager.GetComponent<GameManager>().GetBP() == 1)
                 SpawnLasers(laser0);
-            else if (gameManager.GetComponent<GameManager>().bp == 2)
+            else if (gameManager.GetComponent<GameManager>().GetBP() == 2)
                 SpawnLasers(laser1);
-            else if (gameManager.GetComponent<GameManager>().bp == 3) {
+            else if (gameManager.GetComponent<GameManager>().GetBP() == 3) {
                 SpawnLasers(laser1);
                 SpawnLasersWave(laser2);
             }
-            else if (gameManager.GetComponent<GameManager>().bp == 4 || gameManager.GetComponent<GameManager>().bp == 5) {
+            else if (gameManager.GetComponent<GameManager>().GetBP() == 4 || gameManager.GetComponent<GameManager>().GetBP() == 5) {
                 SpawnLasers(laser1);
                 SpawnLasersSpreadshot(laser0);
                 SpawnLasersWave(laser2);

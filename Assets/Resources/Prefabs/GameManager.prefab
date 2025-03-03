@@ -46,3 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 10
   bp: 1
+  smallHealthCount: 0
+  bigHealthCount: 0
+  bombCount: 0
+  lightningCount: 0
+  missileCount: 0
+  shieldCount: 0
