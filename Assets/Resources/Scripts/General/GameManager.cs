@@ -54,6 +54,9 @@ public class GameManager : MonoBehaviour
     private int[] activeItems = new int[4];
     private bool selectorActive = false;
 
+    // Player reference
+    private GameObject player;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -80,6 +83,9 @@ public class GameManager : MonoBehaviour
 
         itemSelector = GameObject.Find("Selector");
 
+        // Find player
+        player = GameObject.Find("Player");
+
         // Updates to initialize appearances and settings
         UpdateHP(0);
         UpdateBP(0);
@@ -95,6 +101,9 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         MoveSelector();
+
+        if (Input.GetKeyDown(KeyCode.Return))
+            UpdateHP(-1);
     }
 
     // Move selector in accordance to action mode
@@ -119,7 +128,17 @@ public class GameManager : MonoBehaviour
     // GETTERS AND SETTERS
     // Getters and setters for hp/bp
     public void UpdateHP(int hpChange) {
-        hp = KeepInBounds(hp, 0, MAX_ACTION_HP);
+        // Check if HP is being subtracted from, and only allow it if player is not invincible
+        if (hpChange < 0) {
+            if (player.GetComponent<PlayerController>().getIframes())
+                return;
+            
+            // Notify player and subtract from blaster points
+            player.GetComponent<PlayerController>().setHit(true);
+            UpdateBP(-1);
+        }
+
+        hp = KeepInBounds(hp + hpChange, 0, MAX_ACTION_HP);
 
         // Update display
         Image img = healthCells.GetComponent<Image>();
@@ -127,7 +146,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void UpdateBP(int bpChange) {
-        bp = KeepInBounds(bp, 1, MAX_ACTION_BP);
+        bp = KeepInBounds(bp + bpChange, 1, MAX_ACTION_BP);
 
         // Update display
         Image img = blasterCells.GetComponent<Image>();

@@ -37,6 +37,11 @@ public class PlayerController : MonoBehaviour
     // Game manager
     private GameObject gameManager;
 
+    // Values dealing with damage and death
+    private bool hit = false;
+    private bool iframes = false;
+    private const float IFRAME_SECONDS = 1;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -67,6 +72,12 @@ public class PlayerController : MonoBehaviour
         currentAnimation = playerAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
 
         Shoot();
+
+        // Check if hit and activate iframes
+        if (hit) {
+            Invincibility();
+            hit = false;
+        }
     }
 
     // Move player with arrow keys
@@ -213,5 +224,56 @@ public class PlayerController : MonoBehaviour
         Instantiate(laser, rightTurret, Quaternion.Euler(0, 0, transform.rotation.z - angle1));
         Instantiate(laser, leftTurret, Quaternion.Euler(0, 0, transform.rotation.z + angle2));
         Instantiate(laser, rightTurret, Quaternion.Euler(0, 0, transform.rotation.z - angle2));
+    }
+
+    // Enter invincibility frames if hit
+    private void Invincibility() {
+        // Set iframes to true
+        iframes = true;
+
+        // Flash sprite for length of time
+        StartCoroutine(FlashSprite(IFRAME_SECONDS));
+    }
+
+    // Flash sprite alpha for given seconds
+    IEnumerator FlashSprite(float seconds) {
+        float total = 0f;
+        float flashTime = 0.05f; // 20th of a second
+        Color temp = GetComponent<SpriteRenderer>().color;
+
+        // Loop for iframe time
+        while (total < seconds) {
+            // Flash alpha color
+            if (temp.a == 1)
+                temp.a = 0f;
+            else 
+                temp.a = 1f;
+
+            GetComponent<SpriteRenderer>().color = temp;
+
+            // Wait for a 20th of a second
+            yield return new WaitForSeconds(flashTime);
+
+            // Add time to total
+            total += flashTime;
+        }
+
+        // If alpha is zero after loop, set to 1
+        if (temp.a == 0) {
+            temp.a = 1;
+            GetComponent<SpriteRenderer>().color = temp;
+        }
+
+        // Set iframes to false
+        iframes = false;
+    }
+
+    // GETTERS AND SETTERS
+    public bool getIframes() {
+        return iframes;
+    }
+
+    public void setHit(bool hit) {
+        this.hit = hit;
     }
 }
