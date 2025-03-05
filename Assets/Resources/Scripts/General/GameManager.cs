@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
         MoveSelector();
 
         if (Input.GetKeyDown(KeyCode.Return))
-            UpdateHP(-1);
+            UpdateHP(-5);
     }
 
     // Move selector in accordance to action mode
@@ -130,11 +130,16 @@ public class GameManager : MonoBehaviour
     public void UpdateHP(int hpChange) {
         // Check if HP is being subtracted from, and only allow it if player is not invincible
         if (hpChange < 0) {
-            if (player.GetComponent<PlayerController>().getIframes())
+            if (player.GetComponent<PlayerController>().GetIframes())
                 return;
             
             // Notify player and subtract from blaster points
-            player.GetComponent<PlayerController>().setHit(true);
+            if (hp + hpChange <= 0) {
+                player.GetComponent<PlayerController>().SetDead(true);
+                player.GetComponent<PlayerController>().PlayDeathSequence();
+            }
+            else
+                player.GetComponent<PlayerController>().SetHit(true);
             UpdateBP(-1);
         }
 

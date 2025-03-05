@@ -17,6 +17,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private GameObject laser2;
 
+    // Explosions in death animation
+    [SerializeField]
+    private GameObject smallExplosion;
+    [SerializeField]
+    private GameObject bigExplosion;
+    [SerializeField]
+    private GameObject shrapnel;
+
     // X coordinates for animation
     private float x;
     private float previousX;
@@ -39,6 +47,7 @@ public class PlayerController : MonoBehaviour
 
     // Values dealing with damage and death
     private bool hit = false;
+    private bool dead = false;
     private bool iframes = false;
     private const float IFRAME_SECONDS = 1;
 
@@ -61,22 +70,25 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        MovePlayer();
+        // Action controls
+        if (!dead) {
+            MovePlayer();
 
-        // Update x coordinates for animate function
-        x = transform.position.x;
-        AnimatePlayer();
-        previousX = x;
+            // Update x coordinates for animate function
+            x = transform.position.x;
+            AnimatePlayer();
+            previousX = x;
 
-        // Get current animation
-        currentAnimation = playerAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+            // Get current animation
+            currentAnimation = playerAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
 
-        Shoot();
+            Shoot();
 
-        // Check if hit and activate iframes
-        if (hit) {
-            Invincibility();
-            hit = false;
+            // Check if hit and activate iframes
+            if (hit) {
+                Invincibility();
+                hit = false;
+            }
         }
     }
 
@@ -268,12 +280,78 @@ public class PlayerController : MonoBehaviour
         iframes = false;
     }
 
+    // Play death sequence
+    public void PlayDeathSequence() {
+        // Switch to death animation
+        playerAnimator.Play("PlayerDeath");
+
+        // Start flashing!
+        StartCoroutine(FlashSprite(10)); // Long enough to go until end of animation
+
+        // Put a bunch of random explosions around player
+        StartCoroutine(SpawnExplosions());
+
+        // Shoot out shrapnel every time the death animation progresses (animation event)
+
+        // When animation ends, destroy object, create big explosion
+        // and shoot out a few pieces of shrapnel (animation event)
+    }
+
+    // Spawn a random explosion somewhere on the player
+    private void RandomExplosion() {
+        System.Random rand = new System.Random();
+        float explosionX = ((float) rand.Next(-15, 16)) / 100;
+        float explosionY = ((float) rand.Next(-12, 13)) / 100;
+
+        Instantiate(smallExplosion, transform.position + new Vector3(explosionX, explosionY), transform.rotation);
+    }
+
+    // Put a bunch of random explosions around player
+    IEnumerator SpawnExplosions() {
+        float explodeTime = 0.2f; // 5th of a second
+
+        while (true) {
+            RandomExplosion();
+            yield return new WaitForSeconds(explodeTime);
+        }
+    }
+
+    // Shoot out shrapnel in accordance to animation
+    public void AnimationHandler(string message) {
+        // Shoot shrapnel in proper directions
+        if (message.Equals("DeathFrame1")) {
+            GameObject temp = Instantiate(shrapnel, transform.position, transform.rotation);
+            temp.GetComponent<Shrapnel>().SetAngle(45);
+        } else if (message.Equals("DeathFrame2")) {
+            GameObject temp = Instantiate(shrapnel, transform.position, transform.rotation);
+            temp.GetComponent<Shrapnel>().SetAngle(180);
+        } else if (message.Equals("DeathFrame3")) {
+            GameObject temp = Instantiate(shrapnel, transform.position, transform.rotation);
+            temp.GetComponent<Shrapnel>().SetAngle(285);
+        } else if (message.Equals("DeathAnimationEnded")) {
+            // Create big explosion and destroy player
+            Instantiate(bigExplosion, transform.position, transform.rotation);
+            GameObject temp = Instantiate(shrapnel, transform.position, transform.rotation);
+            temp.GetComponent<Shrapnel>().SetAngle(0);
+            temp = Instantiate(shrapnel, transform.position, transform.rotation);
+            temp.GetComponent<Shrapnel>().SetAngle(115);
+            temp = Instantiate(shrapnel, transform.position, transform.rotation);
+            temp.GetComponent<Shrapnel>().SetAngle(270);
+            Destroy(gameObject);
+        }
+    }
+    
+
     // GETTERS AND SETTERS
-    public bool getIframes() {
+    public bool GetIframes() {
         return iframes;
     }
 
-    public void setHit(bool hit) {
+    public void SetHit(bool hit) {
         this.hit = hit;
+    }
+
+    public void SetDead(bool dead) {
+        this.dead = dead;
     }
 }
