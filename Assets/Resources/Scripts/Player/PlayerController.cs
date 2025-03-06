@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
 
             // Check if hit and activate iframes
             if (hit) {
-                Invincibility();
+                Invincibility(0);
                 hit = false;
             }
         }
@@ -163,15 +163,15 @@ public class PlayerController : MonoBehaviour
     public void Shoot() {
         if (Input.GetKeyDown(KeyCode.Space)) {
             // Decide how to shoot based on BP
-            if (gameManager.GetComponent<GameManager>().GetBP() == 1)
+            if (gameManager.GetComponent<GameManager>().GetBp() == 1)
                 SpawnLasers(laser0);
-            else if (gameManager.GetComponent<GameManager>().GetBP() == 2)
+            else if (gameManager.GetComponent<GameManager>().GetBp() == 2)
                 SpawnLasers(laser1);
-            else if (gameManager.GetComponent<GameManager>().GetBP() == 3) {
+            else if (gameManager.GetComponent<GameManager>().GetBp() == 3) {
                 SpawnLasers(laser1);
                 SpawnLasersWave(laser2);
             }
-            else if (gameManager.GetComponent<GameManager>().GetBP() == 4 || gameManager.GetComponent<GameManager>().GetBP() == 5) {
+            else if (gameManager.GetComponent<GameManager>().GetBp() == 4 || gameManager.GetComponent<GameManager>().GetBp() == 5) {
                 SpawnLasers(laser1);
                 SpawnLasersSpreadshot(laser0);
                 SpawnLasersWave(laser2);
@@ -239,12 +239,14 @@ public class PlayerController : MonoBehaviour
     }
 
     // Enter invincibility frames if hit
-    private void Invincibility() {
+    private void Invincibility(float seconds) {
         // Set iframes to true
         iframes = true;
 
         // Flash sprite for length of time
-        StartCoroutine(FlashSprite(IFRAME_SECONDS));
+        if (seconds == 0)
+            seconds = IFRAME_SECONDS;
+        StartCoroutine(FlashSprite(seconds));
     }
 
     // Flash sprite alpha for given seconds
@@ -286,7 +288,7 @@ public class PlayerController : MonoBehaviour
         playerAnimator.Play("PlayerDeath");
 
         // Start flashing!
-        StartCoroutine(FlashSprite(10)); // Long enough to go until end of animation
+        Invincibility(10); // Long enough to go until end of animation
 
         // Put a bunch of random explosions around player
         StartCoroutine(SpawnExplosions());
@@ -329,7 +331,7 @@ public class PlayerController : MonoBehaviour
             GameObject temp = Instantiate(shrapnel, transform.position, transform.rotation);
             temp.GetComponent<Shrapnel>().SetAngle(285);
         } else if (message.Equals("DeathAnimationEnded")) {
-            // Create big explosion and destroy player
+            // Create big explosion and remove player
             Instantiate(bigExplosion, transform.position, transform.rotation);
             GameObject temp = Instantiate(shrapnel, transform.position, transform.rotation);
             temp.GetComponent<Shrapnel>().SetAngle(0);
@@ -337,7 +339,9 @@ public class PlayerController : MonoBehaviour
             temp.GetComponent<Shrapnel>().SetAngle(115);
             temp = Instantiate(shrapnel, transform.position, transform.rotation);
             temp.GetComponent<Shrapnel>().SetAngle(270);
-            Destroy(gameObject);
+
+            // Teleport out of camera
+            transform.position += new Vector3(0, -5, 0);
         }
     }
     

@@ -8,11 +8,26 @@ public class Laser : MonoBehaviour
     [SerializeField]
     private float speed;
 
+    // Hp damage
+    [SerializeField]
+    private int damage;
+
+    [SerializeField]
+    private bool hurtsPlayer;
+    [SerializeField]
+    private bool hurtsEnemies;
+
+    private GameObject gameManager;
+
     // Start is called before the first frame update
     protected virtual void Start()
     {
         // Dividing for vector math
         speed /= 50;
+
+        damage *= -1;
+
+        gameManager = GameObject.Find("GameManager");
     }
 
     // Update is called once per frame
@@ -29,5 +44,20 @@ public class Laser : MonoBehaviour
     // Destroy laser when it leaves the camera
     void OnBecameInvisible() {
         Destroy(gameObject);
+    }
+
+    // Hurt target and destroy self on collision
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (hurtsEnemies && other.gameObject.tag.Equals("Enemy")) {
+            if (!other.gameObject.GetComponent<Enemy>().IsDead()) {
+                other.gameObject.GetComponent<Enemy>().UpdateHp(damage);
+                Destroy(gameObject);
+            }
+        }
+
+        if (hurtsPlayer && other.gameObject.tag.Equals("Player")) {
+            gameManager.GetComponent<GameManager>().UpdateHp(damage);
+            Destroy(gameObject);
+        }
     }
 }

@@ -87,8 +87,8 @@ public class GameManager : MonoBehaviour
         player = GameObject.Find("Player");
 
         // Updates to initialize appearances and settings
-        UpdateHP(0);
-        UpdateBP(0);
+        UpdateHp(0);
+        UpdateBp(0);
         UpdateSmallHealthCount(0);
         UpdateBigHealthCount(0);
         UpdateBombCount(0);
@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
         MoveSelector();
 
         if (Input.GetKeyDown(KeyCode.Return))
-            UpdateHP(-5);
+            UpdateBp(1);
     }
 
     // Move selector in accordance to action mode
@@ -127,7 +127,7 @@ public class GameManager : MonoBehaviour
 
     // GETTERS AND SETTERS
     // Getters and setters for hp/bp
-    public void UpdateHP(int hpChange) {
+    public void UpdateHp(int hpChange) {
         // Check if HP is being subtracted from, and only allow it if player is not invincible
         if (hpChange < 0) {
             if (player.GetComponent<PlayerController>().GetIframes())
@@ -140,7 +140,7 @@ public class GameManager : MonoBehaviour
             }
             else
                 player.GetComponent<PlayerController>().SetHit(true);
-            UpdateBP(-1);
+            UpdateBp(-1);
         }
 
         hp = KeepInBounds(hp + hpChange, 0, MAX_ACTION_HP);
@@ -150,7 +150,7 @@ public class GameManager : MonoBehaviour
         img.sprite = (Sprite) Resources.LoadAll<Sprite>("Sprites/UI/HealthCells")[hp];
     }
 
-    public void UpdateBP(int bpChange) {
+    public void UpdateBp(int bpChange) {
         bp = KeepInBounds(bp + bpChange, 1, MAX_ACTION_BP);
 
         // Update display
@@ -166,11 +166,11 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public int GetHP() {
+    public int GetHp() {
         return hp;
     }
 
-    public int GetBP() {
+    public int GetBp() {
         return bp;
     }
 
