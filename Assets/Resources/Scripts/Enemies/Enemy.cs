@@ -16,7 +16,8 @@ public class Enemy : MonoBehaviour
     // Other scripts dictating specific behavior
     [SerializeField]
     private EnemyBehavior behavior;
-
+    [SerializeField]
+    private EnemyDeath death;
 
     private bool iframes = false;
     private bool dead = false;
@@ -46,7 +47,7 @@ public class Enemy : MonoBehaviour
         if (!dead) {
             // Face player if required
             if (facePlayer) {
-                transform.rotation = Quaternion.Euler(0, 0, FacePoint(player.transform));
+                transform.rotation = Quaternion.Euler(0, 0, GameSystem.FacePoint(transform.position, player.transform.position));
             }
 
             // Deal physical damage if colliding with player
@@ -56,6 +57,9 @@ public class Enemy : MonoBehaviour
 
             // Execute behavior
             behavior.ExecuteBehavior();
+        } else {
+            // Play death animation
+            death.ExecuteDeath();
         }
     }
 
@@ -75,32 +79,12 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // Returns the Z angle to face the given point
-    private float FacePoint(Transform other) {
-        float angle;
-
-        // Arctan formula
-        angle = (float) Math.Atan((other.position.y - transform.position.y) / (other.position.x - transform.position.x));
-        // Convert to degrees
-        angle *= (float) (180 / Math.PI);
-        // Add 90 for upward alignment
-        angle += 90;
-        // Adjust if target is on right side
-        if (other.position.x > transform.position.x) {
-            angle += 180;
-        }
-
-        return angle;
-    }
-
     // Sets sprite to be white briefly and gives iframes
     IEnumerator FlashWhite(float iframeSeconds) {
         iframes = true;
 
         // Flash white for one 20th of a second
-        gameObject.GetComponent<SpriteRenderer>().material = (Material) Resources.Load("Materials/SolidWhite");
-        yield return new WaitForSeconds(0.05f);
-        gameObject.GetComponent<SpriteRenderer>().material = defaultMaterial;
+        StartCoroutine(GameSystem.FlashSprite(GetComponent<SpriteRenderer>(), (Material) Resources.Load("Materials/SolidWhite")));
 
         // Wait out iframes
         yield return new WaitForSeconds(iframeSeconds);

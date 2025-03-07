@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         // Divide for vector math
-        speed = speed / 50;
+        speed = speed / GameSystem.SPEED_DIVISOR;
 
         x = transform.position.x;
         previousX = x;
@@ -94,14 +94,21 @@ public class PlayerController : MonoBehaviour
 
     // Move player with arrow keys
     public void MovePlayer() {
+        float moveSpeed = speed;
+        // Calculate speed for moving diagonal
+        if ((Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow)) && 
+            (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))) {
+                moveSpeed = (float) Math.Sqrt(Math.Pow(moveSpeed, 2) / 2);
+        }
+
         if (Input.GetKey(KeyCode.RightArrow))
-            transform.position += MoveWithCollision(new Vector3(speed, 0, 0));
+            transform.position += MoveWithCollision(new Vector3(moveSpeed, 0, 0));
         if (Input.GetKey(KeyCode.LeftArrow))
-            transform.position += MoveWithCollision(new Vector3(-1 * speed, 0, 0));
+            transform.position += MoveWithCollision(new Vector3(-1 * moveSpeed, 0, 0));
         if (Input.GetKey(KeyCode.UpArrow))
-            transform.position += MoveWithCollision(new Vector3(0, speed, 0));
+            transform.position += MoveWithCollision(new Vector3(0, moveSpeed, 0));
         if (Input.GetKey(KeyCode.DownArrow))
-            transform.position += MoveWithCollision(new Vector3(0, -1 * speed, 0));
+            transform.position += MoveWithCollision(new Vector3(0, -1 * moveSpeed, 0));
     }
 
 
@@ -246,37 +253,13 @@ public class PlayerController : MonoBehaviour
         // Flash sprite for length of time
         if (seconds == 0)
             seconds = IFRAME_SECONDS;
-        StartCoroutine(FlashSprite(seconds));
+        StartCoroutine(InvincibleFlash(seconds));
     }
 
-    // Flash sprite alpha for given seconds
-    IEnumerator FlashSprite(float seconds) {
-        float total = 0f;
-        float flashTime = 0.05f; // 20th of a second
-        Color temp = GetComponent<SpriteRenderer>().color;
-
-        // Loop for iframe time
-        while (total < seconds) {
-            // Flash alpha color
-            if (temp.a == 1)
-                temp.a = 0f;
-            else 
-                temp.a = 1f;
-
-            GetComponent<SpriteRenderer>().color = temp;
-
-            // Wait for a 20th of a second
-            yield return new WaitForSeconds(flashTime);
-
-            // Add time to total
-            total += flashTime;
-        }
-
-        // If alpha is zero after loop, set to 1
-        if (temp.a == 0) {
-            temp.a = 1;
-            GetComponent<SpriteRenderer>().color = temp;
-        }
+    // Flash sprite alpha for given seconds, then remove invincibility
+    IEnumerator InvincibleFlash(float seconds) {
+        StartCoroutine(GameSystem.FlickerSprite(GetComponent<SpriteRenderer>(), seconds));
+        yield return new WaitForSeconds(seconds);
 
         // Set iframes to false
         iframes = false;
@@ -323,13 +306,13 @@ public class PlayerController : MonoBehaviour
         // Shoot shrapnel in proper directions
         if (message.Equals("DeathFrame1")) {
             GameObject temp = Instantiate(shrapnel, transform.position, transform.rotation);
-            temp.GetComponent<Shrapnel>().SetAngle(45);
+            temp.GetComponent<Shrapnel>().SetAngle(315);
         } else if (message.Equals("DeathFrame2")) {
             GameObject temp = Instantiate(shrapnel, transform.position, transform.rotation);
             temp.GetComponent<Shrapnel>().SetAngle(180);
         } else if (message.Equals("DeathFrame3")) {
             GameObject temp = Instantiate(shrapnel, transform.position, transform.rotation);
-            temp.GetComponent<Shrapnel>().SetAngle(285);
+            temp.GetComponent<Shrapnel>().SetAngle(75);
         } else if (message.Equals("DeathAnimationEnded")) {
             // Create big explosion and remove player
             Instantiate(bigExplosion, transform.position, transform.rotation);

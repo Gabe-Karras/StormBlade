@@ -28,10 +28,7 @@ public class Shrapnel : MonoBehaviour
     void Update()
     {
         // Move in direction of angle
-        float xChange = (float) (speed * Math.Sin(angle * (Math.PI / 180))); // Convert to radians
-        float yChange = (float) (speed * Math.Cos(angle * (Math.PI / 180)));
-
-        transform.position += new Vector3(xChange, yChange, 0f);
+        transform.position += GameSystem.MoveAtAngle(angle, speed);
 
         // Spin sprite with rotation speed
         transform.rotation = Quaternion.Euler(0f, 0f, currentRotation);
