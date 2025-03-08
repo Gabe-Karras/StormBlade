@@ -51,9 +51,9 @@ public class SpinOut : EnemyDeath
     public override void ExecuteDeath() {
         if (startFlickering) {
             // Make sure to flicker long enough
-            StartCoroutine(GameSystem.FlickerSprite(GetComponent<SpriteRenderer>(), deathTime + 1));
-            StartCoroutine(DelayedDestroy(deathTime));
-            StartCoroutine(SpawnExplosions());
+            StartCoroutine(GameSystem.FlickerSprite(sRenderer, deathTime + 1));
+            StartCoroutine(GameSystem.DelayedDestroy(gameObject, deathTime));
+            StartCoroutine(GameSystem.StartExploding(sRenderer, (GameObject) Resources.Load("Prefabs/Explosions/SmallExplosion")));
             startFlickering = false;
         }
 
@@ -68,31 +68,5 @@ public class SpinOut : EnemyDeath
     // Randomly returns -1 or 1
     private int RandomSign(System.Random rand) {
         return -1 + 2 * rand.Next(0, 2);
-    }
-
-    IEnumerator DelayedDestroy(float seconds) {
-        yield return new WaitForSeconds(seconds);
-        Destroy(gameObject);
-    }
-
-    // Spawn a random explosion somewhere on the enemy
-    private void RandomExplosion() {
-        System.Random rand = new System.Random();
-        float explosionX = ((float) rand.Next((int) (sRenderer.bounds.size.x / 2 * -1 * GameSystem.PIXELS_PER_UNIT),
-                            (int) (sRenderer.bounds.size.x / 2 * GameSystem.PIXELS_PER_UNIT + 1))) / GameSystem.PIXELS_PER_UNIT;
-        float explosionY = ((float) rand.Next((int) (sRenderer.bounds.size.y / 2 * -1 * GameSystem.PIXELS_PER_UNIT),
-                            (int) (sRenderer.bounds.size.y / 2 * GameSystem.PIXELS_PER_UNIT + 1))) / GameSystem.PIXELS_PER_UNIT;
-
-        Instantiate(Resources.Load("Prefabs/Explosions/SmallExplosion"), transform.position + new Vector3(explosionX, explosionY), transform.rotation);
-    }
-
-    // Put a bunch of random explosions around enemy
-    IEnumerator SpawnExplosions() {
-        float explodeTime = 0.2f; // 5th of a second
-
-        while (true) {
-            RandomExplosion();
-            yield return new WaitForSeconds(explodeTime);
-        }
     }
 }

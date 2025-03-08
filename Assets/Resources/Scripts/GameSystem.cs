@@ -110,4 +110,31 @@ public class GameSystem : MonoBehaviour
         yield return new WaitForSeconds(0.05f);
         s.material = defaultMaterial;
     }
+
+    // Spawn a random explosion somewhere on sprite
+    private static void RandomExplosion(SpriteRenderer s, GameObject explosion) {
+        System.Random rand = new System.Random();
+        float explosionX = ((float) rand.Next((int) (s.bounds.size.x / 2 * -1 * PIXELS_PER_UNIT),
+                            (int) (s.bounds.size.x / 2 * PIXELS_PER_UNIT + 1))) / PIXELS_PER_UNIT;
+        float explosionY = ((float) rand.Next((int) (s.bounds.size.y / 2 * -1 * PIXELS_PER_UNIT),
+                            (int) (s.bounds.size.y / 2 * PIXELS_PER_UNIT + 1))) / PIXELS_PER_UNIT;
+
+        Instantiate(explosion, s.gameObject.transform.position + new Vector3(explosionX, explosionY), s.gameObject.transform.rotation);
+    }
+
+    // Create unending explosions on sprite
+    public static IEnumerator StartExploding(SpriteRenderer s, GameObject explosion) {
+        float explodeTime = 0.2f; // 5th of a second
+
+        while (s != null) {
+            RandomExplosion(s, explosion);
+            yield return new WaitForSeconds(explodeTime);
+        }
+    }
+
+    // Destroy gameObject after length of time
+    public static IEnumerator DelayedDestroy(GameObject obj, float seconds) {
+        yield return new WaitForSeconds(seconds);
+        Destroy(obj);
+    }
 }

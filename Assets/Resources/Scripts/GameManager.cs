@@ -151,6 +151,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void UpdateBp(int bpChange) {
+        int previousBp = bp;
         bp = KeepInBounds(bp + bpChange, 1, MAX_ACTION_BP);
 
         // Update display
@@ -158,10 +159,10 @@ public class GameManager : MonoBehaviour
         img.sprite = (Sprite) Resources.LoadAll<Sprite>("Sprites/UI/BlasterCells")[bp];
 
         // Add/remove laser ring
-        if (bp == 5 && GameObject.Find("LaserRing") == null) {
+        if (bp == 5 && previousBp != 5) {
             Instantiate(Resources.Load("Prefabs/Player/LaserRing"));
-        } else if (bp != 5 && GameObject.Find("LaserRing") != null) {
-            Destroy(GameObject.Find("LaserRing"));
+        } else if (bp != 5 && previousBp == 5) {
+            Destroy(GameObject.Find("LaserRing(Clone)"));
         }
     }
 

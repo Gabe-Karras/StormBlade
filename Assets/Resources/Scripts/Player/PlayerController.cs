@@ -42,6 +42,8 @@ public class PlayerController : MonoBehaviour
     // Collider to use collision physics
     private Collider2D playerCollider;
 
+    private SpriteRenderer playerSprite;
+
     // Game manager
     private GameObject gameManager;
 
@@ -63,6 +65,8 @@ public class PlayerController : MonoBehaviour
         playerAnimator = GetComponent<Animator>();
 
         playerCollider = GetComponent<Collider2D>();
+
+        playerSprite = GetComponent<SpriteRenderer>();
 
         gameManager = GameObject.Find("GameManager");
     }
@@ -267,6 +271,8 @@ public class PlayerController : MonoBehaviour
 
     // Play death sequence
     public void PlayDeathSequence() {
+        gameManager.GetComponent<GameManager>().UpdateBp(-4);
+
         // Switch to death animation
         playerAnimator.Play("PlayerDeath");
 
@@ -274,31 +280,12 @@ public class PlayerController : MonoBehaviour
         Invincibility(10); // Long enough to go until end of animation
 
         // Put a bunch of random explosions around player
-        StartCoroutine(SpawnExplosions());
+        StartCoroutine(GameSystem.StartExploding(playerSprite, (GameObject) Resources.Load("Prefabs/Explosions/SmallExplosion")));
 
         // Shoot out shrapnel every time the death animation progresses (animation event)
 
         // When animation ends, destroy object, create big explosion
         // and shoot out a few pieces of shrapnel (animation event)
-    }
-
-    // Spawn a random explosion somewhere on the player
-    private void RandomExplosion() {
-        System.Random rand = new System.Random();
-        float explosionX = ((float) rand.Next(-15, 16)) / 100;
-        float explosionY = ((float) rand.Next(-12, 13)) / 100;
-
-        Instantiate(smallExplosion, transform.position + new Vector3(explosionX, explosionY), transform.rotation);
-    }
-
-    // Put a bunch of random explosions around player
-    IEnumerator SpawnExplosions() {
-        float explodeTime = 0.2f; // 5th of a second
-
-        while (true) {
-            RandomExplosion();
-            yield return new WaitForSeconds(explodeTime);
-        }
     }
 
     // Shoot out shrapnel in accordance to animation
