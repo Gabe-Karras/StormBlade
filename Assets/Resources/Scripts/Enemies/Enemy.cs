@@ -19,6 +19,11 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private EnemyDeath death;
 
+    // Audio that plays when this enemy takes damage
+    [SerializeField]
+    private AudioSource damageSource;
+    private AudioClip damage;
+
     private bool iframes = false;
     private bool dead = false;
     private GameObject player;
@@ -39,6 +44,8 @@ public class Enemy : MonoBehaviour
         gameManager = GameObject.Find("GameManager");
 
         physicalDamage *= -1;
+
+        damage = Resources.Load<AudioClip>("SoundEffects/Damage/DamageEnemy");
     }
 
     // Update is called once per frame
@@ -76,6 +83,7 @@ public class Enemy : MonoBehaviour
 
             // Flash sprite to be all white
             StartCoroutine(FlashWhite(0.05f));
+            GameSystem.PlaySoundEffect(damage, damageSource, 0.3f);
         }
     }
 

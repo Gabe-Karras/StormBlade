@@ -18,12 +18,17 @@ public class LaserRing : MonoBehaviour
     // Timing to fire
     private string fireFrame;
 
+    // Sound effect
+    private AudioClip laserSound;
+
     // Start is called before the first frame update
     void Start()
     {
         target = GameObject.Find("Player");
         transform.position = target.transform.position;
         fireFrame = "LaserRing_0";
+
+        laserSound = Resources.Load<AudioClip>("SoundEffects/Projectiles/BasicLaser");
     }
 
     // Update is called once per frame
@@ -67,5 +72,8 @@ public class LaserRing : MonoBehaviour
         Instantiate(laser, transform.position + new Vector3(x1, y1), Quaternion.Euler(0, 0, 0 + angleInversion));
         Instantiate(laser, transform.position + new Vector3(x2, y2), Quaternion.Euler(0, 0, 120 + angleInversion));
         Instantiate(laser, transform.position + new Vector3(x3, y3), Quaternion.Euler(0, 0, 240 + angleInversion));
+
+        // Play sound!
+        GameSystem.PlaySoundEffect(laserSound, GetComponent<AudioSource>(), 0);
     }
 }

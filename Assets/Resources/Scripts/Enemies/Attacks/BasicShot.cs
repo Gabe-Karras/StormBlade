@@ -8,7 +8,13 @@ public class BasicShot : EnemyAttack
     [SerializeField]
     private GameObject laser;
 
+    [SerializeField]
+    private AudioSource laserShotSource;
+    [SerializeField]
+    private AudioClip laserShot;
+
     public override void ExecuteAttack() {
         Instantiate(laser, transform.position, transform.rotation);
+        GameSystem.PlaySoundEffect(laserShot, laserShotSource, 0);
     }
 }

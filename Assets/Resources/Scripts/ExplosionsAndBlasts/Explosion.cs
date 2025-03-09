@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
+    [SerializeField]
+    private AudioClip explosionSound;
+
     private AnimatorStateInfo info;
 
-    // Start is called before the first frame update
+    // Play sound!!
     void Start()
     {
-        
+        GameSystem.PlaySoundEffect(explosionSound, GetComponent<AudioSource>(), 0.05f);
     }
 
     // Update is called once per frame

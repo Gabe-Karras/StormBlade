@@ -25,6 +25,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private GameObject shrapnel;
 
+    // Audio sources
+    [SerializeField]
+    private AudioSource laserSource;
+    [SerializeField]
+    private AudioSource hitSource;
+
+    // Audio clips
+    private AudioClip laserSound;
+    private AudioClip hitSound;
+
     // X coordinates for animation
     private float x;
     private float previousX;
@@ -56,17 +66,16 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Divide for vector math
         speed = speed / GameSystem.SPEED_DIVISOR;
-
         x = transform.position.x;
         previousX = x;
 
         playerAnimator = GetComponent<Animator>();
-
         playerCollider = GetComponent<Collider2D>();
-
         playerSprite = GetComponent<SpriteRenderer>();
+
+        laserSound = Resources.Load<AudioClip>("SoundEffects/Projectiles/BasicLaser");
+        hitSound = Resources.Load<AudioClip>("SoundEffects/Damage/Hit");
 
         gameManager = GameObject.Find("GameManager");
     }
@@ -174,18 +183,26 @@ public class PlayerController : MonoBehaviour
     public void Shoot() {
         if (Input.GetKeyDown(KeyCode.Space)) {
             // Decide how to shoot based on BP
-            if (gameManager.GetComponent<GameManager>().GetBp() == 1)
+            if (gameManager.GetComponent<GameManager>().GetBp() == 1) {
                 SpawnLasers(laser0);
-            else if (gameManager.GetComponent<GameManager>().GetBp() == 2)
+                laserSource.pitch = 0.75f;
+                GameSystem.PlaySoundEffect(laserSound, laserSource, 0);
+            } else if (gameManager.GetComponent<GameManager>().GetBp() == 2) {
                 SpawnLasers(laser1);
-            else if (gameManager.GetComponent<GameManager>().GetBp() == 3) {
+                laserSource.pitch = 1;
+                GameSystem.PlaySoundEffect(laserSound, laserSource, 0);
+            } else if (gameManager.GetComponent<GameManager>().GetBp() == 3) {
                 SpawnLasers(laser1);
                 SpawnLasersWave(laser2);
+                laserSource.pitch = 0.5f;
+                GameSystem.PlaySoundEffect(laserSound, laserSource, 0);
             }
             else if (gameManager.GetComponent<GameManager>().GetBp() == 4 || gameManager.GetComponent<GameManager>().GetBp() == 5) {
                 SpawnLasers(laser1);
                 SpawnLasersSpreadshot(laser0);
                 SpawnLasersWave(laser2);
+                laserSource.pitch = 0.5f;
+                GameSystem.PlaySoundEffect(laserSound, laserSource, 0);
             }
         }
     }
@@ -251,6 +268,9 @@ public class PlayerController : MonoBehaviour
 
     // Enter invincibility frames if hit
     private void Invincibility(float seconds) {
+        // Play hit sound
+        GameSystem.PlaySoundEffect(hitSound, hitSource, 0);
+
         // Set iframes to true
         iframes = true;
 

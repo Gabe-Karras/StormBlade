@@ -16,6 +16,9 @@ public class GameSystem : MonoBehaviour
     // Divide pixel distances by this to reflect in game space
     public const float PIXELS_PER_UNIT = 100;
 
+    // Volume to play sound effects
+    public const float SOUND_EFFECT_VOLUME = 0.25f;
+
     // Return a movement of the specified distance and angle
     public static Vector3 MoveAtAngle(float angle, float distance) {
         // Adjust because unity rotation is counterclockwise
@@ -136,5 +139,36 @@ public class GameSystem : MonoBehaviour
     public static IEnumerator DelayedDestroy(GameObject obj, float seconds) {
         yield return new WaitForSeconds(seconds);
         Destroy(obj);
+    }
+
+    // Check if gameobject is outside action mode boundaries
+    public static bool OutOfBounds(GameObject obj) {
+        if (obj.transform.position.y > Y_ACTION_BOUNDARY || obj.transform.position.y < Y_ACTION_BOUNDARY * -1)
+            return true;
+        if (obj.transform.position.x > X_ACTION_BOUNDARY || obj.transform.position.x < X_ACTION_BOUNDARY * -1)
+            return true;
+        
+        return false;
+    }
+
+    // Plays a sound effect through given source at appropriate volume.
+    // Will randomize pitch between 0 and 1.
+    public static void PlaySoundEffect(AudioClip sound, AudioSource source, float pitchVar) {
+        // Don't play sound if source is out of bounds
+        if (OutOfBounds(source.gameObject))
+            return;
+
+        // Get random pitch in range
+        System.Random r = new System.Random();
+        pitchVar *= r.Next(0, 101) / 100.0f;
+
+        source.pitch += source.pitch * pitchVar * RandomSign();
+        source.PlayOneShot(sound, SOUND_EFFECT_VOLUME);
+    }
+
+    // Randomly returns -1 or 1
+    public static int RandomSign() {
+        System.Random r = new System.Random();
+        return -1 + 2 * r.Next(0, 2);
     }
 }

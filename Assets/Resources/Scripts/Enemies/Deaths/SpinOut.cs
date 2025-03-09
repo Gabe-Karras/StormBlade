@@ -31,15 +31,15 @@ public class SpinOut : EnemyDeath
 
         // Get random direction
         if (spinDirection != 1 && spinDirection != -1)
-            spinDirection = RandomSign(rand);
+            spinDirection = GameSystem.RandomSign();
 
         // Get random angle
         if (throwAngle < 0) 
             throwAngle = rand.Next(90, 271);
 
         // Apply random factors to speeds
-        float spinRange = rand.Next(0, 101) / 100f * randomRange * spinSpeed * RandomSign(rand);
-        float throwRange = rand.Next(0, 101) / 100f * randomRange * throwSpeed * RandomSign(rand);
+        float spinRange = rand.Next(0, 101) / 100f * randomRange * spinSpeed * GameSystem.RandomSign();
+        float throwRange = rand.Next(0, 101) / 100f * randomRange * throwSpeed * GameSystem.RandomSign();
 
         spinSpeed += spinRange;
         throwSpeed += throwRange;
@@ -63,10 +63,5 @@ public class SpinOut : EnemyDeath
 
         // Move in thrown direction
         transform.position += GameSystem.MoveAtAngle(throwAngle, throwSpeed);
-    }
-
-    // Randomly returns -1 or 1
-    private int RandomSign(System.Random rand) {
-        return -1 + 2 * rand.Next(0, 2);
     }
 }
