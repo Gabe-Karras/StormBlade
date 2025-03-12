@@ -6,6 +6,9 @@ using System;
 // This class holds important constants concerning all objects of the game.
 public class GameSystem : MonoBehaviour
 {
+    // Frames per second!!!
+    public const int FRAME_RATE = 60;
+
     // Divide all serialized speeds by this to get appropriate frame speed for in-game physics
     public const int SPEED_DIVISOR = 50;
 

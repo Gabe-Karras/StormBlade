@@ -102,6 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 957051199adc749f2a76a5bb7143e13d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasControl: 1
   speed: 2
   laser0: {fileID: 8207349886495330370, guid: 71342b718c52d47e1ad72a511e2f0b15, type: 3}
   laser1: {fileID: 6258366972339107753, guid: d02c6f35fedbe4f6782d7ed6f338cdb0, type: 3}

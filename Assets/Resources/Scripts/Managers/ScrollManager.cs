@@ -9,66 +9,101 @@ public class ScrollManager : MonoBehaviour
 
     // Which level is this taking place in? (to tell it where to find tilemaps)
     [SerializeField]
-    private string level;
+    private int level;
 
     // Directly corresponds to background0 speed
     [SerializeField]
     private float scrollSpeed;
 
     [SerializeField]
-    private bool hasBackground0;
+    private GameObject background0;
     [SerializeField]
-    private bool hasBackground1;
+    private GameObject background1;
     [SerializeField]
-    private bool hasForeground;
+    private GameObject foreground;
 
     // How fast to increase speed for other layers
-    private float background1Factor = 1.5f;
-    private float foregroundFactor = 2f;
+    private float background1Factor = 2;
+    private float foregroundFactor = 3;
 
-    private GameObject current;
-    private GameObject next;
-
-    private SpriteRenderer currentSprite;
-    private SpriteRenderer nextSprite;
+    // All currently existing scrolling backgrounds are stored in here.
+    // 0, 2, 4 = background0, background1, foreground
+    // Odd numbers are the 'next' background objects.
+    private GameObject[] backgrounds = new GameObject[6];
 
     // Start is called before the first frame update
     void Start()
     {
         scrollSpeed /= GameSystem.SPEED_DIVISOR;
 
-        current = GameObject.Find("Background0");
-        currentSprite = current.GetComponent<SpriteRenderer>();
-        current.transform.position += new Vector3(0, currentSprite.bounds.extents.y - GameSystem.Y_ACTION_BOUNDARY, 0);
+        // Instantiate backgrounds
+        backgrounds[0] = Instantiate(background0, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));
+        backgrounds[2] = Instantiate(background1, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));
+        backgrounds[4] = Instantiate(foreground, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));
+
+        // Set sprites
+        backgrounds[0].GetComponent<SpriteRenderer>().sprite = chooseBackground(background0, level);
+        backgrounds[2].GetComponent<SpriteRenderer>().sprite = chooseBackground(background1, level);
+        backgrounds[4].GetComponent<SpriteRenderer>().sprite = chooseBackground(foreground, level);
     }
 
     // Update is called once per frame
     void Update()
     {
-        // If next background doesn't exist, create one
-        if (next == null) {
-            next = Instantiate(Resources.Load<GameObject>("Prefabs/Background0"));
-            nextSprite = next.GetComponent<SpriteRenderer>();
-            float position = currentSprite.bounds.extents.y + current.transform.position.y + nextSprite.bounds.extents.y;
-            next.transform.position += new Vector3(0, position, 0);
+        scrollBackground(0, 1, scrollSpeed, background0);
+        scrollBackground(2, 3, scrollSpeed * background1Factor, background1);
+        scrollBackground(4, 5, scrollSpeed * foregroundFactor, foreground);
+    }
+
+    // Scroll background at speed
+    private void scrollBackground(int current, int next, float speed, GameObject prefab) {
+        if (backgrounds[current] == null) {
+            return;
         }
 
-        current.transform.position += new Vector3(0, -1 * scrollSpeed, 0);
-        next.transform.position += new Vector3(0, -1 * scrollSpeed, 0);
+        SpriteRenderer currentSprite = backgrounds[current].GetComponent<SpriteRenderer>();
+        SpriteRenderer nextSprite;
+
+        // If next background doesn't exist, create one
+        if (backgrounds[next] == null) {
+            backgrounds[next] = Instantiate(prefab);
+            nextSprite = backgrounds[next].GetComponent<SpriteRenderer>();
+            nextSprite.sprite = chooseBackground(prefab, level);
+            float position = currentSprite.bounds.extents.y + backgrounds[current].transform.position.y + nextSprite.bounds.extents.y;
+            backgrounds[next].transform.position += new Vector3(0, position, 0);
+        }  else {
+            nextSprite = backgrounds[next].GetComponent<SpriteRenderer>();
+        }
+
+        backgrounds[current].transform.position += new Vector3(0, -1 * speed, 0);
+        backgrounds[next].transform.position += new Vector3(0, -1 * speed, 0);
 
         // Destroy current if it goes out of camera
-        if (current.transform.position.y < -1 * GameSystem.Y_ACTION_BOUNDARY - currentSprite.bounds.extents.y) {
-            Destroy(current);
-            current = next;
+        if (backgrounds[current].transform.position.y < -1 * GameSystem.Y_ACTION_BOUNDARY - currentSprite.bounds.extents.y) {
+            Destroy(backgrounds[current]);
+            backgrounds[current] = backgrounds[next];
             currentSprite = nextSprite;
-            next = null;
+            backgrounds[next] = null;
         }
     }
 
     // Pick random tilemaps from tilemap folder
-    /*
-    Tilemap randomBackground0() {
+    private Sprite chooseBackground(GameObject prefab, int level) {
+        Sprite result = null;
+
+        // First, get what sprite folder to look in
+        if (prefab.name.Equals("Background0")) {
+            // Generate random number to pick sprite
+            System.Random r = new System.Random();
+            int temp = r.Next(0, 2);
+            result = Resources.Load<Sprite>("Sprites/Tilesets/Level" + level + "/Background0/" + temp);
+        } else if (prefab.name.Equals("Background1")) {
+            result = Resources.Load<Sprite>("Sprites/Tilesets/Level" + level + "/Background1/Map");
+        } else if (prefab.name.Equals("Foreground")) {
+            result = Resources.Load<Sprite>("Sprites/Tilesets/Level" + level + "/Foreground/Map");
+        }
         
+        return result;
     }
-    */
+    
 }

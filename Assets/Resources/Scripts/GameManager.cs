@@ -6,53 +6,39 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    // Oh yeah. This is the big one. (0 for action, 1 for turn-based)
+    [SerializeField]
+    private int gameMode;
+
     // Important player variables
     [SerializeField]
     private int hp = 10;
     [SerializeField]
     private int bp = 1;
     [SerializeField]
-    private int smallHealthCount = 0;
+    private int smallHealthCount;
     [SerializeField]
-    private int bigHealthCount = 0;
+    private int bigHealthCount;
     [SerializeField]
-    private int bombCount = 0;
+    private int bombCount;
     [SerializeField]
-    private int lightningCount = 0;
+    private int lightningCount;
     [SerializeField]
-    private int missileCount = 0;
+    private int missileCount;
     [SerializeField]
-    private int shieldCount = 0;
-    [SerializeField]
-    private int selectorPosition = 0;
+    private int shieldCount;
 
     private const int MAX_ACTION_HP = 10;
     private const int MAX_ACTION_BP = 5;
     private const int MAX_ITEM_COUNT = 99;
 
-    // UI elements
-    private GameObject healthCells;
-    private GameObject blasterCells;
+    private bool initializing = true;
 
-    private GameObject smallHealthSymbol;
-    private GameObject bigHealthSymbol;
-    private GameObject bombSymbol;
-    private GameObject lightningSymbol;
-    private GameObject missileSymbol;
-    private GameObject shieldSymbol;
-
-    private GameObject smallHealthLabel;
-    private GameObject bigHealthLabel;
-    private GameObject bombLabel;
-    private GameObject lightningLabel;
-    private GameObject missileLabel;
-    private GameObject shieldLabel;
-
-    private GameObject itemSelector;
-
-    // Item selection
-    private int[] activeItems = new int[4];
-    private bool selectorActive = false;
+    // Other managers
+    [SerializeField]
+    private GameObject uiManager;
+    [SerializeField]
+    private GameObject scrollManager;
 
     // Player reference
     private GameObject player;
@@ -61,71 +47,59 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         // Set framerate
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = GameSystem.FRAME_RATE;
 
-        // Get UI elements
-        healthCells = GameObject.Find("HealthCells");
-        blasterCells = GameObject.Find("BlasterCells");
-
-        smallHealthSymbol = GameObject.Find("SmallHealthSymbol");
-        bigHealthSymbol = GameObject.Find("BigHealthSymbol");
-        bombSymbol = GameObject.Find("BombSymbol");
-        lightningSymbol = GameObject.Find("LightningSymbol");
-        missileSymbol = GameObject.Find("MissileSymbol");
-        shieldSymbol = GameObject.Find("ShieldSymbol");
-
-        smallHealthLabel = GameObject.Find("SmallHealthCount");
-        bigHealthLabel = GameObject.Find("BigHealthCount");
-        bombLabel = GameObject.Find("BombCount");
-        lightningLabel = GameObject.Find("LightningCount");
-        missileLabel = GameObject.Find("MissileCount");
-        shieldLabel = GameObject.Find("ShieldCount");
-
-        itemSelector = GameObject.Find("Selector");
+        // Create managers
+        scrollManager = Instantiate(scrollManager);
+        uiManager = Instantiate(uiManager);
 
         // Find player
         player = GameObject.Find("Player");
-
-        // Updates to initialize appearances and settings
-        UpdateHp(0);
-        UpdateBp(0);
-        UpdateSmallHealthCount(0);
-        UpdateBigHealthCount(0);
-        UpdateBombCount(0);
-        UpdateLightningCount(0);
-        UpdateMissileCount(0);
-        UpdateShieldCount(0);
     }
 
     // Update is called once per frame
     void Update()
     {
-        MoveSelector();
+        // Stuff is done here to give managers time to initialize
+        if (initializing) {
+            // Updates to initialize appearances and settings
+            UpdateHp(0);
+            UpdateBp(0);
+            UpdateSmallHealthCount(0);
+            UpdateBigHealthCount(0);
+            UpdateBombCount(0);
+            UpdateLightningCount(0);
+            UpdateMissileCount(0);
+            UpdateShieldCount(0);
+            initializing = false;
+        }
 
         if (Input.GetKeyDown(KeyCode.Return))
             UpdateBp(1);
     }
 
-    // Move selector in accordance to action mode
-    private void MoveSelector() {
-        // Check if selection key is pressed
-        if (Input.GetKeyDown(KeyCode.S)) {
-            if (!selectorActive)
-                return; // If it is deactivated
-            else {
-                // Check for next available item to select (Starting at current selection)
-                int offset = selectorPosition + 1;
-                for (int i = 0; i < activeItems.Length - 1; i ++) {
-                    if (activeItems[(i + offset) % activeItems.Length] != 0) {
-                        UpdateSelectorPosition((i + offset) % activeItems.Length);
-                        break;
-                    }
-                }
-            }
-        }
+    // Execute intro cutscene
+    private void IntroCutscene() {
+        // Start scrollmanager at 0 speed and UI at 0 alpha
+
+        // Fly ship by, play sound, flash and shake screen
+
+        // Start accelerating scroll speed to 3x
+
+        // Slowly lower ship in and even out scroll speed
+
+        // Bring ship up to middle
+
+        // Start text, fade in UI
+
+        // Give player control
     }
 
     // GETTERS AND SETTERS
+    public int GetGameMode() {
+        return gameMode;
+    }
+
     // Getters and setters for hp/bp
     public void UpdateHp(int hpChange) {
         // Check if HP is being subtracted from, and only allow it if player is not invincible
@@ -146,8 +120,7 @@ public class GameManager : MonoBehaviour
         hp = KeepInBounds(hp + hpChange, 0, MAX_ACTION_HP);
 
         // Update display
-        Image img = healthCells.GetComponent<Image>();
-        img.sprite = (Sprite) Resources.LoadAll<Sprite>("Sprites/UI/HealthCells")[hp];
+        uiManager.GetComponent<UIManager>().UpdateHealthCells();
     }
 
     public void UpdateBp(int bpChange) {
@@ -155,8 +128,7 @@ public class GameManager : MonoBehaviour
         bp = KeepInBounds(bp + bpChange, 1, MAX_ACTION_BP);
 
         // Update display
-        Image img = blasterCells.GetComponent<Image>();
-        img.sprite = (Sprite) Resources.LoadAll<Sprite>("Sprites/UI/BlasterCells")[bp];
+        uiManager.GetComponent<UIManager>().UpdateBlasterCells();
 
         // Add/remove laser ring
         if (bp == 5 && previousBp != 5) {
@@ -202,46 +174,36 @@ public class GameManager : MonoBehaviour
 
     public void UpdateSmallHealthCount(int change) {
         smallHealthCount = KeepInBounds(smallHealthCount + change, 0, MAX_ITEM_COUNT); // Keep within bounds
-        UpdateItemImage(smallHealthCount, smallHealthSymbol.GetComponent<Image>()); // Adjust opacity of item UI
-        smallHealthLabel.GetComponent<TextMeshProUGUI>().text = smallHealthCount + ""; // Set number label
+        uiManager.GetComponent<UIManager>().UpdateItemImage(smallHealthCount, "SmallHealthSymbol");
     }
 
     public void UpdateBigHealthCount(int change) {
         bigHealthCount = KeepInBounds(bigHealthCount + change, 0, MAX_ITEM_COUNT);
-        UpdateItemImage(bigHealthCount, bigHealthSymbol.GetComponent<Image>());
-        bigHealthLabel.GetComponent<TextMeshProUGUI>().text = bigHealthCount + "";
+        uiManager.GetComponent<UIManager>().UpdateItemImage(bigHealthCount, "BigHealthSymbol");
     }
 
     public void UpdateBombCount(int change) {
         bombCount = KeepInBounds(bombCount + change, 0, MAX_ITEM_COUNT);
-        UpdateItemImage(bombCount, bombSymbol.GetComponent<Image>());
-        activeItems[0] = bombCount; // Update array for seletor
-        UpdateSelectorState(); // Keep selector sprite updated
-        bombLabel.GetComponent<TextMeshProUGUI>().text = bombCount + "";
+        uiManager.GetComponent<UIManager>().UpdateItemImage(bombCount, "BombSymbol");
+        uiManager.GetComponent<UIManager>().UpdateSelectorState(); // Keep selector sprite updated
     }
 
     public void UpdateLightningCount(int change) {
         lightningCount = KeepInBounds(lightningCount + change, 0, MAX_ITEM_COUNT);
-        UpdateItemImage(lightningCount, lightningSymbol.GetComponent<Image>());
-        activeItems[1] = lightningCount;
-        UpdateSelectorState();
-        lightningLabel.GetComponent<TextMeshProUGUI>().text = lightningCount + "";
+        uiManager.GetComponent<UIManager>().UpdateItemImage(lightningCount, "LightningSymbol");
+        uiManager.GetComponent<UIManager>().UpdateSelectorState();
     }
 
     public void UpdateMissileCount(int change) {
         missileCount = KeepInBounds(missileCount + change, 0, MAX_ITEM_COUNT);
-        UpdateItemImage(missileCount, missileSymbol.GetComponent<Image>());
-        activeItems[2] = missileCount;
-        UpdateSelectorState();
-        missileLabel.GetComponent<TextMeshProUGUI>().text = missileCount + "";
+        uiManager.GetComponent<UIManager>().UpdateItemImage(missileCount, "MissileSymbol");
+        uiManager.GetComponent<UIManager>().UpdateSelectorState();
     }
 
     public void UpdateShieldCount(int change) {
         shieldCount = KeepInBounds(shieldCount + change, 0, MAX_ITEM_COUNT);
-        UpdateItemImage(shieldCount, shieldSymbol.GetComponent<Image>());
-        activeItems[3] = shieldCount;
-        UpdateSelectorState();
-        shieldLabel.GetComponent<TextMeshProUGUI>().text = shieldCount + "";
+        uiManager.GetComponent<UIManager>().UpdateItemImage(shieldCount, "ShieldSymbol");
+        uiManager.GetComponent<UIManager>().UpdateSelectorState();
     }
 
     // Method to keep value between given bounds
@@ -252,64 +214,5 @@ public class GameManager : MonoBehaviour
             value = lowBound;
         
         return value;
-    }
-
-    // Change menu item opacity based on value
-    private void UpdateItemImage(int itemCount, Image itemImage) {
-        if (itemCount == 0) {
-            var tempColor = itemImage.color;
-            tempColor.a = 0.5f;
-            itemImage.color = tempColor;
-        } else {
-            var tempColor = itemImage.color;
-            tempColor.a = 1f;
-            itemImage.color = tempColor;
-        }
-    }
-
-    // Deactivate/activate selector based on items
-    private void UpdateSelectorState() {
-        bool foundItems = false;
-
-        // Search for any items
-        int i;
-        for (i = 0; i < activeItems.Length; i ++) {
-            if (activeItems[i] > 0) {
-                foundItems = true;
-                break;
-            }
-        }
-
-        if (foundItems) {
-            // If coming from deactivated, move to active item
-            if (!selectorActive)
-                UpdateSelectorPosition(i);
-
-            selectorActive = true;
-            // Make visible
-            var tempColor = itemSelector.GetComponent<Image>().color;
-            tempColor.a = 1f;
-            itemSelector.GetComponent<Image>().color = tempColor;
-        } else {
-            selectorActive = false;
-            // Make invisible
-            var tempColor = itemSelector.GetComponent<Image>().color;
-            tempColor.a = 0f;
-            itemSelector.GetComponent<Image>().color = tempColor;
-        }
-    }
-
-    // Move selector to position 0 - 3 (over the four items)
-    private void UpdateSelectorPosition(int position) {
-        if (position == 0)
-            itemSelector.transform.position = bombSymbol.transform.position;
-        else if (position == 1)
-            itemSelector.transform.position = lightningSymbol.transform.position;
-        else if (position == 2)
-            itemSelector.transform.position = missileSymbol.transform.position;
-        else if (position == 3)
-            itemSelector.transform.position = shieldSymbol.transform.position;
-
-        selectorPosition = position;
     }
 }

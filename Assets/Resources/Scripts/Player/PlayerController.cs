@@ -5,6 +5,10 @@ using System;
 
 public class PlayerController : MonoBehaviour
 {
+    // Allows player controls
+    [SerializeField]
+    private bool hasControl = false;
+
     // Player speed
     [SerializeField]
     private float speed = 4;
@@ -84,7 +88,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // Action controls
-        if (!dead) {
+        if (!dead && hasControl) {
             MovePlayer();
 
             // Update x coordinates for animate function
