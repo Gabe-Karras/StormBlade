@@ -39,6 +39,8 @@ public class GameManager : MonoBehaviour
     private GameObject uiManager;
     [SerializeField]
     private GameObject scrollManager;
+    [SerializeField]
+    private GameObject musicManager;
 
     // Player reference
     private GameObject player;
@@ -52,6 +54,7 @@ public class GameManager : MonoBehaviour
         // Create managers
         scrollManager = Instantiate(scrollManager);
         uiManager = Instantiate(uiManager);
+        musicManager = Instantiate(musicManager);
 
         // Find player
         player = GameObject.Find("Player");
@@ -71,11 +74,14 @@ public class GameManager : MonoBehaviour
             UpdateLightningCount(0);
             UpdateMissileCount(0);
             UpdateShieldCount(0);
+
+            musicManager.GetComponent<MusicManager>().PlayMusic(Resources.Load<AudioClip>("Music/Level1"));
+            musicManager.GetComponent<MusicManager>().PlayMusic(Resources.Load<AudioClip>("Music/Level1"));
             initializing = false;
         }
 
         if (Input.GetKeyDown(KeyCode.Return))
-            UpdateBp(1);
+            StartCoroutine(musicManager.GetComponent<MusicManager>().FadeOut());
     }
 
     // Execute intro cutscene

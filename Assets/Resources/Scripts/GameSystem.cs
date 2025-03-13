@@ -20,7 +20,7 @@ public class GameSystem : MonoBehaviour
     public const float PIXELS_PER_UNIT = 100;
 
     // Volume to play sound effects
-    public const float SOUND_EFFECT_VOLUME = 0.25f;
+    public const float SOUND_EFFECT_VOLUME = 0.2f;
 
     // Return a movement of the specified distance and angle
     public static Vector3 MoveAtAngle(float angle, float distance) {

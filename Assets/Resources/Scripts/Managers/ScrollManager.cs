@@ -95,7 +95,7 @@ public class ScrollManager : MonoBehaviour
         if (prefab.name.Equals("Background0")) {
             // Generate random number to pick sprite
             System.Random r = new System.Random();
-            int temp = r.Next(0, 2);
+            int temp = r.Next(0, 3); // 0 - 2
             result = Resources.Load<Sprite>("Sprites/Tilesets/Level" + level + "/Background0/" + temp);
         } else if (prefab.name.Equals("Background1")) {
             result = Resources.Load<Sprite>("Sprites/Tilesets/Level" + level + "/Background1/Map");

@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76b9b05820473498c918e364284eccfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameMode: 0
   hp: 10
   bp: 1
   smallHealthCount: 0
@@ -52,6 +53,6 @@ MonoBehaviour:
   lightningCount: 0
   missileCount: 0
   shieldCount: 0
-  selectorPosition: 0
   uiManager: {fileID: 5485677530862664725, guid: 9695e4de7693343adafda9c09c5a5cca, type: 3}
   scrollManager: {fileID: 6641709884190929255, guid: a9f1e3d9e6f824573b41d553b28cf298, type: 3}
+  musicManager: {fileID: 5362804809426137351, guid: 9231590e96d5147969c1c96cf6a8d8d5, type: 3}
