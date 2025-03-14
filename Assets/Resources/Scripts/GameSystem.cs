@@ -108,12 +108,12 @@ public class GameSystem : MonoBehaviour
     }
 
     // Briefly flash sprite a certain material
-    public static IEnumerator FlashSprite(SpriteRenderer s, Material m) {
+    public static IEnumerator FlashSprite(SpriteRenderer s, Material m, float time=0.05f) {
         Material defaultMaterial = s.material;
 
-        // Flash for one 20th of a second
+        // Flash for one 20th of a second (or specified time)
         s.material = m;
-        yield return new WaitForSeconds(0.05f);
+        yield return new WaitForSeconds(time);
         s.material = defaultMaterial;
     }
 
@@ -135,6 +135,23 @@ public class GameSystem : MonoBehaviour
         while (s != null) {
             RandomExplosion(s, explosion);
             yield return new WaitForSeconds(explodeTime);
+        }
+    }
+
+    // Emit a particle effect from a given point relative to a game object
+    public static IEnumerator EmitParticles(GameObject source, GameObject particlePrefab, float xOffset, float yOffset, float seconds) {
+        float totalTime = 0;
+
+        while (totalTime < seconds) {
+            // Find point of origin
+            Vector3 point = source.transform.position + new Vector3(xOffset, yOffset, 0);
+
+            // Spawn a particle
+            Instantiate(particlePrefab, point, Quaternion.Euler(0, 0, 0));
+
+            // Wait for a tiny bit of time
+            yield return new WaitForSeconds(0.01f); // 1 100th of a second!
+            totalTime += 0.01f;
         }
     }
 

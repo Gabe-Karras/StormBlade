@@ -34,10 +34,16 @@ public class PlayerController : MonoBehaviour
     private AudioSource laserSource;
     [SerializeField]
     private AudioSource hitSource;
+    [SerializeField]
+    private AudioSource pickupSource;
+    [SerializeField]
+    private AudioSource healSource;
 
     // Audio clips
     private AudioClip laserSound;
     private AudioClip hitSound;
+    private AudioClip pickupSound;
+    private AudioClip healSound;
 
     // X coordinates for animation
     private float x;
@@ -59,7 +65,7 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer playerSprite;
 
     // Game manager
-    private GameObject gameManager;
+    private GameManager gameManager;
 
     // Values dealing with damage and death
     private bool hit = false;
@@ -80,8 +86,10 @@ public class PlayerController : MonoBehaviour
 
         laserSound = Resources.Load<AudioClip>("SoundEffects/Projectiles/BasicLaser");
         hitSound = Resources.Load<AudioClip>("SoundEffects/Damage/Hit");
+        pickupSound = Resources.Load<AudioClip>("SoundEffects/Items/Pickup");
+        healSound = Resources.Load<AudioClip>("SoundEffects/Items/Heal");
 
-        gameManager = GameObject.Find("GameManager");
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -101,11 +109,52 @@ public class PlayerController : MonoBehaviour
 
             Shoot();
 
+            UseItem();
+
             // Check if hit and activate iframes
             if (hit) {
                 Invincibility(0);
                 hit = false;
             }
+        }
+    }
+
+    // Handle item pickups
+    void OnTriggerEnter2D(Collider2D other) {
+        if (other.tag.Equals("Item")) {
+            // Figure out which var to add to
+            string item = other.gameObject.GetComponent<Pickup>().GetItem();
+
+            switch (item) {
+                case "blaster":
+                    gameManager.UpdateBp(1);
+                    break;
+                case "smallHealth":
+                    gameManager.UpdateSmallHealthCount(1);
+                    break;
+                case "bigHealth":
+                    gameManager.UpdateBigHealthCount(1);
+                    break;
+                case "bomb":
+                    gameManager.UpdateBombCount(1);
+                    break;
+                case "lightning":
+                    gameManager.UpdateLightningCount(1);
+                    break;
+                case "missile":
+                    gameManager.UpdateMissileCount(1);
+                    break;
+                case "shield":
+                    gameManager.UpdateShieldCount(1);
+                    break;
+            }
+
+            // Flash player sprite and destroy pickup
+            StartCoroutine(GameSystem.FlashSprite(playerSprite, Resources.Load<Material>("Materials/SolidWhite")));
+            Destroy(other.gameObject);
+
+            // Play sound effect
+            GameSystem.PlaySoundEffect(pickupSound, pickupSource, 0);
         }
     }
 
@@ -187,21 +236,21 @@ public class PlayerController : MonoBehaviour
     public void Shoot() {
         if (Input.GetKeyDown(KeyCode.Space)) {
             // Decide how to shoot based on BP
-            if (gameManager.GetComponent<GameManager>().GetBp() == 1) {
+            if (gameManager.GetBp() == 1) {
                 SpawnLasers(laser0);
                 laserSource.pitch = 0.75f;
                 GameSystem.PlaySoundEffect(laserSound, laserSource, 0);
-            } else if (gameManager.GetComponent<GameManager>().GetBp() == 2) {
+            } else if (gameManager.GetBp() == 2) {
                 SpawnLasers(laser1);
                 laserSource.pitch = 1;
                 GameSystem.PlaySoundEffect(laserSound, laserSource, 0);
-            } else if (gameManager.GetComponent<GameManager>().GetBp() == 3) {
+            } else if (gameManager.GetBp() == 3) {
                 SpawnLasers(laser1);
                 SpawnLasersWave(laser2);
                 laserSource.pitch = 0.5f;
                 GameSystem.PlaySoundEffect(laserSound, laserSource, 0);
             }
-            else if (gameManager.GetComponent<GameManager>().GetBp() == 4 || gameManager.GetComponent<GameManager>().GetBp() == 5) {
+            else if (gameManager.GetBp() == 4 || gameManager.GetBp() == 5) {
                 SpawnLasers(laser1);
                 SpawnLasersSpreadshot(laser0);
                 SpawnLasersWave(laser2);
@@ -270,6 +319,35 @@ public class PlayerController : MonoBehaviour
         Instantiate(laser, rightTurret, Quaternion.Euler(0, 0, transform.rotation.z - angle2));
     }
 
+    // If player presses item key, deploy the item that is currently selected
+    private void UseItem() {
+        // Small heal
+        if (Input.GetKeyDown(KeyCode.E)) {
+            if (gameManager.GetSmallHealthCount() > 0) {
+                // Update values and play heal effects
+                gameManager.UpdateHp(2);
+                StartCoroutine(GameSystem.FlashSprite(playerSprite, Resources.Load<Material>("Materials/SolidRed"), time: 0.3f));
+                gameManager.UpdateSmallHealthCount(-1);
+                StartCoroutine(GameSystem.EmitParticles(gameObject, Resources.Load<GameObject>("Prefabs/Explosions/RedParticle"), 0, 0, 0.1f));
+                GameSystem.PlaySoundEffect(healSound, healSource, 0);
+            }
+        }
+
+        // Big heal
+        if (Input.GetKeyDown(KeyCode.W)) {
+            if (gameManager.GetBigHealthCount() > 0) {
+                gameManager.UpdateHp(4);
+                StartCoroutine(GameSystem.FlashSprite(playerSprite, Resources.Load<Material>("Materials/SolidRed"), time: 0.3f));
+                gameManager.UpdateBigHealthCount(-1);
+                StartCoroutine(GameSystem.EmitParticles(gameObject, Resources.Load<GameObject>("Prefabs/Explosions/RedParticle"), 0, 0, 0.2f));
+                GameSystem.PlaySoundEffect(healSound, healSource, 0);
+            }
+        }
+
+
+        // Other items
+    }
+
     // Enter invincibility frames if hit
     private void Invincibility(float seconds) {
         // Play hit sound
@@ -295,7 +373,7 @@ public class PlayerController : MonoBehaviour
 
     // Play death sequence
     public void PlayDeathSequence() {
-        gameManager.GetComponent<GameManager>().UpdateBp(-4);
+        gameManager.UpdateBp(-4);
 
         // Switch to death animation
         playerAnimator.Play("PlayerDeath");

@@ -78,6 +78,11 @@ public class GameManager : MonoBehaviour
             musicManager.GetComponent<MusicManager>().PlayMusic(Resources.Load<AudioClip>("Music/Level1"));
             musicManager.GetComponent<MusicManager>().PlayMusic(Resources.Load<AudioClip>("Music/Level1"));
             initializing = false;
+
+            // Case where ship starts at level 5
+            if (bp == 5) {
+                Instantiate(Resources.Load("Prefabs/Player/LaserRing"));
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Return))

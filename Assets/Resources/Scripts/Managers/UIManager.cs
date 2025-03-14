@@ -148,6 +148,7 @@ public class UIManager : MonoBehaviour
                 for (int i = 0; i < activeItems.Length - 1; i ++) {
                     if (activeItems[(i + offset) % activeItems.Length] != 0) {
                         UpdateActionSelectorPosition((i + offset) % activeItems.Length);
+                        GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
                         break;
                     }
                 }

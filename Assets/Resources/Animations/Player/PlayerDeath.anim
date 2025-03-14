@@ -21,11 +21,11 @@ AnimationClip:
   - curve:
     - time: 0
       value: {fileID: 1355255781, guid: ec0c710affbd54118946bfe404b7fe6d, type: 3}
-    - time: 1
+    - time: 0.75
       value: {fileID: 75625840, guid: ec0c710affbd54118946bfe404b7fe6d, type: 3}
-    - time: 1.9833333
+    - time: 1.4833333
       value: {fileID: -262558194, guid: ec0c710affbd54118946bfe404b7fe6d, type: 3}
-    - time: 2.9833333
+    - time: 2.2333333
       value: {fileID: -979396065, guid: ec0c710affbd54118946bfe404b7fe6d, type: 3}
     attribute: m_Sprite
     path: 
@@ -55,7 +55,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 4.016667
+    m_StopTime: 3
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -75,28 +75,28 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 1
+  - time: 0.75
     functionName: AnimationHandler
     data: DeathFrame1
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 2
+  - time: 1.5
     functionName: AnimationHandler
     data: DeathFrame2
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 2.9833333
+  - time: 2.25
     functionName: AnimationHandler
     data: DeathFrame3
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 4.016667
+  - time: 3
     functionName: AnimationHandler
     data: DeathAnimationEnded
     objectReferenceParameter: {fileID: 0}
