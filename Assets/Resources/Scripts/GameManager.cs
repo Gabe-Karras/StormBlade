@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     private int missileCount;
     [SerializeField]
     private int shieldCount;
+    [SerializeField]
+    private GameObject activeShield;
 
     private const int MAX_ACTION_HP = 10;
     private const int MAX_ACTION_BP = 5;
@@ -86,7 +88,7 @@ public class GameManager : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Return))
-            StartCoroutine(musicManager.GetComponent<MusicManager>().FadeOut());
+            Instantiate(Resources.Load<GameObject>("Prefabs/Items/Bomb"), player.transform.position, player.transform.rotation);
     }
 
     // Execute intro cutscene
@@ -117,6 +119,12 @@ public class GameManager : MonoBehaviour
         if (hpChange < 0) {
             if (player.GetComponent<PlayerController>().GetIframes())
                 return;
+            
+            if (activeShield != null) {
+                activeShield.GetComponent<Shield>().UpdateShieldState(-1);
+                player.GetComponent<PlayerController>().SetHit(true);
+                return;
+            }
             
             // Notify player and subtract from blaster points
             if (hp + hpChange <= 0) {
@@ -217,6 +225,14 @@ public class GameManager : MonoBehaviour
         uiManager.GetComponent<UIManager>().UpdateSelectorState();
     }
 
+    public GameObject GetActiveShield() {
+        return activeShield;
+    }
+
+    public void SetActiveShield(GameObject obj) {
+        activeShield = obj;
+    }
+
     // Method to keep value between given bounds
     private int KeepInBounds(int value, int lowBound, int highBound) {
         if (value > highBound)
@@ -225,5 +241,10 @@ public class GameManager : MonoBehaviour
             value = lowBound;
         
         return value;
+    }
+
+    // Getters for managers
+    public UIManager GetUIManager() {
+        return uiManager.GetComponent<UIManager>();
     }
 }

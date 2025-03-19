@@ -12,7 +12,8 @@ public class Explosion : MonoBehaviour
     // Play sound!!
     void Start()
     {
-        GameSystem.PlaySoundEffect(explosionSound, GetComponent<AudioSource>(), 0.05f);
+        if (explosionSound != null)
+            GameSystem.PlaySoundEffect(explosionSound, GetComponent<AudioSource>(), 0.05f);
     }
 
     // Update is called once per frame

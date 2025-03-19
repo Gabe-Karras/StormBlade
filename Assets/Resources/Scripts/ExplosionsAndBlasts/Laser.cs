@@ -6,7 +6,7 @@ public class Laser : MonoBehaviour
 {
     // Speed of laser
     [SerializeField]
-    private float speed;
+    protected float speed;
 
     // Hp damage
     [SerializeField]
@@ -16,6 +16,10 @@ public class Laser : MonoBehaviour
     private bool hurtsPlayer;
     [SerializeField]
     private bool hurtsEnemies;
+
+    // Whether this destroys on impact from an enemy or not
+    [SerializeField]
+    private bool destroysOnHit;
 
     private GameObject gameManager;
 
@@ -31,7 +35,7 @@ public class Laser : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         MoveForward();
     }
@@ -42,7 +46,7 @@ public class Laser : MonoBehaviour
     }
 
     // Destroy laser when it leaves the camera
-    void OnBecameInvisible() {
+    protected virtual void OnBecameInvisible() {
         Destroy(gameObject);
     }
 
@@ -51,13 +55,17 @@ public class Laser : MonoBehaviour
         if (hurtsEnemies && other.gameObject.tag.Equals("Enemy")) {
             if (!other.gameObject.GetComponent<Enemy>().IsDead()) {
                 other.gameObject.GetComponent<Enemy>().UpdateHp(damage);
-                Destroy(gameObject);
+
+                if (destroysOnHit)
+                    Destroy(gameObject);
             }
         }
 
         if (hurtsPlayer && other.gameObject.tag.Equals("Player")) {
             gameManager.GetComponent<GameManager>().UpdateHp(damage);
-            Destroy(gameObject);
+            
+            if (destroysOnHit)
+                Destroy(gameObject);
         }
     }
 }

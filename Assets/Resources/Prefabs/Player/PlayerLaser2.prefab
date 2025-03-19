@@ -102,6 +102,7 @@ MonoBehaviour:
   damage: 1
   hurtsPlayer: 0
   hurtsEnemies: 1
+  destroysOnHit: 1
   horizontalSpeed: 5
   velocity: 7
   direction: 1

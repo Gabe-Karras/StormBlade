@@ -21,6 +21,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private GameObject laser2;
 
+    // Items
+    [SerializeField]
+    private GameObject bomb;
+    [SerializeField]
+    private GameObject lightning;
+    [SerializeField]
+    private GameObject missile;
+    [SerializeField]
+    private GameObject shield;
+
     // Explosions in death animation
     [SerializeField]
     private GameObject smallExplosion;
@@ -324,12 +334,9 @@ public class PlayerController : MonoBehaviour
         // Small heal
         if (Input.GetKeyDown(KeyCode.E)) {
             if (gameManager.GetSmallHealthCount() > 0) {
-                // Update values and play heal effects
                 gameManager.UpdateHp(2);
-                StartCoroutine(GameSystem.FlashSprite(playerSprite, Resources.Load<Material>("Materials/SolidRed"), time: 0.3f));
                 gameManager.UpdateSmallHealthCount(-1);
-                StartCoroutine(GameSystem.EmitParticles(gameObject, Resources.Load<GameObject>("Prefabs/Explosions/RedParticle"), 0, 0, 0.1f));
-                GameSystem.PlaySoundEffect(healSound, healSource, 0);
+                PlayHealAnimation(0.1f);
             }
         }
 
@@ -337,15 +344,52 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W)) {
             if (gameManager.GetBigHealthCount() > 0) {
                 gameManager.UpdateHp(4);
-                StartCoroutine(GameSystem.FlashSprite(playerSprite, Resources.Load<Material>("Materials/SolidRed"), time: 0.3f));
                 gameManager.UpdateBigHealthCount(-1);
-                StartCoroutine(GameSystem.EmitParticles(gameObject, Resources.Load<GameObject>("Prefabs/Explosions/RedParticle"), 0, 0, 0.2f));
-                GameSystem.PlaySoundEffect(healSound, healSource, 0);
+                PlayHealAnimation(0.2f);
             }
         }
 
 
         // Other items
+        if (Input.GetKeyDown(KeyCode.D)) {
+            UIManager ui = gameManager.GetUIManager();
+
+            switch (ui.GetSelectorState()) {
+                case 0: // Bomb
+                    Instantiate(bomb, transform.position + new Vector3(0, 11 / GameSystem.PIXELS_PER_UNIT, 0), transform.rotation);
+                    gameManager.UpdateBombCount(-1);
+                    break;
+                case 1: // Lightning
+                    GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Lightning"), laserSource, 0, volume: 0.5f);
+                    Instantiate(lightning, transform.position + new Vector3(-10 / GameSystem.PIXELS_PER_UNIT, 0, 0), Quaternion.Euler(0, 0, 90));
+                    Instantiate(lightning, transform.position + new Vector3(0, -10 / GameSystem.PIXELS_PER_UNIT, 0), Quaternion.Euler(0, 0, 180));
+                    Instantiate(lightning, transform.position + new Vector3(10 / GameSystem.PIXELS_PER_UNIT, 0, 0), Quaternion.Euler(0, 0, 270));
+                    gameManager.UpdateLightningCount(-1);
+                    break;
+                case 2: // Missile
+                    GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Missile"), laserSource, 0);
+                    Instantiate(missile, transform.position + new Vector3(-10 / GameSystem.PIXELS_PER_UNIT, 0, 0), Quaternion.Euler(0, 0, 45));
+                    Instantiate(missile, transform.position + new Vector3(0, 5 / GameSystem.PIXELS_PER_UNIT, 0), Quaternion.Euler(0, 0, 0));
+                    Instantiate(missile, transform.position + new Vector3(10 / GameSystem.PIXELS_PER_UNIT, 0, 0), Quaternion.Euler(0, 0, 315));
+                    gameManager.UpdateMissileCount(-1);
+                    break;
+                case 3: // Shield
+                    // Only spawn shield if one is not already active
+                    if (gameManager.GetActiveShield() == null) {
+                        GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Shield"), laserSource, 0, volume: 0.5f);
+                        gameManager.SetActiveShield(Instantiate(shield, transform.position, transform.rotation));
+                        gameManager.UpdateShieldCount(-1);
+                    }
+                    break;
+            }
+        }
+    }
+
+    // Flash sprite red, emit particles, and play heal sound
+    private void PlayHealAnimation(float particleTime) {
+        StartCoroutine(GameSystem.FlashSprite(playerSprite, Resources.Load<Material>("Materials/SolidRed"), time: 0.3f));
+        StartCoroutine(GameSystem.EmitParticles(gameObject, Resources.Load<GameObject>("Prefabs/Explosions/RedParticle"), 0, 0, particleTime));
+        GameSystem.PlaySoundEffect(healSound, healSource, 0);
     }
 
     // Enter invincibility frames if hit
@@ -359,12 +403,16 @@ public class PlayerController : MonoBehaviour
         // Flash sprite for length of time
         if (seconds == 0)
             seconds = IFRAME_SECONDS;
+
         StartCoroutine(InvincibleFlash(seconds));
     }
 
     // Flash sprite alpha for given seconds, then remove invincibility
     IEnumerator InvincibleFlash(float seconds) {
-        StartCoroutine(GameSystem.FlickerSprite(GetComponent<SpriteRenderer>(), seconds));
+        // Don't flash the ship if the shield still exists!
+        if (gameManager.GetActiveShield() == null)
+            StartCoroutine(GameSystem.FlickerSprite(GetComponent<SpriteRenderer>(), seconds));
+            
         yield return new WaitForSeconds(seconds);
 
         // Set iframes to false
@@ -429,5 +477,9 @@ public class PlayerController : MonoBehaviour
 
     public void SetDead(bool dead) {
         this.dead = dead;
+    }
+
+    public bool IsDead() {
+        return dead;
     }
 }

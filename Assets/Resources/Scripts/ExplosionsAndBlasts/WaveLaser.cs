@@ -28,7 +28,7 @@ public class WaveLaser : Laser
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
         // Reverse direction if speed gets too great
         if (realSpeed >= horizontalSpeed) {

@@ -47,6 +47,9 @@ public class UIManager : MonoBehaviour
     private bool selectorActive = false;
     private int selectorPosition = 0;
 
+    // Player reference
+    private GameObject player;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -84,13 +87,16 @@ public class UIManager : MonoBehaviour
         // Set lists of items
         itemSymbols = new GameObject[6] {smallHealthSymbol, bigHealthSymbol, bombSymbol, lightningSymbol, missileSymbol, shieldSymbol};
         itemLabels = new GameObject[6] {smallHealthLabel, bigHealthLabel, bombLabel, lightningLabel, missileLabel, shieldLabel};
+
+        // Get player reference
+        player = GameObject.Find("Player");
     }
 
     // Update is called once per frame
     void Update()
     {
         // In action mode, the only UI feature is the item selector
-        if (gameManager.GetGameMode() == 0)
+        if (gameManager.GetGameMode() == 0 && !player.GetComponent<PlayerController>().IsDead())
             MoveActionSelector();
     }
 
@@ -106,6 +112,10 @@ public class UIManager : MonoBehaviour
                 break;
             }
         }
+
+        // Update selector state if the item it's currently on goes dark
+        if (selectorPosition == i - 2 && itemCount == 0)
+            FindNextItem();
 
         Image itemImage = itemSymbols[i].GetComponent<Image>();
         TextMeshProUGUI itemLabel = itemLabels[i].GetComponent<TextMeshProUGUI>();
@@ -144,16 +154,25 @@ public class UIManager : MonoBehaviour
                 return; // If it is deactivated
             else {
                 // Check for next available item to select (Starting at current selection)
-                int offset = selectorPosition + 1;
-                for (int i = 0; i < activeItems.Length - 1; i ++) {
-                    if (activeItems[(i + offset) % activeItems.Length] != 0) {
-                        UpdateActionSelectorPosition((i + offset) % activeItems.Length);
-                        GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
-                        break;
-                    }
-                }
+                FindNextItem();
             }
         }
+    }
+
+    // From the current selector position, find if there is a next available item index to snap to
+    // If next item is not found, return false
+    private bool FindNextItem() {
+        // Check for next available item to select (Starting at current selection)
+        int offset = selectorPosition + 1;
+        for (int i = 0; i < activeItems.Length - 1; i ++) {
+            if (activeItems[(i + offset) % activeItems.Length] != 0) {
+                UpdateActionSelectorPosition((i + offset) % activeItems.Length);
+                GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // Hollow method that executes the right one based on game mode
@@ -197,7 +216,7 @@ public class UIManager : MonoBehaviour
 
     // Move selector to position 0 - 3 (over the four items)
     private void UpdateActionSelectorPosition(int position) {
-        if (position == 0)
+        if (position == 0) 
             itemSelector.transform.position = bombSymbol.transform.position;
         else if (position == 1)
             itemSelector.transform.position = lightningSymbol.transform.position;
@@ -207,5 +226,20 @@ public class UIManager : MonoBehaviour
             itemSelector.transform.position = shieldSymbol.transform.position;
 
         selectorPosition = position;
+    }
+
+    // Get the item index the selector is currently on. -1 if it is deactivated
+    public int GetSelectorState() {
+        if (gameManager.GetGameMode() == 0)
+            return GetActionSelectorState();
+        
+        return -1;
+    }
+
+    public int GetActionSelectorState() {
+        if (itemSelector.GetComponent<Image>().color.a != 0)
+            return selectorPosition;
+        
+        return -1;
     }
 }

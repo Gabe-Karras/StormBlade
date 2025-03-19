@@ -22,6 +22,9 @@ public class GameSystem : MonoBehaviour
     // Volume to play sound effects
     public const float SOUND_EFFECT_VOLUME = 0.2f;
 
+    // Number to divide previous movement by in momentum calculations
+    public const float ACCELERATION_DIVISOR = 1;
+
     // Return a movement of the specified distance and angle
     public static Vector3 MoveAtAngle(float angle, float distance) {
         // Adjust because unity rotation is counterclockwise
@@ -30,6 +33,15 @@ public class GameSystem : MonoBehaviour
         float yChange = (float) (distance * Math.Cos(angle * (Math.PI / 180)));
 
         return new Vector3(xChange, yChange, 0);
+    }
+
+    // Movement considering previous acceleration
+    public static Vector3 MoveAtAngleWithMomentum(float angle, float distance, Vector3 previousMovement) {
+        Vector3 result = MoveAtAngle(angle, distance);
+        Vector3 temp = new Vector3(previousMovement.x / ACCELERATION_DIVISOR, previousMovement.y / ACCELERATION_DIVISOR, previousMovement.z / ACCELERATION_DIVISOR);
+        result += temp;
+
+        return result;
     }
 
     // Returns Z angle for current to face target
@@ -74,14 +86,25 @@ public class GameSystem : MonoBehaviour
         return result;
     }
 
+    // Movement considering previous acceleration
+    public static Vector3 MoveTowardsPointWithMomentum(Vector3 currentPosition, Vector3 destination, float speed, Vector3 previousMovement) {
+
+        Vector3 result = MoveTowardsPoint(currentPosition, destination, speed);
+        //Vector3 temp = new Vector3(previousMovement.x / ACCELERATION_DIVISOR, previousMovement.y / ACCELERATION_DIVISOR, previousMovement.z / ACCELERATION_DIVISOR);
+        result += previousMovement * 0.97f;
+
+        return result;
+    }
+
     // Flickers sprite alpha for length of time
+    // If seconds is 0, do it forever
     public static IEnumerator FlickerSprite(SpriteRenderer s, float seconds) {
         float total = 0;
         float flashTime = 0.05f; // 20th of a second
         Color temp = s.color;
 
         // Loop for iframe time
-        while (total < seconds && s != null) {
+        while ((total < seconds || seconds == 0) && s != null) {
             // Flash alpha color
             if (temp.a == 1)
                 temp.a = 0f;
@@ -163,9 +186,15 @@ public class GameSystem : MonoBehaviour
 
     // Check if gameobject is outside action mode boundaries
     public static bool OutOfBounds(GameObject obj) {
-        if (obj.transform.position.y > Y_ACTION_BOUNDARY || obj.transform.position.y < Y_ACTION_BOUNDARY * -1)
+        SpriteRenderer s = obj.GetComponent<SpriteRenderer>();
+
+        // Empty objects are considered in bounds regardless of where they are
+        if (s == null)
+            return false;
+        
+        if (obj.transform.position.y > Y_ACTION_BOUNDARY + s.bounds.extents.y * 2 || obj.transform.position.y < Y_ACTION_BOUNDARY * -1 - s.bounds.extents.y * 2)
             return true;
-        if (obj.transform.position.x > X_ACTION_BOUNDARY || obj.transform.position.x < X_ACTION_BOUNDARY * -1)
+        if (obj.transform.position.x > X_ACTION_BOUNDARY + s.bounds.extents.x * 2 || obj.transform.position.x < X_ACTION_BOUNDARY * -1 - s.bounds.extents.x * 2)
             return true;
         
         return false;
@@ -173,7 +202,7 @@ public class GameSystem : MonoBehaviour
 
     // Plays a sound effect through given source at appropriate volume.
     // Will randomize pitch between 0 and 1.
-    public static void PlaySoundEffect(AudioClip sound, AudioSource source, float pitchVar) {
+    public static void PlaySoundEffect(AudioClip sound, AudioSource source, float pitchVar, float volume=SOUND_EFFECT_VOLUME) {
         // Don't play sound if source is out of bounds
         if (OutOfBounds(source.gameObject))
             return;
@@ -183,12 +212,18 @@ public class GameSystem : MonoBehaviour
         pitchVar *= r.Next(0, 101) / 100.0f;
 
         source.pitch += source.pitch * pitchVar * RandomSign();
-        source.PlayOneShot(sound, SOUND_EFFECT_VOLUME);
+        source.PlayOneShot(sound, volume);
     }
 
     // Randomly returns -1 or 1
     public static int RandomSign() {
         System.Random r = new System.Random();
         return -1 + 2 * r.Next(0, 2);
+    }
+
+    // Randomly returns float between 0 and 1
+    public static float RandomPercentage() {
+        System.Random r = new System.Random();
+        return r.Next(0, 101) / 100f;
     }
 }

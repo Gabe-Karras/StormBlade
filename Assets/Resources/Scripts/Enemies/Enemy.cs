@@ -84,11 +84,11 @@ public class Enemy : MonoBehaviour
                 int chance = r.Next(1, 101);
 
                 if (chance == 1) // 1% chance
-                    Instantiate(Resources.Load<GameObject>("Prefabs/Items/Pickups/BlasterItem"));
+                    Instantiate(Resources.Load<GameObject>("Prefabs/Items/Pickups/BlasterItem"), transform.position, Quaternion.Euler(0, 0, 0));
                 else if (chance <= 6) // 5% chance
-                    Instantiate(Resources.Load<GameObject>("Prefabs/Items/Pickups/BigHealthItem"));
+                    Instantiate(Resources.Load<GameObject>("Prefabs/Items/Pickups/BigHealthItem"), transform.position, Quaternion.Euler(0, 0, 0));
                 else if (chance <= 16) // 10% chance
-                    Instantiate(Resources.Load<GameObject>("Prefabs/Items/Pickups/SmallHealthItem"));
+                    Instantiate(Resources.Load<GameObject>("Prefabs/Items/Pickups/SmallHealthItem"), transform.position, Quaternion.Euler(0, 0, 0));
                 
                 return;
             }
@@ -126,5 +126,9 @@ public class Enemy : MonoBehaviour
 
     public bool IsDead() {
         return dead;
+    }
+
+    public void SetDeathBehavior(EnemyDeath behavior) {
+        death = behavior;
     }
 }

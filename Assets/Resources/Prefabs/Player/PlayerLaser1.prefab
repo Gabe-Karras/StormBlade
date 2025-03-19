@@ -102,6 +102,7 @@ MonoBehaviour:
   damage: 3
   hurtsPlayer: 0
   hurtsEnemies: 1
+  destroysOnHit: 1
 --- !u!61 &3402144970445692276
 BoxCollider2D:
   m_ObjectHideFlags: 0
