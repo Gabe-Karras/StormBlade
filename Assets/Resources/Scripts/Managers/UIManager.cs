@@ -49,6 +49,7 @@ public class UIManager : MonoBehaviour
 
     // Player reference
     private GameObject player;
+    private PlayerController playerController;
 
     // Start is called before the first frame update
     void Start()
@@ -90,13 +91,14 @@ public class UIManager : MonoBehaviour
 
         // Get player reference
         player = GameObject.Find("Player");
+        playerController = player.GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
     void Update()
     {
         // In action mode, the only UI feature is the item selector
-        if (gameManager.GetGameMode() == 0 && !player.GetComponent<PlayerController>().IsDead())
+        if (gameManager.GetGameMode() == 0 && !playerController.IsDead() && playerController.HasControl())
             MoveActionSelector();
     }
 
@@ -241,5 +243,14 @@ public class UIManager : MonoBehaviour
             return selectorPosition;
         
         return -1;
+    }
+
+    // Set alpha value for all action canvas elements
+    public void SetActionAlpha(float alpha) {
+        actionCanvas.GetComponent<CanvasGroup>().alpha = alpha;
+    }
+
+    public float GetActionAlpha() {
+        return actionCanvas.GetComponent<CanvasGroup>().alpha;
     }
 }

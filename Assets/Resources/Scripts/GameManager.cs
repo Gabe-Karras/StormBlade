@@ -10,6 +10,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int gameMode;
 
+    // This one's a pretty big deal too!
+    [SerializeField]
+    private int level;
+
     // Important player variables
     [SerializeField]
     private int hp = 10;
@@ -43,6 +47,8 @@ public class GameManager : MonoBehaviour
     private GameObject scrollManager;
     [SerializeField]
     private GameObject musicManager;
+    [SerializeField]
+    private GameObject cutsceneManager;
 
     // Player reference
     private GameObject player;
@@ -54,9 +60,10 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = GameSystem.FRAME_RATE;
 
         // Create managers
-        scrollManager = Instantiate(scrollManager);
-        uiManager = Instantiate(uiManager);
-        musicManager = Instantiate(musicManager);
+        scrollManager = Instantiate(scrollManager, transform.position, transform.rotation);
+        uiManager = Instantiate(uiManager, transform.position, transform.rotation);
+        musicManager = Instantiate(musicManager, transform.position, transform.rotation);
+        cutsceneManager = Instantiate(cutsceneManager, transform.position, transform.rotation);
 
         // Find player
         player = GameObject.Find("Player");
@@ -77,8 +84,9 @@ public class GameManager : MonoBehaviour
             UpdateMissileCount(0);
             UpdateShieldCount(0);
 
-            musicManager.GetComponent<MusicManager>().PlayMusic(Resources.Load<AudioClip>("Music/Level1"));
-            musicManager.GetComponent<MusicManager>().PlayMusic(Resources.Load<AudioClip>("Music/Level1"));
+            //musicManager.GetComponent<MusicManager>().PlayMusic(Resources.Load<AudioClip>("Music/Level1"));
+            //musicManager.GetComponent<MusicManager>().PlayMusic(Resources.Load<AudioClip>("Music/Level1"));
+            cutsceneManager.GetComponent<CutsceneManager>().IntroCutscene();
             initializing = false;
 
             // Case where ship starts at level 5
@@ -91,26 +99,13 @@ public class GameManager : MonoBehaviour
             Instantiate(Resources.Load<GameObject>("Prefabs/Items/Bomb"), player.transform.position, player.transform.rotation);
     }
 
-    // Execute intro cutscene
-    private void IntroCutscene() {
-        // Start scrollmanager at 0 speed and UI at 0 alpha
-
-        // Fly ship by, play sound, flash and shake screen
-
-        // Start accelerating scroll speed to 3x
-
-        // Slowly lower ship in and even out scroll speed
-
-        // Bring ship up to middle
-
-        // Start text, fade in UI
-
-        // Give player control
-    }
-
     // GETTERS AND SETTERS
     public int GetGameMode() {
         return gameMode;
+    }
+
+    public int GetLevel() {
+        return level;
     }
 
     // Getters and setters for hp/bp
@@ -246,5 +241,13 @@ public class GameManager : MonoBehaviour
     // Getters for managers
     public UIManager GetUIManager() {
         return uiManager.GetComponent<UIManager>();
+    }
+
+    public ScrollManager GetScrollManager() {
+        return scrollManager.GetComponent<ScrollManager>();
+    }
+
+    public MusicManager GetMusicManager() {
+        return musicManager.GetComponent<MusicManager>();
     }
 }

@@ -98,9 +98,8 @@ public class GameSystem : MonoBehaviour
 
     // Flickers sprite alpha for length of time
     // If seconds is 0, do it forever
-    public static IEnumerator FlickerSprite(SpriteRenderer s, float seconds) {
+    public static IEnumerator FlickerSprite(SpriteRenderer s, float seconds, float flashTime=0.05f) {
         float total = 0;
-        float flashTime = 0.05f; // 20th of a second
         Color temp = s.color;
 
         // Loop for iframe time

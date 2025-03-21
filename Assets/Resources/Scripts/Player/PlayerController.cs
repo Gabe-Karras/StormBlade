@@ -482,4 +482,12 @@ public class PlayerController : MonoBehaviour
     public bool IsDead() {
         return dead;
     }
+
+    public void SetHasControl(bool hasControl) {
+        this.hasControl = hasControl;
+    }
+
+    public bool HasControl() {
+        return hasControl;
+    }
 }

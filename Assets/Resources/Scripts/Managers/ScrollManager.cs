@@ -22,6 +22,10 @@ public class ScrollManager : MonoBehaviour
     [SerializeField]
     private GameObject foreground;
 
+    // Vars used in screenshake
+    private float shakeSpeed = 4;
+    private int shakeFactor = 0;
+
     // How fast to increase speed for other layers
     private float background1Factor = 2;
     private float foregroundFactor = 3;
@@ -35,6 +39,7 @@ public class ScrollManager : MonoBehaviour
     void Start()
     {
         scrollSpeed /= GameSystem.SPEED_DIVISOR;
+        shakeSpeed /= GameSystem.SPEED_DIVISOR;
 
         // Instantiate backgrounds
         backgrounds[0] = Instantiate(background0, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));
@@ -53,6 +58,11 @@ public class ScrollManager : MonoBehaviour
         scrollBackground(0, 1, scrollSpeed, background0);
         scrollBackground(2, 3, scrollSpeed * background1Factor, background1);
         scrollBackground(4, 5, scrollSpeed * foregroundFactor, foreground);
+
+        // Code executes during screen shake
+        backgrounds[0].transform.position += new Vector3(shakeSpeed * shakeFactor, 0, 0);
+        backgrounds[2].transform.position += new Vector3(shakeSpeed * shakeFactor, 0, 0);
+        backgrounds[4].transform.position += new Vector3(shakeSpeed * shakeFactor, 0, 0);
     }
 
     // Scroll background at speed
@@ -105,5 +115,39 @@ public class ScrollManager : MonoBehaviour
         
         return result;
     }
+
     
+    // Briefly Shake background back and forth
+    public IEnumerator ScreenShake() {
+        shakeFactor = -1;
+        yield return new WaitForSeconds(0.01f);
+
+        for (int i = 0; i < 4; i ++) {
+            shakeFactor *= -1;
+            yield return new WaitForSeconds(0.02f);
+        }
+
+        shakeFactor *= -1;
+        yield return new WaitForSeconds(0.01f);
+
+        shakeFactor = 0;
+        SetZeros();
+    }
+    
+
+    // Forces the x values of the background back to 0
+    private void SetZeros() {
+        for (int i = 0; i < 5; i += 2) {
+            backgrounds[i].transform.position = new Vector3(0, backgrounds[i].transform.position.y, 0);
+        }
+    }
+    
+
+    public float GetScrollSpeed() {
+        return scrollSpeed;
+    }
+    
+    public void SetScrollSpeed(float speed) {
+        scrollSpeed = speed;
+    }
 }
