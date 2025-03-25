@@ -131,4 +131,8 @@ public class Enemy : MonoBehaviour
     public void SetDeathBehavior(EnemyDeath behavior) {
         death = behavior;
     }
+
+    public int GetHp() {
+        return hp;
+    }
 }

@@ -8,10 +8,13 @@ public class BombExplosion : MonoBehaviour
     [SerializeField]
     private GameObject smallerExplosion;
 
+    private List<GameObject> overlappingEnemies;
+
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(GameSystem.StartExploding(GetComponent<SpriteRenderer>(), smallerExplosion));
+        overlappingEnemies = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -20,13 +23,34 @@ public class BombExplosion : MonoBehaviour
         
     }
 
-    // On contact with an enemy, change death behavior to 'scorch' and set health to 0
+    // Damage enemies over and over as long as they are colliding
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.tag.Equals("Enemy")) {
-            Enemy enemy = other.gameObject.GetComponent<Enemy>();
-            other.gameObject.AddComponent<Scorch>();
-            enemy.SetDeathBehavior(other.gameObject.GetComponent<Scorch>());
-            enemy.UpdateHp(-1000);
+            overlappingEnemies.Add(other.gameObject);
+            StartCoroutine(HurtEnemy(other.gameObject));
+        }
+    }
+
+    // If enemy escapes explosion, turn off damage
+    private void OnTriggerExit2D(Collider2D other) {
+        if (overlappingEnemies.Contains(other.gameObject))
+            overlappingEnemies.Remove(other.gameObject);
+    }
+
+    // Will constantly hurt a given enemy until told to stop
+    private IEnumerator HurtEnemy(GameObject enemy) {
+        while (enemy != null && overlappingEnemies.Contains(enemy)) {
+            // If enemy is about to die from explosion, set death animation to scorch
+            if (enemy.GetComponent<Enemy>().GetHp() <= 5) {
+                enemy.AddComponent<Scorch>();
+                enemy.GetComponent<Enemy>().SetDeathBehavior(enemy.GetComponent<Scorch>());
+            }
+
+            // Deal damage
+            enemy.GetComponent<Enemy>().UpdateHp(-5);
+
+            // Wait
+            yield return new WaitForSeconds(0.3f);
         }
     }
 }

@@ -109,11 +109,6 @@ public class PlayerController : MonoBehaviour
         if (!dead && hasControl) {
             MovePlayer();
 
-            // Update x coordinates for animate function
-            x = transform.position.x;
-            AnimatePlayer();
-            previousX = x;
-
             // Get current animation
             currentAnimation = playerAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
 
@@ -127,6 +122,11 @@ public class PlayerController : MonoBehaviour
                 hit = false;
             }
         }
+
+        // Update x coordinates for animate function
+        x = transform.position.x;
+        AnimatePlayer();
+        previousX = x;
     }
 
     // Handle item pickups
@@ -367,7 +367,7 @@ public class PlayerController : MonoBehaviour
                     gameManager.UpdateLightningCount(-1);
                     break;
                 case 2: // Missile
-                    GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Missile"), laserSource, 0);
+                    GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Missile"), laserSource, 0, volume: 0.5f);
                     Instantiate(missile, transform.position + new Vector3(-10 / GameSystem.PIXELS_PER_UNIT, 0, 0), Quaternion.Euler(0, 0, 45));
                     Instantiate(missile, transform.position + new Vector3(0, 5 / GameSystem.PIXELS_PER_UNIT, 0), Quaternion.Euler(0, 0, 0));
                     Instantiate(missile, transform.position + new Vector3(10 / GameSystem.PIXELS_PER_UNIT, 0, 0), Quaternion.Euler(0, 0, 315));

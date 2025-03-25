@@ -6,8 +6,13 @@ using System;
 // This class will contain the programming for all in-game cutscenes.
 public class CutsceneManager : MonoBehaviour
 {
+    // Start text that flashes when level begins
     [SerializeField]
     private GameObject startMessage;
+
+    // Constants for action UI bar positions
+    private const float BAR_ON_SCREEN = 1.25f;
+    private const float BAR_OFF_SCREEN = 1.75f;
 
     // References to other managers
     private GameManager gameManager;
@@ -18,24 +23,45 @@ public class CutsceneManager : MonoBehaviour
     // Booleans to control update function
     private bool flyUp = false;
     private bool flyDown = false;
-    private bool fadeUI = false;
+    private bool goToMiddle = false;
 
     // Other values pertaining to cutscene behavior
     private float flyUpSpeed = 8;
     private float flyDownSpeed = 3;
+    private float flyNormalSpeed = 1;
+
     private float scrollTarget = 0;
     private float scrollChange;
     private float scrollSpeed = 0;
+
     private float uiFadeSpeed = 0.015f;
+    private float uiTarget = 0;
+    private float uiFade = 0;
+
+    private float uiBarSpeed = 0.3f;
+    private float uiBarTarget = BAR_ON_SCREEN;
+
+    private float bossSpeed = 0.4f;
+    private float bossTarget = GameSystem.BOSS_POSITION;
+
+    // Reference to black bars in action UI
+    private GameObject barrierLeft;
+    private GameObject barrierRight;
 
     // Player reference
     private GameObject player;
+
+    // Reference to level boss
+    private GameObject boss;
 
     // Start is called before the first frame update
     void Start()
     {
         flyUpSpeed /= GameSystem.SPEED_DIVISOR;
         flyDownSpeed /= GameSystem.SPEED_DIVISOR;
+        flyNormalSpeed /= GameSystem.SPEED_DIVISOR;
+        uiBarSpeed /= GameSystem.SPEED_DIVISOR;
+        bossSpeed /= GameSystem.SPEED_DIVISOR;
 
         // Grab references to managers
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -43,7 +69,16 @@ public class CutsceneManager : MonoBehaviour
         uiManager = gameManager.GetUIManager();
         musicManager = gameManager.GetMusicManager();
 
+        barrierLeft = uiManager.GetBoundaries().transform.Find("BarrierLeft").gameObject;
+        barrierRight = uiManager.GetBoundaries().transform.Find("BarrierRight").gameObject;
+
         player = GameObject.Find("Player");
+
+        if (gameManager.GetGameMode() == 0) {
+            uiManager.SetTurnAlpha(0);
+        } else {
+            uiManager.SetActionAlpha(0);
+        }
     }
 
     // Update is called once per frame
@@ -76,11 +111,50 @@ public class CutsceneManager : MonoBehaviour
 
         scrollManager.SetScrollSpeed(scrollSpeed);
 
-        // Fade in Action UI
-        if (fadeUI) {
+        // Fade Action UI
+        if (uiFade < uiTarget) {
             uiManager.SetActionAlpha(uiManager.GetActionAlpha() + uiFadeSpeed);
-            if (uiManager.GetActionAlpha() == 1)
-                fadeUI = false;
+        } else if (uiFade > uiTarget) {
+            uiManager.SetActionAlpha(uiManager.GetActionAlpha() - uiFadeSpeed);
+        }
+
+        uiFade = uiManager.GetActionAlpha();
+
+        // Move action bars
+        if (barrierLeft.transform.position.x != uiBarTarget * -1) {
+            Vector3 current = barrierLeft.transform.position;
+            Vector3 destination = new Vector3(uiBarTarget * -1, current.y, 0);
+            barrierLeft.transform.position += GameSystem.MoveTowardsPoint(current, destination, uiBarSpeed);
+        }
+        
+        if (barrierRight.transform.position.x != uiBarTarget) {
+            Vector3 current = barrierRight.transform.position;
+            Vector3 destination = new Vector3(uiBarTarget, current.y, 0);
+            barrierRight.transform.position += GameSystem.MoveTowardsPoint(current, destination, uiBarSpeed);
+        }
+
+        // Move player to turn-based position
+        if (goToMiddle) {
+            Vector3 current = player.transform.position;
+            Vector3 destination = new Vector3(0, GameSystem.TURN_BASED_Y_POSITION, 0);
+            player.transform.position += GameSystem.MoveTowardsPoint(current, destination, flyNormalSpeed);
+
+            if (GameSystem.PointDistance(player.transform.position, destination) == 0)
+                goToMiddle = false;
+        }
+
+        // Move boss to battle position once bars are gone
+        if (boss != null && boss.transform.position.y != bossTarget) {
+            Vector3 current = boss.transform.position;
+            Vector3 target = new Vector3(0, bossTarget, 0);
+            boss.transform.position += GameSystem.MoveTowardsPoint(current, target, bossSpeed);
+
+            // Turn on the menu, start boss music, and officially switch to turn-based mode!
+            if (boss.transform.position.y == bossTarget) {
+                musicManager.PlayMusic(Resources.Load<AudioClip>("Music/Boss"));
+                uiManager.SetTurnAlpha(1);
+                gameManager.SwitchGameMode();
+            }
         }
     }
 
@@ -95,6 +169,7 @@ public class CutsceneManager : MonoBehaviour
         scrollChange = tempScrollSpeed / 83;
         
         uiManager.SetActionAlpha(0);
+        uiManager.SetTurnAlpha(0);
 
         // Fly ship by, play sound
         StartCoroutine(FlyBy());
@@ -106,6 +181,24 @@ public class CutsceneManager : MonoBehaviour
         // Start text, fade in UI
         // Give player control
         StartCoroutine(FadeInUI());
+    }
+
+    // Execute transition cutscene between action mode and turn-based mode
+    public void TransitionToTurnBased() {
+        // Remove control from player and pilot them to correct position
+        player.GetComponent<PlayerController>().SetHasControl(false);
+        goToMiddle = true;
+
+        // Fade out action UI and music
+        uiTarget = 0;
+        StartCoroutine(musicManager.FadeOut());
+
+        // Withdraw black bars from the side of screen
+        StartCoroutine(MoveBars(BAR_OFF_SCREEN));
+
+        // Bring down the boss!!
+        gameManager.SpawnBoss();
+        boss = gameManager.GetBoss().gameObject;
     }
 
     // Fly ship by, play sound, shake screen
@@ -136,11 +229,23 @@ public class CutsceneManager : MonoBehaviour
     // Fade in Action UI, display start message
     private IEnumerator FadeInUI() {
         yield return new WaitForSeconds(8);
-        fadeUI = true;
+        uiTarget = 1;
 
         yield return new WaitForSeconds(1);
         Instantiate(startMessage, new Vector3(0, 0.5f, 0), Quaternion.Euler(0, 0, 0));
         musicManager.PlayMusic(Resources.Load<AudioClip>("Music/Level" + gameManager.GetLevel()));
         player.GetComponent<PlayerController>().SetHasControl(true);
+
+        // test
+        yield return new WaitForSeconds(5);
+        TransitionToTurnBased();
+    }
+
+    // Move bars in or out of frame. Will only do it if action ui is transparent
+    private IEnumerator MoveBars(float target) {
+        while(uiManager.GetActionAlpha() != 0)
+            yield return new WaitForSeconds(1);
+
+        uiBarTarget = target;
     }
 }

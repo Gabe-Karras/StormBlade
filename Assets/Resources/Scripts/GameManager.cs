@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     // This one's a pretty big deal too!
     [SerializeField]
-    private int level;
+    private int level = 1;
 
     // Important player variables
     [SerializeField]
@@ -53,6 +53,9 @@ public class GameManager : MonoBehaviour
     // Player reference
     private GameObject player;
 
+    // Boss of the level
+    private GameObject boss;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -67,6 +70,9 @@ public class GameManager : MonoBehaviour
 
         // Find player
         player = GameObject.Find("Player");
+
+        // Get boss prefab
+        boss = Resources.Load<GameObject>("Prefabs/Enemies/Bosses/Boss" + level);
     }
 
     // Update is called once per frame
@@ -83,10 +89,12 @@ public class GameManager : MonoBehaviour
             UpdateLightningCount(0);
             UpdateMissileCount(0);
             UpdateShieldCount(0);
+            // This is called once more for initializing the turn-based menu
+            UpdateBombCount(0);
 
-            //musicManager.GetComponent<MusicManager>().PlayMusic(Resources.Load<AudioClip>("Music/Level1"));
-            //musicManager.GetComponent<MusicManager>().PlayMusic(Resources.Load<AudioClip>("Music/Level1"));
-            cutsceneManager.GetComponent<CutsceneManager>().IntroCutscene();
+            // Play level intro
+            //cutsceneManager.GetComponent<CutsceneManager>().IntroCutscene();
+            cutsceneManager.GetComponent<CutsceneManager>().TransitionToTurnBased();
             initializing = false;
 
             // Case where ship starts at level 5
@@ -94,9 +102,11 @@ public class GameManager : MonoBehaviour
                 Instantiate(Resources.Load("Prefabs/Player/LaserRing"));
             }
         }
+    }
 
-        if (Input.GetKeyDown(KeyCode.Return))
-            Instantiate(Resources.Load<GameObject>("Prefabs/Items/Bomb"), player.transform.position, player.transform.rotation);
+    // Spawn in the boss above camera
+    public void SpawnBoss() {
+        boss = Instantiate(boss, new Vector3(0, GameSystem.Y_ACTION_BOUNDARY * 2, 0), Quaternion.Euler(0, 0, 0));
     }
 
     // GETTERS AND SETTERS
@@ -104,8 +114,21 @@ public class GameManager : MonoBehaviour
         return gameMode;
     }
 
+    // Don't call this unless you know what you're doing
+    public void SwitchGameMode() {
+        if (gameMode == 0)
+            gameMode = 1;
+        else
+            gameMode = 0;
+    }
+
     public int GetLevel() {
         return level;
+    }
+
+    // Get reference to boss instance
+    public Boss GetBoss() {
+        return boss.GetComponent<Boss>();
     }
 
     // Getters and setters for hp/bp

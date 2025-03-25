@@ -25,6 +25,10 @@ public class GameSystem : MonoBehaviour
     // Number to divide previous movement by in momentum calculations
     public const float ACCELERATION_DIVISOR = 1;
 
+    // Y value to put player at in turn-based mode
+    public const float TURN_BASED_Y_POSITION = -0.45f;
+    public const float BOSS_POSITION = 0.44f;
+
     // Return a movement of the specified distance and angle
     public static Vector3 MoveAtAngle(float angle, float distance) {
         // Adjust because unity rotation is counterclockwise
@@ -90,7 +94,6 @@ public class GameSystem : MonoBehaviour
     public static Vector3 MoveTowardsPointWithMomentum(Vector3 currentPosition, Vector3 destination, float speed, Vector3 previousMovement) {
 
         Vector3 result = MoveTowardsPoint(currentPosition, destination, speed);
-        //Vector3 temp = new Vector3(previousMovement.x / ACCELERATION_DIVISOR, previousMovement.y / ACCELERATION_DIVISOR, previousMovement.z / ACCELERATION_DIVISOR);
         result += previousMovement * 0.97f;
 
         return result;

@@ -46,8 +46,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionCanvas: {fileID: 6397228056874511457, guid: e5c372a38fd084c24b2b69203a586b79, type: 3}
-  actionAlpha: 1
+  turnCanvas: {fileID: 2606203620520061088, guid: db364177345bf400cbf315534034f9f7, type: 3}
   boundaries: {fileID: 2832759568809487041, guid: 5107fa474e0b44810a405db1fd5291e3, type: 3}
+  enemySelector: {fileID: 4924434785482264140, guid: d09d7b7a757a74759a4652400e94ab67, type: 3}
 --- !u!82 &5242041801393382031
 AudioSource:
   m_ObjectHideFlags: 0
