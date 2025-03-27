@@ -17,9 +17,12 @@ public class LaserRing : MonoBehaviour
 
     // Timing to fire
     private string fireFrame;
+    private bool shotThisFrame = false;
 
     // Sound effect
     private AudioClip laserSound;
+
+    GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +32,8 @@ public class LaserRing : MonoBehaviour
         fireFrame = "LaserRing_0";
 
         laserSound = Resources.Load<AudioClip>("SoundEffects/Projectiles/BasicLaser");
+
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -37,15 +42,23 @@ public class LaserRing : MonoBehaviour
         // Always circle around the target
         transform.position = target.transform.position;
 
-        // Shoot when the time is right
-        if (GetComponent<SpriteRenderer>().sprite.name.Equals(fireFrame)) {
-            SpawnLasers(fireFrame);
+        // In action mode, constantly shoot lasers everywhere!
+        if (gameManager.GetGameMode() == 0 && target.GetComponent<PlayerController>().HasControl()) {
+            // Shoot when the time is right
+            if (GetComponent<SpriteRenderer>().sprite.name.Equals(fireFrame)) {
+                SpawnLasers(fireFrame);
 
-            // Alternate frame
-            if (fireFrame.Equals("LaserRing_0"))
-                fireFrame = "LaserRing_2";
-            else
-                fireFrame = "LaserRing_0";
+                // Alternate frame
+                if (fireFrame.Equals("LaserRing_0"))
+                    fireFrame = "LaserRing_2";
+                else
+                    fireFrame = "LaserRing_0";
+            }
+        }
+
+        // In turn-based mode, only fire when attack animation is playing
+        else if (target.GetComponent<PlayerMoves>().IsAttacking()){
+            ShootUp();
         }
     }
 
@@ -75,5 +88,20 @@ public class LaserRing : MonoBehaviour
 
         // Play sound!
         GameSystem.PlaySoundEffect(laserSound, GetComponent<AudioSource>(), 0);
+    }
+
+    // Used in turn-based animation. Shoots a red laser straight up when ring is at frame 0
+    private void ShootUp() {
+        if (GetComponent<SpriteRenderer>().sprite.name.Equals("LaserRing_0")) {
+            if (!shotThisFrame) {
+                GameObject upLaser = Instantiate(laser, transform.position + new Vector3(0, BIG_RING_DISTANCE, 0), Quaternion.Euler(0, 0, 0));
+                upLaser.GetComponent<Laser>().SetTarget(target.GetComponent<PlayerMoves>().GetCurrentTarget());
+                // Play sound!
+                GameSystem.PlaySoundEffect(laserSound, GetComponent<AudioSource>(), 0);
+                shotThisFrame = true;
+            }
+        } else {
+            shotThisFrame = false;
+        }
     }
 }

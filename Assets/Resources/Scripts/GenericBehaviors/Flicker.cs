@@ -11,7 +11,8 @@ public class Flicker : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(flicker());
+        if (flashTime != 0)
+            StartCoroutine(flicker());
     }
 
     private IEnumerator flicker() {
@@ -31,5 +32,9 @@ public class Flicker : MonoBehaviour
             // Wait for flash time
             yield return new WaitForSeconds(flashTime);
         }
+    }
+
+    public void SetFlashTime(float seconds) {
+        flashTime = seconds;
     }
 }

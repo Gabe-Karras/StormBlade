@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int bp = 1;
     [SerializeField]
+    private float shieldDefense = 2;
+    [SerializeField]
     private int smallHealthCount;
     [SerializeField]
     private int bigHealthCount;
@@ -33,8 +36,11 @@ public class GameManager : MonoBehaviour
     private int shieldCount;
     [SerializeField]
     private GameObject activeShield;
+    [SerializeField]
+    private GameObject shieldPrefab;
 
     private const int MAX_ACTION_HP = 10;
+    private const int MAX_TURN_HP = 500;
     private const int MAX_ACTION_BP = 5;
     private const int MAX_ITEM_COUNT = 99;
 
@@ -116,9 +122,18 @@ public class GameManager : MonoBehaviour
 
     // Don't call this unless you know what you're doing
     public void SwitchGameMode() {
-        if (gameMode == 0)
+        if (gameMode == 0) {
             gameMode = 1;
-        else
+
+            // Convert hp to turn-based bounds
+            hp *= 50;
+
+            // If action shield exists, replace with turn-based shield
+            if (activeShield != null) {
+                Destroy(activeShield);
+                activeShield = Instantiate(shieldPrefab);
+            }
+        } else
             gameMode = 0;
     }
 
@@ -133,31 +148,64 @@ public class GameManager : MonoBehaviour
 
     // Getters and setters for hp/bp
     public void UpdateHp(int hpChange) {
-        // Check if HP is being subtracted from, and only allow it if player is not invincible
-        if (hpChange < 0) {
-            if (player.GetComponent<PlayerController>().GetIframes())
-                return;
-            
-            if (activeShield != null) {
-                activeShield.GetComponent<Shield>().UpdateShieldState(-1);
-                player.GetComponent<PlayerController>().SetHit(true);
-                return;
+        // In action mode, getting hit reduces your blaster points and death is immediate
+        if (gameMode == 0) {
+            // Check if HP is being subtracted from, and only allow it if player is not invincible
+            if (hpChange < 0) {
+                if (player.GetComponent<PlayerController>().GetIframes())
+                    return;
+                
+                if (activeShield != null) {
+                    activeShield.GetComponent<Shield>().UpdateShieldState(-1);
+                    player.GetComponent<PlayerController>().SetHit(true);
+                    return;
+                }
+                
+                // Notify player and subtract from blaster points
+                if (hp + hpChange <= 0) {
+                    player.GetComponent<PlayerController>().SetDead(true);
+                    player.GetComponent<PlayerController>().PlayDeathSequence();
+                }
+                else
+                    player.GetComponent<PlayerController>().SetHit(true);
+                UpdateBp(-1);
             }
-            
-            // Notify player and subtract from blaster points
-            if (hp + hpChange <= 0) {
-                player.GetComponent<PlayerController>().SetDead(true);
-                player.GetComponent<PlayerController>().PlayDeathSequence();
-            }
-            else
-                player.GetComponent<PlayerController>().SetHit(true);
-            UpdateBp(-1);
+
+            hp = KeepInBounds(hp + hpChange, 0, MAX_ACTION_HP);
+
+            // Update display
+            uiManager.GetComponent<UIManager>().UpdateHealthCells();
         }
+        // In turn based mode, modifying the hp results in a graphic, and death is determined at the
+        // beginning of the player's turn
+        else {
+            // Text color in animation
+            Color textColor = new Color(1, 1, 1);
 
-        hp = KeepInBounds(hp + hpChange, 0, MAX_ACTION_HP);
+            // If change is negative, apply shield defense
+            if (hpChange < 0) {
+                if (activeShield != null)
+                    hpChange = (int) (hpChange / shieldDefense);
+            }
+            // If change is positive, make it a health color
+            else {
+                // Same color as player healthbar and particle animation
+                textColor = new Color(0.93f, 0.38f, 0.36f);
+            }
 
-        // Update display
-        uiManager.GetComponent<UIManager>().UpdateHealthCells();
+            // Play animation
+            float textX = player.transform.position.x * GameSystem.CANVAS_RATIO * GameSystem.PIXELS_PER_UNIT;
+            float textY = player.transform.position.y * GameSystem.CANVAS_RATIO * GameSystem.PIXELS_PER_UNIT;
+
+            GameObject damageText = Instantiate(uiManager.GetComponent<UIManager>().GetDamageText());
+            damageText.GetComponent<TextMeshProUGUI>().text = Math.Abs(hpChange) + "";
+            damageText.GetComponent<TextMeshProUGUI>().color = textColor;
+
+            damageText.transform.SetParent(uiManager.GetComponent<UIManager>().GetTurnCanvas().transform);
+            damageText.GetComponent<RectTransform>().anchoredPosition = new Vector2(textX, textY);
+
+            hp = KeepInBounds(hp + hpChange, 0, MAX_TURN_HP);
+        }
     }
 
     public void UpdateBp(int bpChange) {

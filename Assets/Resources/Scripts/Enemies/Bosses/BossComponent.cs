@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using TMPro;
 
 // This class represents a component of a boss
 // Active components have their own health or can be a direct pipe to the boss' health
@@ -34,10 +36,21 @@ public class BossComponent : MonoBehaviour
     // How long it takes the standard component to destroy
     private float deathTime = 1.5f;
 
+    private bool iframes = false;
+    private float iframeSeconds = 0.06f;
+
+    // Game manager
+    private GameManager gameManager;
+
+    // Reference to ui manager for text animation
+    private UIManager uiManager;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        // Get managers
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        uiManager = gameManager.GetUIManager();
     }
 
     // Update is called once per frame
@@ -46,16 +59,56 @@ public class BossComponent : MonoBehaviour
         
     }
 
-    // Update hp up or down after an animation is performed
-    // Returns change if modified by defense
-    public int UpdateHp(int change) {
+    // Update hp up or down
+    // Plays text animation showing the value
+    public void UpdateHp(int change) {
+        // Text color in animation
+        Color textColor = new Color(1, 1, 1);
+
         // If change is negative, apply defense
         if (change < 0) {
             change = (int) (change / defense);
         }
+        // If change is positive, make it a health color
+        else {
+            // Same color as player healthbar and particle animation
+            textColor = new Color(0.93f, 0.38f, 0.36f);
+        }
+
+        // Play animation
+        float textX = transform.position.x * GameSystem.CANVAS_RATIO * GameSystem.PIXELS_PER_UNIT;
+        float textY = transform.position.y * GameSystem.CANVAS_RATIO * GameSystem.PIXELS_PER_UNIT;
+
+        GameObject damageText = Instantiate(uiManager.GetDamageText());
+        damageText.GetComponent<TextMeshProUGUI>().text = Math.Abs(change) + "";
+        damageText.GetComponent<TextMeshProUGUI>().color = textColor;
+
+        damageText.transform.SetParent(uiManager.GetTurnCanvas().transform);
+        damageText.GetComponent<RectTransform>().anchoredPosition = new Vector2(textX, textY);
 
         hp += change;
-        return change;
+    }
+
+    // Sets sprite to be white briefly and gives iframes
+    public IEnumerator FlashWhite(float time=0) {
+        if (iframes) {
+            yield break;
+        }
+
+        iframes = true;
+
+        // Flash white material
+        StartCoroutine(GameSystem.FlashSprite(GetComponent<SpriteRenderer>(), (Material) Resources.Load("Materials/SolidWhite"), time: time));
+
+        // Play hit sound
+        GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Damage/DamageEnemy"), uiManager.gameObject.GetComponent<AudioSource>(), 0.3f);
+
+        if (time == 0)
+            time = iframeSeconds;
+
+        // Wait out iframes
+        yield return new WaitForSeconds(time);
+        iframes = false;
     }
 
     // Flash and explode!

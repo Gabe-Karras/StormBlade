@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 636723309313527289}
   - component: {fileID: 636723309313527294}
   - component: {fileID: 636723309313527288}
+  - component: {fileID: 6431672695617736287}
   - component: {fileID: 636723309313527291}
   - component: {fileID: 636723309313527290}
   - component: {fileID: 1309117771}
@@ -120,6 +121,30 @@ MonoBehaviour:
   hitSource: {fileID: 1285851871}
   pickupSource: {fileID: 1360842556}
   healSource: {fileID: 1360842557}
+--- !u!114 &6431672695617736287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636723309313527295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 454bcd6daf4fd4267aa3ab787077be97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 1
+  laserSource: {fileID: 1285851870}
+  laserSound: {fileID: 8300000, guid: f62aa9537551f4c8c8bb2ec98124b78c, type: 3}
+  healSource: {fileID: 1360842556}
+  laser0: {fileID: 8207349886495330370, guid: 71342b718c52d47e1ad72a511e2f0b15, type: 3}
+  laser1: {fileID: 6258366972339107753, guid: d02c6f35fedbe4f6782d7ed6f338cdb0, type: 3}
+  laser2: {fileID: 7526052961603819522, guid: 62097a9585ef9423dba6851f6c0d0c54, type: 3}
+  bomb: {fileID: 3546869775295821023, guid: 4649dd55ea19349e3b77ef3e71da308b, type: 3}
+  lightning: {fileID: 7706730008431128638, guid: f52f9448a8ec24aa8b4948b296a40c9c, type: 3}
+  animationMissile: {fileID: 0}
+  missile: {fileID: 3877118088410419567, guid: f5d74d45c9b824460a50a9b765f45361, type: 3}
+  shield: {fileID: 9192849078587370376, guid: 896d0739268174bf19a51e5a4dc28ec0, type: 3}
 --- !u!95 &636723309313527291
 Animator:
   serializedVersion: 5

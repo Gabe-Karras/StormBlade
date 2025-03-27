@@ -59,6 +59,9 @@ public class PlayerController : MonoBehaviour
     private float x;
     private float previousX;
 
+    // This is the threshold distance for what to animate or not
+    private const float MINIMAL_DISTANCE = 0.0001f;
+
     // Animation elements
     private Animator playerAnimator;
     private string currentAnimation;
@@ -76,6 +79,9 @@ public class PlayerController : MonoBehaviour
 
     // Game manager
     private GameManager gameManager;
+
+    // Player moves class
+    private PlayerMoves playerMoves;
 
     // Values dealing with damage and death
     private bool hit = false;
@@ -100,6 +106,7 @@ public class PlayerController : MonoBehaviour
         healSound = Resources.Load<AudioClip>("SoundEffects/Items/Heal");
 
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        playerMoves = GetComponent<PlayerMoves>();
     }
 
     // Update is called once per frame
@@ -233,9 +240,9 @@ public class PlayerController : MonoBehaviour
 
     // Tilt the ship if it's going in a certain direction
     public void AnimatePlayer() {
-        if (x < previousX) {
+        if (x < previousX && previousX - x > MINIMAL_DISTANCE) {
             playerAnimator.Play("PlayerLeft");
-        } else if (x > previousX) {
+        } else if (x > previousX && x - previousX > MINIMAL_DISTANCE) {
             playerAnimator.Play("PlayerRight");
         } else {
             playerAnimator.Play("PlayerIdle");
@@ -270,23 +277,47 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Perform move from PlayerMoves class in turn-based combat
+    public void PerformMove(int move, GameObject singleTarget, List<GameObject> manyTargets) {
+        switch(move) {
+            case 0: // Nova bomb
+                StartCoroutine(playerMoves.Bomb(singleTarget, manyTargets));
+                gameManager.UpdateBombCount(-1);
+                break;
+            case 1: // Hyper bolt
+                StartCoroutine(playerMoves.Lightning(singleTarget, manyTargets));
+                gameManager.UpdateLightningCount(-1);
+                break;
+            case 2: // Homing missiles
+                StartCoroutine(playerMoves.Missile(manyTargets));
+                gameManager.UpdateMissileCount(-1);
+                break;
+            case 3: // Energy shield
+                StartCoroutine(playerMoves.Shield());
+                gameManager.UpdateShieldCount(-1);
+                break;
+            case 4: // Small repair
+                StartCoroutine(playerMoves.SmallHealth());
+                gameManager.UpdateSmallHealthCount(-1);
+                break;
+            case 5: // Big repair
+                StartCoroutine(playerMoves.BigHealth());
+                gameManager.UpdateBigHealthCount(-1);
+                break;
+            case 6: // Normal attack
+                StartCoroutine(playerMoves.Attack(singleTarget));
+                break;
+        }
+    }
+
     // Get vectors for turret positions based on animation
-    private Vector3[] GetTurretPositions() {
+    public Vector3[] GetTurretPositions() {
         Vector3 leftTurret = transform.position;
         Vector3 rightTurret = transform.position;
 
-        // Check animation to get correct positions
-        if (currentAnimation.Equals("PlayerIdle")) {
-            leftTurret += new Vector3(-1 * TURRET_X, TURRET_Y);
-            rightTurret += new Vector3(TURRET_X, TURRET_Y);
-        } else if (currentAnimation.Equals("PlayerLeft")) {
-            leftTurret += new Vector3(-1 * CLOSE_TURRET_X, TURRET_Y);
-            rightTurret += new Vector3(FAR_TURRET_X, TURRET_Y);
-        } else if (currentAnimation.Equals("PlayerRight")) {
-            leftTurret += new Vector3(-1 * FAR_TURRET_X, TURRET_Y);
-            rightTurret += new Vector3(CLOSE_TURRET_X, TURRET_Y);
-        }
-
+        leftTurret += new Vector3(-1 * TURRET_X, TURRET_Y);
+        rightTurret += new Vector3(TURRET_X, TURRET_Y);
+        
         Vector3[] result = {leftTurret, rightTurret};
         return result;
     }
@@ -386,8 +417,8 @@ public class PlayerController : MonoBehaviour
     }
 
     // Flash sprite red, emit particles, and play heal sound
-    private void PlayHealAnimation(float particleTime) {
-        StartCoroutine(GameSystem.FlashSprite(playerSprite, Resources.Load<Material>("Materials/SolidRed"), time: 0.3f));
+    public void PlayHealAnimation(float particleTime) {
+        StartCoroutine(GameSystem.FlashSprite(playerSprite, Resources.Load<Material>("Materials/SolidRed"), time: particleTime + 0.2f));
         StartCoroutine(GameSystem.EmitParticles(gameObject, Resources.Load<GameObject>("Prefabs/Explosions/RedParticle"), 0, 0, particleTime));
         GameSystem.PlaySoundEffect(healSound, healSource, 0);
     }

@@ -24,6 +24,10 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject enemySelector;
 
+    // Text object to use to display damage
+    [SerializeField]
+    private GameObject damageText;
+
     // Elements of action canvas
     private GameObject healthCells;
     private GameObject blasterCells;
@@ -39,9 +43,13 @@ public class UIManager : MonoBehaviour
 
     // Elements in turn-based mode
     private GameObject healthBar;
+    private GameObject healthBarText;
     private GameObject menuSelector;
     private GameObject turnItemSelector;
     private int turnSelectorPosition = 0;
+
+    private int healthBarValue;
+    private int healthBarSpeed = 2; // How fast the health bar fills up
 
     private GameObject attackText;
     private GameObject itemText;
@@ -50,7 +58,16 @@ public class UIManager : MonoBehaviour
     private GameObject[] turnItemSymbols;
     private GameObject[] turnItemLabels;
 
+    // Constants concerning the selection of components with items
+    private const float BOMB_RADIUS = 0.375f;
+    private const float LIGHTNING_WIDTH = 0.2f;
+
+    // Keeps track of what menu the player is in during combat
     private int uiMode;
+
+    // Keeps track of player move selection
+    // (0 = bomb, 1 = lightning, 2 = missile, 3 = shield, 4 = small repair, 5 = big repair, 6 = normal attack)
+    private int playerMove;
 
     // Player reference
     private GameObject player;
@@ -77,14 +94,17 @@ public class UIManager : MonoBehaviour
         healthCells = actionCanvas.transform.Find("HealthCells").gameObject;
         blasterCells = actionCanvas.transform.Find("BlasterCells").gameObject;
         healthBar = turnCanvas.transform.Find("HealthBar").gameObject;
+        healthBarText = turnCanvas.transform.Find("HealthText").gameObject;
+
+        healthBarValue = gameManager.GetHp();
 
         // Turn-based menu options
         attackText = turnCanvas.transform.Find("AttackText").gameObject;
         itemText = turnCanvas.transform.Find("ItemText").gameObject;
         descriptionText = turnCanvas.transform.Find("DescriptionText").gameObject;
-        descriptionText.GetComponent<TextMeshProUGUI>().text = "";
 
         // Description text in menu
+        descriptionText.GetComponent<TextMeshProUGUI>().text = "";
 
         // Collect item symbols/labels into arrays
         actionItemSymbols = GetSymbols(actionCanvas);
@@ -129,7 +149,9 @@ public class UIManager : MonoBehaviour
                     break;
             }
         }
-        
+
+        // Always keep healthbar updated
+        UpdateHealthBar();
     }
 
     // Retrieve array of item symbols for given canvas
@@ -204,6 +226,20 @@ public class UIManager : MonoBehaviour
         img.sprite = (Sprite) Resources.LoadAll<Sprite>("Sprites/UI/Action/BlasterCells")[gameManager.GetBp()];
     }
 
+    // Keep player healthbar in turn-based mode active
+    private void UpdateHealthBar() {
+        healthBarText.GetComponent<TextMeshProUGUI>().text = healthBarValue + "/500";
+        healthBar.transform.localScale = new Vector3(1 / 500f * healthBarValue, 1, 1);
+
+        if (Math.Abs(healthBarValue - gameManager.GetHp()) < healthBarSpeed) {
+            healthBarValue = gameManager.GetHp();
+        } else if (healthBarValue < gameManager.GetHp()) {
+            healthBarValue += healthBarSpeed;
+        } else if (healthBarValue > gameManager.GetHp()) {
+            healthBarValue -= healthBarSpeed;
+        }
+    }
+
     // Move selector in accordance to action mode
     private void MoveActionSelector() {
         // Check if selection key is pressed
@@ -223,6 +259,9 @@ public class UIManager : MonoBehaviour
     private void MoveTurnSelector() {
         bool playSound = false;
 
+        // Display correct item description
+        DisplayItemDescription();
+
         // Check for key presses and move accordingly
         if (Input.GetKeyDown(KeyCode.RightArrow)) {
             if (FindNextTurnItem(1))
@@ -241,10 +280,48 @@ public class UIManager : MonoBehaviour
         if (playSound)
             GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
 
-        // If player presses esc or shift, go back
+        // If player presses esc, go back
         if (Input.GetKeyDown(KeyCode.Escape)) {
             SetUIMode(1);
             GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
+            return;
+        }
+
+        // If player presses enter, move forward to component selection and set player move
+        if (Input.GetKeyDown(KeyCode.Return)) {
+            playerMove = turnSelectorPosition;
+            GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
+            SetUIMode(3);
+        }
+    }
+
+    // Based on what item is selected, display message in description box
+    private void DisplayItemDescription() {
+        if (uiMode == 2) {
+            string message = "";
+    
+            switch(turnSelectorPosition) {
+                case 0: // bomb
+                    message = "Nova Bomb";
+                    break;
+                case 1: // lightning
+                    message = "Hyper Bolt";
+                    break;
+                case 2: // missile
+                    message = "Homing Missiles";
+                    break;
+                case 3: // shield
+                    message = "Energy Shield";
+                    break;
+                case 4: // small health
+                    message = "Small Repair";
+                    break;
+                case 5: // big health
+                    message = "Large Repair";
+                    break;
+            }
+
+            descriptionText.GetComponent<TextMeshProUGUI>().text = message;
         }
     }
 
@@ -264,8 +341,9 @@ public class UIManager : MonoBehaviour
         // Enter/Space to confirm
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
             if (menuSelector.transform.position.y == attackText.transform.position.y) {
-                // MODE 3 CODE GOES HERE!!!!!
+                // Switch straight to mode three with intent to attack
                 GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
+                playerMove = 6; // Normal attack
                 SetUIMode(3);
             } else {
                 // Switch to item selection if there are items to be selected
@@ -288,9 +366,21 @@ public class UIManager : MonoBehaviour
     // Move flashing arrow around to different components of boss
     private void MoveEnemySelector() {
         // If none yet exist, create selectors on the selected components
+        List<GameObject> selected = SelectComponents();
         if (GameObject.FindGameObjectsWithTag("EnemySelector").Length == 0) {
-            Instantiate(enemySelector, bossComponents[enemySelectorPosition].gameObject.transform.position, Quaternion.Euler(0, 0, 0));
-            descriptionText.GetComponent<TextMeshProUGUI>().text = bossComponents[enemySelectorPosition].GetName();
+            for (int i = 0; i < selected.Count; i ++) {
+                GameObject temp = Instantiate(enemySelector, selected[i].transform.position, Quaternion.Euler(0, 0, 0));
+
+                // Keep main arrow solid
+                if (selected[i].Equals(bossComponents[enemySelectorPosition].gameObject) || selected[i].Equals(player))
+                    temp.GetComponent<Flicker>().SetFlashTime(0);
+            }
+
+            // Display description of current component unless player is selecting themselves
+            if (playerMove != 3 && playerMove != 4 && playerMove != 5)
+                descriptionText.GetComponent<TextMeshProUGUI>().text = bossComponents[enemySelectorPosition].GetName();
+            else
+                descriptionText.GetComponent<TextMeshProUGUI>().text = "StormBlade";
         }
 
         int movement = 0;
@@ -308,14 +398,31 @@ public class UIManager : MonoBehaviour
             enemySelectorPosition += movement;
             if (enemySelectorPosition >= bossComponents.Count)
                 enemySelectorPosition = 0;
+            else if (enemySelectorPosition < 0)
+                enemySelectorPosition = bossComponents.Count - 1;
             GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
         }
 
         // Back out to previous menu if esc is pressed
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            DestroyEnemySelectors();
             GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
-            SetUIMode(1);
+
+            // Back out to correct menu
+            if (playerMove == 6)
+                SetUIMode(1);
+            else
+                SetUIMode(2);
+            return;
+        }
+
+        // If enter is pressed, attack!
+        if (Input.GetKeyDown(KeyCode.Return)) {
+            // Don't create a new shield if one already exists
+            if (playerMove != 3 || (playerMove == 3 && gameManager.GetActiveShield() == null)) {
+                playerController.PerformMove(playerMove, bossComponents[enemySelectorPosition].gameObject, selected);
+                SetUIMode(1);
+                GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
+            }
         }
     }
 
@@ -326,6 +433,56 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < selectors.Length; i ++) {
             Destroy(selectors[i]);
         }
+    }
+
+    // Return list of components to select with arrow based on player move
+    private List<GameObject> SelectComponents() {
+        // Get currently selected component
+        GameObject current = bossComponents[enemySelectorPosition].gameObject;
+        List<GameObject> result = new List<GameObject>();
+
+        // Bomb: check radius of explosion sprite
+        if (playerMove == 0) {
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(new Vector2(current.transform.position.x, current.transform.position.y), BOMB_RADIUS);
+
+            // Sort through all colliders and keep any that belong to active components
+            for (int i = 0; i < colliders.Length; i ++) {
+                if (bossComponents.Contains(colliders[i].gameObject.GetComponent<BossComponent>()))
+                    result.Add(colliders[i].gameObject);
+            }
+        }
+        // Lighting: check vertical rectangle
+        else if (playerMove == 1) {
+            // Get points for overlap rectangle
+            // Top left
+            Vector3 point1 = new Vector3(current.transform.position.x - LIGHTNING_WIDTH / 2, GameSystem.Y_ACTION_BOUNDARY, 0);
+            // Bottom right
+            Vector3 point2 = new Vector3(current.transform.position.x + LIGHTNING_WIDTH / 2, player.transform.position.y, 0);
+
+            Collider2D[] colliders = Physics2D.OverlapAreaAll(point1, point2);
+
+            // Sort through all colliders and keep any that belong to active components
+            for (int i = 0; i < colliders.Length; i ++) {
+                if (bossComponents.Contains(colliders[i].gameObject.GetComponent<BossComponent>()))
+                    result.Add(colliders[i].gameObject);
+            }
+        }
+        // Missile: select all active components
+        else if (playerMove == 2) {
+            for (int i = 0; i < bossComponents.Count; i ++) {
+                result.Add(bossComponents[i].gameObject);
+            }
+        }
+        // Shield and heals: select player
+        else if (playerMove == 3 || playerMove == 4 || playerMove == 5) {
+            result.Add(player);
+        }
+        // Basic attack: just select the current component
+        else if (playerMove == 6) {
+            result.Add(current);
+        }
+
+        return result;
     }
 
     // From the current selector position, find if there is a next available item index to snap to
@@ -499,6 +656,7 @@ public class UIManager : MonoBehaviour
     public void SetUIMode(int level) {
 
         descriptionText.GetComponent<TextMeshProUGUI>().text = "";
+        DestroyEnemySelectors();
 
         switch (level) {
             case 0:
@@ -557,5 +715,15 @@ public class UIManager : MonoBehaviour
     // Returns the parent UI boundaries object
     public GameObject GetBoundaries() {
         return boundaries;
+    }
+
+    // Returns turn-based canvas
+    public GameObject GetTurnCanvas() {
+        return turnCanvas;
+    }
+
+    // Returns damage text prefab
+    public GameObject GetDamageText() {
+        return damageText;
     }
 }

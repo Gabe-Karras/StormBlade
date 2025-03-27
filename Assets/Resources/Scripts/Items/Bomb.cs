@@ -26,6 +26,9 @@ public class Bomb : MonoBehaviour
     // This is the x/y distance to spawn the "bomblight" object
     private const float LIGHT_DISTANCE = 21f / GameSystem.PIXELS_PER_UNIT;
 
+    // player reference
+    private PlayerMoves playerMoves;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +36,8 @@ public class Bomb : MonoBehaviour
         travelDistance /= GameSystem.PIXELS_PER_UNIT;
 
         startPos = transform.position.y;
+
+        playerMoves = GameObject.Find("Player").GetComponent<PlayerMoves>();
     }
 
     // Update is called once per frame
@@ -51,7 +56,11 @@ public class Bomb : MonoBehaviour
             
             // When light effect is finished, destroy and spawn explosion
             if (effectFinished) {
-                Instantiate(explosion, transform.position, transform.rotation);
+                GameObject temp = Instantiate(explosion, transform.position, transform.rotation);
+
+                // Send explosion to moves class for animation
+                playerMoves.SetBombExplosion(temp);
+                
                 Destroy(gameObject);
             }
         }
@@ -78,5 +87,10 @@ public class Bomb : MonoBehaviour
         // Wait until animations are finished
         yield return new WaitForSeconds(temp.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
         effectFinished = true;
+    }
+
+    // Set travel distance for animation
+    public void SetTravelDistance(float distance) {
+        travelDistance = distance;
     }
 }

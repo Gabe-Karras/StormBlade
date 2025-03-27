@@ -117,7 +117,6 @@ GameObject:
   - component: {fileID: 1576303015004861861}
   - component: {fileID: 1576303015004861858}
   - component: {fileID: 1576303015004861859}
-  - component: {fileID: 1576303015004861860}
   - component: {fileID: 1576303015004861863}
   m_Layer: 0
   m_Name: LeftTurret
@@ -133,14 +132,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1576303015004861870}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.64, y: 0.255, z: 0.014578069}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
+  m_LocalPosition: {x: -0.64, y: 0.255, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1576303016796062068}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!212 &1576303015004861856
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -258,19 +257,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &1576303015004861860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1576303015004861870}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c737dc978496740cdb4ee05b5985d47b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  obj: {fileID: 636723309313527295, guid: 2632a6fdf41484ba78acee62777c4acf, type: 3}
 --- !u!95 &1576303015004861863
 Animator:
   serializedVersion: 5
@@ -943,8 +929,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1576303016359511876}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.29, z: 0.014578069}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.29000002, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1018,7 +1004,7 @@ MonoBehaviour:
   boss: {fileID: 1576303016796062069}
   hp: 1
   hasTotalBossHealth: 1
-  defense: 0.5
+  defense: 0.7
   componentName: Missile Silo
   explosion: {fileID: 97584526808370060, guid: 4d99ecb9240b7469680760a46c7d5afe, type: 3}
 --- !u!61 &1576303016359511896
@@ -1031,7 +1017,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1271,9 +1257,10 @@ MonoBehaviour:
   - {fileID: 1576303015825241524}
   - {fileID: 1576303016359511899}
   activeComponents:
-  - {fileID: 1576303015004861861}
   - {fileID: 1576303015869049844}
   - {fileID: 1576303016803476256}
+  - {fileID: 1576303015004861861}
+  - {fileID: 1576303016359511899}
   moves: []
 --- !u!1 &1576303016803476269
 GameObject:
@@ -1288,7 +1275,6 @@ GameObject:
   - component: {fileID: 1576303016803476256}
   - component: {fileID: 1576303016803476257}
   - component: {fileID: 1576303016803476270}
-  - component: {fileID: 1576303016803476259}
   - component: {fileID: 1576303016803476258}
   m_Layer: 0
   m_Name: RightTurret
@@ -1304,14 +1290,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1576303016803476269}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.64, y: 0.255, z: 0.014578069}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
+  m_LocalPosition: {x: 0.64, y: 0.255, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1576303016796062068}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!212 &1576303016803476271
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1429,19 +1415,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &1576303016803476259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1576303016803476269}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c737dc978496740cdb4ee05b5985d47b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  obj: {fileID: 636723309313527295, guid: 2632a6fdf41484ba78acee62777c4acf, type: 3}
 --- !u!95 &1576303016803476258
 Animator:
   serializedVersion: 5

@@ -27,7 +27,10 @@ public class GameSystem : MonoBehaviour
 
     // Y value to put player at in turn-based mode
     public const float TURN_BASED_Y_POSITION = -0.45f;
-    public const float BOSS_POSITION = 0.44f;
+    public const float BOSS_POSITION = 0.48f;
+
+    // Ratio between UI canvas positioning and in-game positioning
+    public const float CANVAS_RATIO = 3.13f;
 
     // Return a movement of the specified distance and angle
     public static Vector3 MoveAtAngle(float angle, float distance) {
@@ -213,7 +216,7 @@ public class GameSystem : MonoBehaviour
         System.Random r = new System.Random();
         pitchVar *= r.Next(0, 101) / 100.0f;
 
-        source.pitch += source.pitch * pitchVar * RandomSign();
+        source.pitch = 1 + 1 * pitchVar * RandomSign();
         source.PlayOneShot(sound, volume);
     }
 

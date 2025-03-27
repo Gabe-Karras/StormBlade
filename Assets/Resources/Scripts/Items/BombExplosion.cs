@@ -10,11 +10,19 @@ public class BombExplosion : MonoBehaviour
 
     private List<GameObject> overlappingEnemies;
 
+    // Used for turn-based animations
+    private GameManager gameManager;
+    private float animationLength;
+
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(GameSystem.StartExploding(GetComponent<SpriteRenderer>(), smallerExplosion));
         overlappingEnemies = new List<GameObject>();
+
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        animationLength = GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length;
     }
 
     // Update is called once per frame
@@ -28,6 +36,15 @@ public class BombExplosion : MonoBehaviour
         if (other.tag.Equals("Enemy")) {
             overlappingEnemies.Add(other.gameObject);
             StartCoroutine(HurtEnemy(other.gameObject));
+        }
+
+        // Flash sprite of boss components
+        if (gameManager.GetGameMode() == 1) {
+            List<BossComponent> bossComponents = gameManager.GetBoss().GetActiveComponents();
+
+            if (bossComponents.Contains(other.GetComponent<BossComponent>())) {
+                StartCoroutine(other.GetComponent<BossComponent>().FlashWhite(time: animationLength - 0.1f));
+            }
         }
     }
 

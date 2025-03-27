@@ -72,5 +72,15 @@ public class HomingLaser : Laser
     }
 
     // Override against parent
-    protected override void OnBecameInvisible() {}
+    protected override void OnBecameInvisible() {
+        // For animations in turn-based mode
+        if (gameManager.GetComponent<GameManager>().GetGameMode() == 1 && target != null) {
+            StartCoroutine(GameSystem.DelayedDestroy(gameObject, 1));
+        }
+    }
+
+    // Manually set a target for animation purposes
+    public void SetHomingTarget(GameObject obj) {
+        target = obj;
+    }
 }

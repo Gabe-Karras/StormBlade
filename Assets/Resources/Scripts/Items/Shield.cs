@@ -6,15 +6,25 @@ using UnityEngine;
 public class Shield : MonoBehaviour
 {
     // Shield can take 2 hits. 2 = full, 1 = flashing, 0 = destroy
+    // In turn-based mode, the shield can withstand 6 hits!
     [SerializeField]
     private int shieldState = 2;
+    [SerializeField]
+    private int turnShieldState = 6;
 
     private GameObject player;
+
+    private GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.Find("Player");
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        if (gameManager.GetGameMode() == 1) {
+            shieldState = turnShieldState;
+        }
     }
 
     // Update is called once per frame
