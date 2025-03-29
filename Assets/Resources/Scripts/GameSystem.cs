@@ -69,6 +69,21 @@ public class GameSystem : MonoBehaviour
         return angle;
     }
 
+    // Returns a new angle a step closer to the desired angle at specified speed
+    public static Quaternion TurnToAngle(float current, float target, float speed) {
+        float result = 0;
+        float distance = Math.Abs(target - current);
+        if (distance < speed)
+            speed = distance;
+
+        if (target < current)
+            result = current - speed;
+        else if (target > current)
+            result = current + speed;
+
+        return Quaternion.Euler(0, 0, result);
+    }
+
     // Calculate distance between two points
     public static float PointDistance(Vector3 point1, Vector3 point2) {
         return (float) Math.Sqrt(Math.Pow(point2.x - point1.x, 2) + Math.Pow(point2.y - point1.y, 2));
@@ -216,7 +231,8 @@ public class GameSystem : MonoBehaviour
         System.Random r = new System.Random();
         pitchVar *= r.Next(0, 101) / 100.0f;
 
-        source.pitch = 1 + 1 * pitchVar * RandomSign();
+        if (pitchVar != 0)
+            source.pitch = 1 + 1 * pitchVar * RandomSign();
         source.PlayOneShot(sound, volume);
     }
 

@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour
 
     // Boss of the level
     private GameObject boss;
+    private bool bossTurn = false;
 
     // Start is called before the first frame update
     void Start()
@@ -110,6 +111,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Set up player to take a turn in turn-based mode
+    private void TakeTurn() {
+        // First, check if player is dead
+        if (hp <= 0) {
+            player.GetComponent<PlayerController>().SetDead(true);
+            player.GetComponent<PlayerController>().PlayDeathSequence();
+            if (activeShield != null)
+                Destroy(activeShield);
+
+            return;
+        }
+
+        // If not, activate menu!
+        uiManager.GetComponent<UIManager>().SetUIMode(1);
+    }
+
     // Spawn in the boss above camera
     public void SpawnBoss() {
         boss = Instantiate(boss, new Vector3(0, GameSystem.Y_ACTION_BOUNDARY * 2, 0), Quaternion.Euler(0, 0, 0));
@@ -127,6 +144,9 @@ public class GameManager : MonoBehaviour
 
             // Convert hp to turn-based bounds
             hp *= 50;
+
+            // Instantly update healthbar
+            uiManager.GetComponent<UIManager>().SetHealthBarValue(hp);
 
             // If action shield exists, replace with turn-based shield
             if (activeShield != null) {
@@ -184,8 +204,10 @@ public class GameManager : MonoBehaviour
 
             // If change is negative, apply shield defense
             if (hpChange < 0) {
-                if (activeShield != null)
+                if (activeShield != null) {
                     hpChange = (int) (hpChange / shieldDefense);
+                    activeShield.GetComponent<Shield>().UpdateShieldState(-1);
+                }
             }
             // If change is positive, make it a health color
             else {
@@ -297,6 +319,18 @@ public class GameManager : MonoBehaviour
 
     public void SetActiveShield(GameObject obj) {
         activeShield = obj;
+    }
+
+    public bool GetBossTurn() {
+        return bossTurn;
+    }
+
+    public void SetBossTurn(bool turn) {
+        bossTurn = turn;
+
+        // Take player turn if set to false
+        if (turn == false)
+            TakeTurn();
     }
 
     // Method to keep value between given bounds

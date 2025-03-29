@@ -94,8 +94,18 @@ public class Laser : MonoBehaviour
         else {
             if (destroysOnHit) {
                 if (other.gameObject.Equals(animationTarget)) {
-                    StartCoroutine(other.gameObject.GetComponent<BossComponent>().FlashWhite());
-                    transform.position = new Vector3(100, 100, 0);
+                    // If target is boss component
+                    if (other.gameObject.GetComponent<BossComponent>() != null) {
+                        StartCoroutine(other.gameObject.GetComponent<BossComponent>().FlashWhite());
+                        transform.position = new Vector3(100, 100, 0);
+                    }
+
+                    // If target is player
+                    else {
+                        if (!other.gameObject.GetComponent<PlayerController>().GetIframes())
+                            other.gameObject.GetComponent<PlayerController>().Invincibility(1);
+                        transform.position = new Vector3(100, 100, 0);
+                    }
                 }
             }
             // If it doesn't destroy on hit (lightning) allow it to light up any boss component it touches

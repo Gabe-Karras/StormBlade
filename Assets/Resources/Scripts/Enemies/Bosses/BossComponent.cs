@@ -86,7 +86,10 @@ public class BossComponent : MonoBehaviour
         damageText.transform.SetParent(uiManager.GetTurnCanvas().transform);
         damageText.GetComponent<RectTransform>().anchoredPosition = new Vector2(textX, textY);
 
-        hp += change;
+        if (hasTotalBossHealth)
+            boss.UpdateHp(change);
+        else
+            hp += change;
     }
 
     // Sets sprite to be white briefly and gives iframes
@@ -101,7 +104,7 @@ public class BossComponent : MonoBehaviour
         StartCoroutine(GameSystem.FlashSprite(GetComponent<SpriteRenderer>(), (Material) Resources.Load("Materials/SolidWhite"), time: time));
 
         // Play hit sound
-        GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Damage/DamageEnemy"), uiManager.gameObject.GetComponent<AudioSource>(), 0.3f);
+        GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Damage/DamageEnemy"), boss.GetComponent<AudioSource>(), 0.3f);
 
         if (time == 0)
             time = iframeSeconds;
@@ -112,9 +115,9 @@ public class BossComponent : MonoBehaviour
     }
 
     // Flash and explode!
-    private void Death(int seconds) {
-        StartCoroutine(GameSystem.DelayedDestroy(gameObject, seconds));
-        StartCoroutine(GameSystem.FlickerSprite(GetComponent<SpriteRenderer>(), seconds));
+    public void Death() {
+        StartCoroutine(GameSystem.DelayedDestroy(gameObject, deathTime));
+        StartCoroutine(GameSystem.FlickerSprite(GetComponent<SpriteRenderer>(), 0));
         StartCoroutine(GameSystem.StartExploding(GetComponent<SpriteRenderer>(), explosion));
     }
 

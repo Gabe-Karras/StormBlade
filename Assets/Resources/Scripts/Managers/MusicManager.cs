@@ -51,6 +51,15 @@ public class MusicManager : MonoBehaviour
             PlayMusic(queue.Dequeue());
     }
 
+    // Stop current song and empty queue
+    public void StopAllMusic() {
+        source.Stop();
+        songPlaying = false;
+
+        while (queue.Count > 0)
+            queue.Dequeue();
+    }
+
     // Fades out the current song
     public IEnumerator FadeOut() {
         // Caluclate vars to fade sound over time

@@ -133,7 +133,7 @@ public class UIManager : MonoBehaviour
 
         // In turn-based mode, there are several layers to the UI functionality
         if (gameManager.GetGameMode() == 1) {
-            // In level 0, the player can do nothing.
+            // In level 0, the player can do nothing
             switch (uiMode) {
                 case 1:
                     // In level 1, the player may select between the attack and item options
@@ -288,7 +288,7 @@ public class UIManager : MonoBehaviour
         }
 
         // If player presses enter, move forward to component selection and set player move
-        if (Input.GetKeyDown(KeyCode.Return)) {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
             playerMove = turnSelectorPosition;
             GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
             SetUIMode(3);
@@ -416,11 +416,11 @@ public class UIManager : MonoBehaviour
         }
 
         // If enter is pressed, attack!
-        if (Input.GetKeyDown(KeyCode.Return)) {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
             // Don't create a new shield if one already exists
             if (playerMove != 3 || (playerMove == 3 && gameManager.GetActiveShield() == null)) {
                 playerController.PerformMove(playerMove, bossComponents[enemySelectorPosition].gameObject, selected);
-                SetUIMode(1);
+                SetUIMode(0);
                 GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
             }
         }
@@ -651,7 +651,7 @@ public class UIManager : MonoBehaviour
     public void SetTurnAlpha(float alpha) {
         turnCanvas.GetComponent<CanvasGroup>().alpha = alpha;
     }
-
+ 
     // Changes ui mode in turn-based and updates alphas accordingly
     public void SetUIMode(int level) {
 
@@ -725,5 +725,10 @@ public class UIManager : MonoBehaviour
     // Returns damage text prefab
     public GameObject GetDamageText() {
         return damageText;
+    }
+
+    // Instantly set current healthbar value
+    public void SetHealthBarValue(int value) {
+        healthBarValue = value;
     }
 }

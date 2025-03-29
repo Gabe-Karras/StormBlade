@@ -9,6 +9,10 @@ public class PlayerMoves : MonoBehaviour
     [SerializeField]
     private float moveSpeed;
 
+    // How long to wait after player finishes move before letting boss take over
+    [SerializeField]
+    private float afterMoveTime = 2;
+
     // Source to play zaps from
     [SerializeField]
     private AudioSource laserSource;
@@ -83,9 +87,12 @@ public class PlayerMoves : MonoBehaviour
         if (move) {
             Vector3 destination = new Vector3(xTarget, GameSystem.TURN_BASED_Y_POSITION, 0);
 
-            transform.position += GameSystem.MoveTowardsPoint(transform.position, destination, moveSpeed);
-            if (GameSystem.PointDistance(transform.position, destination) == 0)
+            if (GameSystem.PointDistance(transform.position, destination) == 0) {
                 move = false;
+                return;
+            }
+
+            transform.position += GameSystem.MoveTowardsPoint(transform.position, destination, moveSpeed);
         }
     }
 
@@ -174,6 +181,10 @@ public class PlayerMoves : MonoBehaviour
         // Deal damage to component
         damage = RandomizeDamage(damage);
         target.GetComponent<BossComponent>().UpdateHp(damage * -1);
+
+        // Wait, then set boss turn to be true
+        yield return new WaitForSeconds(afterMoveTime);
+        gameManager.SetBossTurn(true);
     }
 
     // Attack boss with a bomb
@@ -223,6 +234,10 @@ public class PlayerMoves : MonoBehaviour
             if (!otherTargets[i].Equals(target))
                 otherTargets[i].GetComponent<BossComponent>().UpdateHp(RandomizeDamage(bombDamage * -1));
         }
+
+        // Wait, then set boss turn to be true
+        yield return new WaitForSeconds(afterMoveTime);
+        gameManager.SetBossTurn(true);
     }
 
     // Attack boss with lightning
@@ -262,6 +277,10 @@ public class PlayerMoves : MonoBehaviour
             if (!otherTargets[i].Equals(target))
                 otherTargets[i].GetComponent<BossComponent>().UpdateHp(RandomizeDamage(lightningDamage * -1));
         }
+
+        // Wait, then set boss turn to be true
+        yield return new WaitForSeconds(afterMoveTime);
+        gameManager.SetBossTurn(true);
     }
 
     // Attack boss with missiles
@@ -305,6 +324,10 @@ public class PlayerMoves : MonoBehaviour
         for (int i = 0; i < targets.Count; i ++) {
             targets[i].GetComponent<BossComponent>().UpdateHp(RandomizeDamage(missileDamage * -1));
         }
+
+        // Wait, then set boss turn to be true
+        yield return new WaitForSeconds(afterMoveTime);
+        gameManager.SetBossTurn(true);
     }
 
     // Give player shield
@@ -316,6 +339,10 @@ public class PlayerMoves : MonoBehaviour
 
         // Play shield noise
         GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Shield"), healSource, 0);
+
+        // Wait, then set boss turn to be true
+        yield return new WaitForSeconds(afterMoveTime);
+        gameManager.SetBossTurn(true);
     }
 
     // Heal player with small repair
@@ -328,6 +355,10 @@ public class PlayerMoves : MonoBehaviour
 
         // Give player health!
         gameManager.UpdateHp(RandomizeDamage(smallHeal));
+
+        // Wait, then set boss turn to be true
+        yield return new WaitForSeconds(afterMoveTime);
+        gameManager.SetBossTurn(true);
     }
 
     // Heal player with small repair
@@ -340,6 +371,10 @@ public class PlayerMoves : MonoBehaviour
 
         // Give player health!
         gameManager.UpdateHp(RandomizeDamage(bigHeal));
+
+        // Wait, then set boss turn to be true
+        yield return new WaitForSeconds(afterMoveTime);
+        gameManager.SetBossTurn(true);
     }
 
     // Randomize a damage value based on 10%

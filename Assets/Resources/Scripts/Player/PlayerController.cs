@@ -79,6 +79,7 @@ public class PlayerController : MonoBehaviour
 
     // Game manager
     private GameManager gameManager;
+    private MusicManager musicManager;
 
     // Player moves class
     private PlayerMoves playerMoves;
@@ -106,34 +107,39 @@ public class PlayerController : MonoBehaviour
         healSound = Resources.Load<AudioClip>("SoundEffects/Items/Heal");
 
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        musicManager = gameManager.GetMusicManager();
         playerMoves = GetComponent<PlayerMoves>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Action controls
-        if (!dead && hasControl) {
-            MovePlayer();
+        // Animate/control when alive
+        if (!dead) {
 
-            // Get current animation
-            currentAnimation = playerAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+            // Action controls
+            if (hasControl) {
+                MovePlayer();
 
-            Shoot();
+                // Get current animation
+                currentAnimation = playerAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
 
-            UseItem();
+                Shoot();
 
-            // Check if hit and activate iframes
-            if (hit) {
-                Invincibility(0);
-                hit = false;
+                UseItem();
+
+                // Check if hit and activate iframes
+                if (hit) {
+                    Invincibility(0);
+                    hit = false;
+                }
             }
-        }
 
-        // Update x coordinates for animate function
-        x = transform.position.x;
-        AnimatePlayer();
-        previousX = x;
+            // Update x coordinates for animate function
+            x = transform.position.x;
+            AnimatePlayer();
+            previousX = x;
+        }
     }
 
     // Handle item pickups
@@ -398,7 +404,7 @@ public class PlayerController : MonoBehaviour
                     gameManager.UpdateLightningCount(-1);
                     break;
                 case 2: // Missile
-                    GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Missile"), laserSource, 0, volume: 0.5f);
+                    GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Missile"), laserSource, 0, volume: 0.35f);
                     Instantiate(missile, transform.position + new Vector3(-10 / GameSystem.PIXELS_PER_UNIT, 0, 0), Quaternion.Euler(0, 0, 45));
                     Instantiate(missile, transform.position + new Vector3(0, 5 / GameSystem.PIXELS_PER_UNIT, 0), Quaternion.Euler(0, 0, 0));
                     Instantiate(missile, transform.position + new Vector3(10 / GameSystem.PIXELS_PER_UNIT, 0, 0), Quaternion.Euler(0, 0, 315));
@@ -424,7 +430,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Enter invincibility frames if hit
-    private void Invincibility(float seconds) {
+    public void Invincibility(float seconds) {
         // Play hit sound
         GameSystem.PlaySoundEffect(hitSound, hitSource, 0);
 
@@ -460,13 +466,11 @@ public class PlayerController : MonoBehaviour
         // Start flashing!
         Invincibility(10); // Long enough to go until end of animation
 
-        // Put a bunch of random explosions around player
+        // Put a bunch of random explosions around player and shoot out shrapnel
         StartCoroutine(GameSystem.StartExploding(playerSprite, (GameObject) Resources.Load("Prefabs/Explosions/SmallExplosion")));
 
-        // Shoot out shrapnel every time the death animation progresses (animation event)
-
-        // When animation ends, destroy object, create big explosion
-        // and shoot out a few pieces of shrapnel (animation event)
+        // Stop music
+        musicManager.StopAllMusic();
     }
 
     // Shoot out shrapnel in accordance to animation
