@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Item
   - EnemySelector
+  - WaveTimer
   layers:
   - Default
   - TransparentFX

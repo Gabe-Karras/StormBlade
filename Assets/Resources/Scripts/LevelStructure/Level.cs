@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Generic class that represents a level. Contains all information in a large queue
-public class Level : MonoBehaviour
+public class Level
 {
     // List of bad guys/items/wave timers to spawn
     private Queue<LevelEntity> levelQueue;
+
+    public Level() {
+        levelQueue = new Queue<LevelEntity>();
+    }
 
     public void AddEntity(LevelEntity e) {
         levelQueue.Enqueue(e);

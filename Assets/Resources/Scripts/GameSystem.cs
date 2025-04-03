@@ -231,8 +231,9 @@ public class GameSystem : MonoBehaviour
         System.Random r = new System.Random();
         pitchVar *= r.Next(0, 101) / 100.0f;
 
+        source.pitch = 1;
         if (pitchVar != 0)
-            source.pitch = 1 + 1 * pitchVar * RandomSign();
+            source.pitch += 1 * pitchVar * RandomSign();
         source.PlayOneShot(sound, volume);
     }
 
@@ -246,5 +247,14 @@ public class GameSystem : MonoBehaviour
     public static float RandomPercentage() {
         System.Random r = new System.Random();
         return r.Next(0, 101) / 100f;
+    }
+
+    // Returns random point between two other points
+    public static Vector3 RandomPoint(Vector3 point1, Vector3 point2) {
+        float xDistance = Math.Abs(point2.x - point1.x) * RandomPercentage();
+        float yDistance = Math.Abs(point2.y - point1.y) * RandomPercentage();
+
+        Vector3 result = new Vector3(Math.Min(point1.x, point2.x) + xDistance, Math.Min(point1.y, point2.y) + yDistance, 0);
+        return result;
     }
 }

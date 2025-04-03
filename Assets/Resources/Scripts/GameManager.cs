@@ -55,6 +55,8 @@ public class GameManager : MonoBehaviour
     private GameObject musicManager;
     [SerializeField]
     private GameObject cutsceneManager;
+    [SerializeField]
+    private GameObject levelManager;
 
     // Player reference
     private GameObject player;
@@ -74,6 +76,7 @@ public class GameManager : MonoBehaviour
         uiManager = Instantiate(uiManager, transform.position, transform.rotation);
         musicManager = Instantiate(musicManager, transform.position, transform.rotation);
         cutsceneManager = Instantiate(cutsceneManager, transform.position, transform.rotation);
+        levelManager = Instantiate(levelManager, transform.position, transform.rotation);
 
         // Find player
         player = GameObject.Find("Player");
@@ -358,5 +361,9 @@ public class GameManager : MonoBehaviour
 
     public CutsceneManager GetCutsceneManager() {
         return cutsceneManager.GetComponent<CutsceneManager>();
+    }
+
+    public LevelManager GetLevelManager() {
+        return levelManager.GetComponent<LevelManager>();
     }
 }

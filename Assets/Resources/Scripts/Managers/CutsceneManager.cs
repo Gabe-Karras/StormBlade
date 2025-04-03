@@ -235,10 +235,6 @@ public class CutsceneManager : MonoBehaviour
         Instantiate(startMessage, new Vector3(0, 0.5f, 0), Quaternion.Euler(0, 0, 0));
         musicManager.PlayMusic(Resources.Load<AudioClip>("Music/Level" + gameManager.GetLevel()));
         player.GetComponent<PlayerController>().SetHasControl(true);
-
-        // test
-        yield return new WaitForSeconds(5);
-        TransitionToTurnBased();
     }
 
     // Move bars in or out of frame. Will only do it if action ui is transparent

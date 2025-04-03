@@ -22,7 +22,7 @@ public class WaveLaser : Laser
     protected override void Start()
     {
         base.Start();
-        horizontalSpeed /= 50;
+        horizontalSpeed /= GameSystem.SPEED_DIVISOR;
         realSpeed = horizontalSpeed * direction;
         velocity = horizontalSpeed / velocity * direction;
     }

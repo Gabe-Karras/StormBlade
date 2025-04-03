@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &693598522247255226
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7689463848214315447}
+  - component: {fileID: 3092983938413154338}
+  m_Layer: 0
+  m_Name: LevelManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7689463848214315447
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 693598522247255226}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.44034424, y: 0.4308228, z: -0.010882424}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3092983938413154338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 693598522247255226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8053efc93837342b89fae86e06f4418f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaver: {fileID: 3806737102023566361, guid: b90d76fbad3094961b2671c805ca1feb, type: 3}
+  weaverLv2: {fileID: 3806737102023566361, guid: 4627206d192bb464092ff1468b0731da, type: 3}
+  shuffler: {fileID: 0}
+  kamikaze: {fileID: 0}
+  dragonfly: {fileID: 0}
+  stalker: {fileID: 8545996803992707877, guid: e984411472ca14ea28975eef8fa85c52, type: 3}
+  smallHealth: {fileID: 83177742325960584, guid: fccd62b407cce4fb5a54c75d494a41d4, type: 3}
+  bigHealth: {fileID: 3116642203537047192, guid: 4c2d2570c2249496e8cb2f8c7bcd3e11, type: 3}
+  bomb: {fileID: 464766794225193147, guid: f0e67935e355449459ed5e2362f231a5, type: 3}
+  lightning: {fileID: 2870410936131013429, guid: 45ae40cab8eac4ab1a275dd765b4ae2d, type: 3}
+  missile: {fileID: 2399366967911943161, guid: 917c897c295f24ea9bcfaa440863fdb0, type: 3}
+  shield: {fileID: 861298760321916170, guid: 0cb4b9236bdbb41079526dfbc39e8da5, type: 3}
+  blaster: {fileID: 5977760146879335434, guid: 862a6cce50e4a4a2b94a8106056aa096, type: 3}
+  waveTimer: {fileID: 2214221623850665550, guid: 0e41a4cc6c8714c25bc3a821e1c78b89, type: 3}
