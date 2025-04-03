@@ -462,7 +462,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8282517313674321174, guid: 88ca9cf3560ec432ebdfbf752f7c8c8b, type: 3}
       propertyPath: bp
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8282517313674321174, guid: 88ca9cf3560ec432ebdfbf752f7c8c8b, type: 3}
       propertyPath: hp
@@ -470,23 +470,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8282517313674321174, guid: 88ca9cf3560ec432ebdfbf752f7c8c8b, type: 3}
       propertyPath: bombCount
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8282517313674321174, guid: 88ca9cf3560ec432ebdfbf752f7c8c8b, type: 3}
       propertyPath: missileCount
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8282517313674321174, guid: 88ca9cf3560ec432ebdfbf752f7c8c8b, type: 3}
       propertyPath: bigHealthCount
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8282517313674321174, guid: 88ca9cf3560ec432ebdfbf752f7c8c8b, type: 3}
       propertyPath: lightningCount
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8282517313674321174, guid: 88ca9cf3560ec432ebdfbf752f7c8c8b, type: 3}
       propertyPath: smallHealthCount
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8282517313674321175, guid: 88ca9cf3560ec432ebdfbf752f7c8c8b, type: 3}
       propertyPath: m_Name

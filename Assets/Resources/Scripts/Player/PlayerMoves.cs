@@ -178,6 +178,8 @@ public class PlayerMoves : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
+        yield return new WaitForSeconds(0.3f);
+
         // Deal damage to component
         damage = RandomizeDamage(damage);
         target.GetComponent<BossComponent>().UpdateHp(damage * -1);

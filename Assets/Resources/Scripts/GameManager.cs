@@ -100,8 +100,8 @@ public class GameManager : MonoBehaviour
             UpdateBombCount(0);
 
             // Play level intro
-            //cutsceneManager.GetComponent<CutsceneManager>().IntroCutscene();
-            cutsceneManager.GetComponent<CutsceneManager>().TransitionToTurnBased();
+            cutsceneManager.GetComponent<CutsceneManager>().IntroCutscene();
+            //cutsceneManager.GetComponent<CutsceneManager>().TransitionToTurnBased();
             initializing = false;
 
             // Case where ship starts at level 5
@@ -354,5 +354,9 @@ public class GameManager : MonoBehaviour
 
     public MusicManager GetMusicManager() {
         return musicManager.GetComponent<MusicManager>();
+    }
+
+    public CutsceneManager GetCutsceneManager() {
+        return cutsceneManager.GetComponent<CutsceneManager>();
     }
 }

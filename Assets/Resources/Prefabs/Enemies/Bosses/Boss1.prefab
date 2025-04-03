@@ -705,7 +705,7 @@ MonoBehaviour:
   boss: {fileID: 1576303016796062069}
   hp: 1
   hasTotalBossHealth: 1
-  defense: 2.5
+  defense: 2
   componentName: Armored Hull
   explosion: {fileID: 97584526808370060, guid: 4d99ecb9240b7469680760a46c7d5afe, type: 3}
 --- !u!61 &1576303015869049845
@@ -1011,7 +1011,7 @@ MonoBehaviour:
   boss: {fileID: 1576303016796062069}
   hp: 1
   hasTotalBossHealth: 1
-  defense: 0.7
+  defense: 0.5
   componentName: Missile Silo
   explosion: {fileID: 5256562161114831308, guid: 08b61ab70f6464060b4bcc6b06886171, type: 3}
 --- !u!61 &1576303016359511896
@@ -1211,6 +1211,7 @@ GameObject:
   - component: {fileID: 1576303016796062069}
   - component: {fileID: 5722420312234882414}
   - component: {fileID: 6665044899005134892}
+  - component: {fileID: -8142451440749938457}
   - component: {fileID: -8126953267116147625}
   m_Layer: 0
   m_Name: Boss1
@@ -1280,7 +1281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boss: {fileID: 1576303016796062069}
-  chance: 60
+  chance: 100
   damage: 60
   leftTurret: {fileID: 1576303015004861870}
   rightTurret: {fileID: 1576303016803476269}
@@ -1299,13 +1300,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boss: {fileID: 1576303016796062069}
-  chance: 40
+  chance: 50
   damage: 75
   body: {fileID: 1576303016245721749}
   leftArm: {fileID: 1576303015141955109}
   rightArm: {fileID: 1576303014938053460}
+  doors: {fileID: 1576303015825241523}
+  silo: {fileID: 1576303016359511876}
   armSpeed: 0.5
   bodySpeed: 0.8
+--- !u!114 &-8142451440749938457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1576303016796062066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a0444c3efa5b416581bcee2924a906d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boss: {fileID: 1576303016796062069}
+  chance: 50
+  damage: 90
+  doors: {fileID: 1576303015825241523}
+  silo: {fileID: 1576303016359511876}
+  missile: {fileID: 3410009565632032836, guid: 73a5a1e463ea14461b0dc2c3f8e19f8f, type: 3}
+  missileExplosion: {fileID: 5256562161114831308, guid: 08b61ab70f6464060b4bcc6b06886171, type: 3}
 --- !u!82 &-8126953267116147625
 AudioSource:
   m_ObjectHideFlags: 0

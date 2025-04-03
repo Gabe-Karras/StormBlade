@@ -14,6 +14,12 @@ public class SawAttack1 : BossMove
     [SerializeField]
     private GameObject rightArm;
 
+    [SerializeField]
+    private GameObject doors;
+
+    [SerializeField]
+    private GameObject silo;
+
     private float bodyHeight;
 
     private GameObject leftSaw;
@@ -23,6 +29,8 @@ public class SawAttack1 : BossMove
 
     private float leftArmPosition;
     private float rightArmPosition;
+
+    private SpriteRenderer doorSprite;
 
     // How fast to move arms together
     [SerializeField]
@@ -47,11 +55,26 @@ public class SawAttack1 : BossMove
 
         armSpeed /= GameSystem.SPEED_DIVISOR;
         bodySpeed /= GameSystem.SPEED_DIVISOR;
+
+        // Used in door closing animation
+        doorSprite = doors.GetComponent<SpriteRenderer>();
     }
 
     public override IEnumerator ExecuteMove() {
         moveFinished = false;
         // If silo is open, close doors and deactivate component
+        bool doorsClosed = true;
+        if (doorSprite.sprite.name.Equals("SiloDoors_4"))
+            doorsClosed = false;
+
+        if (!doorsClosed) {
+            boss.DeactivateComponent(silo.GetComponent<BossComponent>());
+
+            for (int i = 3; i >= 0; i --) {
+                doorSprite.sprite = Resources.LoadAll<Sprite>("Sprites/Enemies/Bosses/Boss1/SiloDoors")[i];
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
 
         // Slide saws together
         bool sawsTouching = false;

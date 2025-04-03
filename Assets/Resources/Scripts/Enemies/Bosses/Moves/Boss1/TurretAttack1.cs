@@ -25,9 +25,10 @@ public class TurretAttack1 : BossMove
         // Get most current boss data
         base.Update();
 
-        // If both turrets are destroyed, remove move from list
-        if (leftTurret == null && rightTurret == null) {
+        // If both turrets are destroyed, remove move from list and add missile move
+        if (leftTurret == null && rightTurret == null && !moves.Contains(GetComponent<MissileAttack1>())) {
             boss.RemoveMove(this);
+            boss.AddMove(GetComponent<MissileAttack1>());
         }
     }
 

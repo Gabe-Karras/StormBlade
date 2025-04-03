@@ -30,12 +30,14 @@ public class Boss : MonoBehaviour
 
     private GameManager gameManager;
     private MusicManager musicManager;
+    private UIManager uiManager;
 
     // Start is called before the first frame update
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         musicManager = gameManager.GetMusicManager();
+        uiManager = gameManager.GetUIManager();
 
         hp = maxHp;
     }
@@ -44,7 +46,6 @@ public class Boss : MonoBehaviour
     void Update()
     {
         // Take turn when game manager says so!
-        //Debug.Log("bossturn: " + gameManager.GetBossTurn() + " startturn: " + startTurn);
         if (gameManager.GetBossTurn() && startTurn) {
             startTurn = false;
             StartCoroutine(TakeTurn());
@@ -74,8 +75,10 @@ public class Boss : MonoBehaviour
 
         // Then, check if the entire boss itself has been destroyed
         if (hp <= 0) {
-            // Stop the boss music so he explodes in silence
+            // Stop the boss music and get rid of the menu so he explodes in silence
             musicManager.StopMusic();
+            uiManager.SetTurnAlpha(0);
+            yield return new WaitForSeconds(0.3f);
 
             // Explode everything at once!
             for (int i = 0; i < components.Count; i ++) {
@@ -95,6 +98,8 @@ public class Boss : MonoBehaviour
                 // Destroy entire object at the end
                 StartCoroutine(GameSystem.DelayedDestroy(gameObject, deathTime));
             }
+
+            yield break;
         }
 
         // Pick a random move to execute!
