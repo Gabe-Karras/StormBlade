@@ -9,4 +9,10 @@ public abstract class EnemyBehavior : MonoBehaviour
 {
     // This method will be called every frame the enemy is alive in the generic Enemy class.
     public abstract void ExecuteBehavior();
+
+    // Quit any behavior code if enemy dies
+    private void Update() {
+        if (gameObject.GetComponent<Enemy>().GetHp() <= 0)
+            Destroy(this);
+    }
 }

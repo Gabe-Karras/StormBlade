@@ -28,8 +28,13 @@ public class HomingLaser : Laser
 
         // Move towards/face target
         if (target != null) {
-            currentMovement = GameSystem.MoveTowardsPointWithMomentum(transform.position, target.transform.position, speed, previousMovement);
-            transform.rotation = Quaternion.Euler(0, 0, GameSystem.FacePoint(transform.position, target.transform.position));
+            // Set target to null if enemy is dead
+            if (target.GetComponent<Enemy>().IsDead())
+                target = null;
+            else {
+                currentMovement = GameSystem.MoveTowardsPointWithMomentum(transform.position, target.transform.position, speed, previousMovement);
+                transform.rotation = Quaternion.Euler(0, 0, GameSystem.FacePoint(transform.position, target.transform.position));
+            }
         }
         // If no target, move up and look for new target
         else {

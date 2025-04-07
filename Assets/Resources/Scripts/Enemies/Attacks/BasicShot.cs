@@ -15,6 +15,7 @@ public class BasicShot : EnemyAttack
 
     public override void ExecuteAttack() {
         Instantiate(laser, transform.position, transform.rotation);
-        GameSystem.PlaySoundEffect(laserShot, laserShotSource, 0);
+        if (laserShot != null)
+            GameSystem.PlaySoundEffect(laserShot, laserShotSource, 0);
     }
 }

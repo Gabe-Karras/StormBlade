@@ -64,8 +64,8 @@ public class WeaveDown : EnemyBehavior
 
     private IEnumerator AttackWait(float seconds) {
         attacking = true;
-        yield return new WaitForSeconds(seconds);
         attack.ExecuteAttack();
+        yield return new WaitForSeconds(seconds);
         attacking = false;
     }
 }

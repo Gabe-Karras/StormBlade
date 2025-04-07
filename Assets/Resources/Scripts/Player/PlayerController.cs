@@ -173,7 +173,8 @@ public class PlayerController : MonoBehaviour
             }
 
             // Flash player sprite and destroy pickup
-            StartCoroutine(GameSystem.FlashSprite(playerSprite, Resources.Load<Material>("Materials/SolidWhite")));
+            if (playerSprite.material != Resources.Load<Material>("Materials/SolidWhite") && playerSprite.material != Resources.Load<Material>("Materials/SolidRed"))
+                StartCoroutine(GameSystem.FlashSprite(playerSprite, Resources.Load<Material>("Materials/SolidWhite")));
             Destroy(other.gameObject);
 
             // Play sound effect
@@ -261,24 +262,20 @@ public class PlayerController : MonoBehaviour
             // Decide how to shoot based on BP
             if (gameManager.GetBp() == 1) {
                 SpawnLasers(laser0);
-                laserSource.pitch = 0.75f;
-                GameSystem.PlaySoundEffect(laserSound, laserSource, 0);
+                GameSystem.PlaySoundEffect(laserSound, laserSource, 0, pitch: 0.75f);
             } else if (gameManager.GetBp() == 2) {
                 SpawnLasers(laser1);
-                laserSource.pitch = 1;
                 GameSystem.PlaySoundEffect(laserSound, laserSource, 0);
             } else if (gameManager.GetBp() == 3) {
                 SpawnLasers(laser1);
                 SpawnLasersWave(laser2);
-                laserSource.pitch = 0.5f;
-                GameSystem.PlaySoundEffect(laserSound, laserSource, 0);
+                GameSystem.PlaySoundEffect(laserSound, laserSource, 0, pitch: 0.5f);
             }
             else if (gameManager.GetBp() == 4 || gameManager.GetBp() == 5) {
                 SpawnLasers(laser1);
                 SpawnLasersSpreadshot(laser0);
                 SpawnLasersWave(laser2);
-                laserSource.pitch = 0.5f;
-                GameSystem.PlaySoundEffect(laserSound, laserSource, 0);
+                GameSystem.PlaySoundEffect(laserSound, laserSource, 0, pitch: 0.5f);
             }
         }
     }
@@ -368,21 +365,24 @@ public class PlayerController : MonoBehaviour
 
     // If player presses item key, deploy the item that is currently selected
     private void UseItem() {
-        // Small heal
-        if (Input.GetKeyDown(KeyCode.E)) {
-            if (gameManager.GetSmallHealthCount() > 0) {
-                gameManager.UpdateHp(2);
-                gameManager.UpdateSmallHealthCount(-1);
-                PlayHealAnimation(0.1f);
+        // Heal items have cooldown
+        if (playerSprite.material != Resources.Load<Material>("Materials/SolidRed")) {
+            // Small heal
+            if (Input.GetKeyDown(KeyCode.E)) {
+                if (gameManager.GetSmallHealthCount() > 0) {
+                    gameManager.UpdateHp(2);
+                    gameManager.UpdateSmallHealthCount(-1);
+                    PlayHealAnimation(0.1f);
+                }
             }
-        }
 
-        // Big heal
-        if (Input.GetKeyDown(KeyCode.W)) {
-            if (gameManager.GetBigHealthCount() > 0) {
-                gameManager.UpdateHp(4);
-                gameManager.UpdateBigHealthCount(-1);
-                PlayHealAnimation(0.2f);
+            // Big heal
+            if (Input.GetKeyDown(KeyCode.W)) {
+                if (gameManager.GetBigHealthCount() > 0) {
+                    gameManager.UpdateHp(4);
+                    gameManager.UpdateBigHealthCount(-1);
+                    PlayHealAnimation(0.2f);
+                }
             }
         }
 
@@ -424,7 +424,9 @@ public class PlayerController : MonoBehaviour
 
     // Flash sprite red, emit particles, and play heal sound
     public void PlayHealAnimation(float particleTime) {
-        StartCoroutine(GameSystem.FlashSprite(playerSprite, Resources.Load<Material>("Materials/SolidRed"), time: particleTime + 0.2f));
+        if (playerSprite.material != Resources.Load<Material>("Materials/SolidWhite"))
+            StartCoroutine(GameSystem.FlashSprite(playerSprite, Resources.Load<Material>("Materials/SolidRed"), time: particleTime + 0.2f));
+            
         StartCoroutine(GameSystem.EmitParticles(gameObject, Resources.Load<GameObject>("Prefabs/Explosions/RedParticle"), 0, 0, particleTime));
         GameSystem.PlaySoundEffect(healSound, healSource, 0);
     }

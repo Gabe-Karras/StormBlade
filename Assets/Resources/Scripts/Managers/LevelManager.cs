@@ -57,19 +57,21 @@ public class LevelManager : MonoBehaviour
     // Other important references
     private GameManager gameManager;
     private CutsceneManager cutsceneManager;
+    private MusicManager musicManager;
     private PlayerController playerController;
 
     // Start is called before the first frame update
     void Start()
     {
-        TOP = new Vector3(0, GameSystem.Y_ACTION_BOUNDARY + 0.32f, 0);
-        TOP_LEFT = new Vector3(-0.53f, GameSystem.Y_ACTION_BOUNDARY + 0.32f, 0);
-        TOP_RIGHT = new Vector3(0.53f, GameSystem.Y_ACTION_BOUNDARY + 0.32f, 0);
-        TOP_LEFT_CORNER = new Vector3(-1.06f, GameSystem.Y_ACTION_BOUNDARY + 0.32f, 0);
-        TOP_RIGHT_CORNER = new Vector3(1.06f, GameSystem.Y_ACTION_BOUNDARY + 0.32f, 0);
+        TOP = new Vector3(0, GameSystem.Y_ACTION_BOUNDARY, 0);
+        TOP_LEFT = new Vector3(-0.53f, GameSystem.Y_ACTION_BOUNDARY, 0);
+        TOP_RIGHT = new Vector3(0.53f, GameSystem.Y_ACTION_BOUNDARY, 0);
+        TOP_LEFT_CORNER = new Vector3(-1.06f, GameSystem.Y_ACTION_BOUNDARY, 0);
+        TOP_RIGHT_CORNER = new Vector3(1.06f, GameSystem.Y_ACTION_BOUNDARY, 0);
 
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         cutsceneManager = gameManager.GetCutsceneManager();
+        musicManager = gameManager.GetMusicManager();
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
 
         // Build correct level
@@ -97,6 +99,7 @@ public class LevelManager : MonoBehaviour
 
         switch (level) {
             case 1: // LEVEL 1
+                /*
                 // Intro to weavers
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 3));
                 result.AddEntity(new LevelEntity(weaver, TOP));
@@ -157,21 +160,116 @@ public class LevelManager : MonoBehaviour
                 result.AddEntity(new LevelEntity(weaver, TOP_LEFT - new Vector3(HALF, 0, 0)));
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.2f));
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.2f));
+
+                // Missiles
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(missile, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(missile, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(missile, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 5));
+
                 // Intro to shufflers
+                result.AddEntity(new LevelEntity(shuffler, TOP));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(shuffler, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(shuffler, TOP_LEFT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(shuffler, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1.5f));
+                result.AddEntity(new LevelEntity(shuffler, TOP_LEFT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1.5f));
+                result.AddEntity(new LevelEntity(shuffler, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1.5f));
+                result.AddEntity(new LevelEntity(shuffler, TOP_LEFT));
 
                 // Weavers and shufflers
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(weaverLv2, TOP));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(weaver, TOP - new Vector3(HALF, 0, 0)));
+                result.AddEntity(new LevelEntity(weaver, TOP + new Vector3(HALF, 0, 0)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(shuffler, TOP_LEFT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(shuffler, TOP_RIGHT));
 
                 // Blaster 3
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(blaster, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 3));
+
+                result.AddEntity(new LevelEntity(weaverLv2, TOP_LEFT - new Vector3(HALF, 0, 0)));
+                result.AddEntity(new LevelEntity(weaverLv2, TOP_RIGHT + new Vector3(HALF, 0, 0)));
+                result.AddEntity(new LevelEntity(shuffler, TOP));
+                
 
                 // Intro to kamikaze
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_LEFT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 2));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_RIGHT + new Vector3(HALF, 0, 0)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_LEFT - new Vector3(HALF, 0, 0)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_RIGHT));
 
                 // Shufflers and kamikaze
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(shuffler, TOP_LEFT));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_LEFT));
+                result.AddEntity(new LevelEntity(shuffler, TOP_RIGHT));
+
+                // Bombs!!!
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(bomb, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(bomb, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(bomb, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 5));
+                */
 
                 // Intro to dragonflies
+                result.AddEntity(new LevelEntity(dragonfly, TOP));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 3));
+                result.AddEntity(new LevelEntity(dragonfly, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(dragonfly, TOP_LEFT));
 
                 // Blaster 4
+                result.AddEntity(new LevelEntity(blaster, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
 
                 // Kamikaze and dragonflies
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
 
                 // Shufflers and dragonflies
 
@@ -182,12 +280,12 @@ public class LevelManager : MonoBehaviour
                 // Intro to stalkers
 
                 // Boss
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 5));
                 break;
         }
 
         levelQueue = result.GetQueue();
-        Debug.Log("bruh");
         return result;
     }
 
@@ -203,6 +301,11 @@ public class LevelManager : MonoBehaviour
         if (obj.Equals(waveTimer)) {
             if (e.GetTimer() != 0)
                 temp.GetComponent<WaveTimer>().SetTime(e.GetTimer());
+        }
+
+        // If last item in queue, fade out music
+        if (levelQueue.Count == 0) {
+            StartCoroutine(musicManager.FadeOut());
         }
     }
 }

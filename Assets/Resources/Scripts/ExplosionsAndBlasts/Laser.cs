@@ -24,6 +24,8 @@ public class Laser : MonoBehaviour
     // Used in turn-based mode to determine what to hit
     private GameObject animationTarget;
     private List<BossComponent> bossComponents;
+    // What game mode was this laser created in?
+    private int creationMode;
 
     protected GameObject gameManager;
 
@@ -36,15 +38,23 @@ public class Laser : MonoBehaviour
         damage *= -1;
 
         gameManager = GameObject.Find("GameManager");
+        creationMode = gameManager.GetComponent<GameManager>().GetGameMode();
+
+        // If laser is created out of bounds, immediately destroy it
+        if (GameSystem.OutOfBounds(gameObject)) {
+            Destroy(gameObject);
+        }
     }
 
     // Update is called once per frame
     protected virtual void Update()
     {
+        // Move forward in action mode or to target in turn-based mode
         if (gameManager.GetComponent<GameManager>().GetGameMode() == 0 || !destroysOnHit)
             MoveForward();
-        else
+        else {
             MoveTowardsTarget();
+        }
     }
 
     // Move laser forward at speed
@@ -65,7 +75,10 @@ public class Laser : MonoBehaviour
 
     // Move towards target in turn-based mode
     protected void MoveTowardsTarget() {
-        transform.position += GameSystem.MoveTowardsPoint(transform.position, animationTarget.transform.position, speed);
+        if (creationMode == 0)
+            Destroy(gameObject);
+        else
+            transform.position += GameSystem.MoveTowardsPoint(transform.position, animationTarget.transform.position, speed);
     }
 
     // Hurt target and destroy self on collision
@@ -74,11 +87,16 @@ public class Laser : MonoBehaviour
         // In action mode, hurt enemies or player
         if (gameManager.GetComponent<GameManager>().GetGameMode() == 0) {
             if (hurtsEnemies && other.gameObject.tag.Equals("Enemy")) {
-                if (!other.gameObject.GetComponent<Enemy>().IsDead()) {
-                    other.gameObject.GetComponent<Enemy>().UpdateHp(damage);
+                if (other.gameObject.GetComponent<Enemy>() != null) {
+                    if (!other.gameObject.GetComponent<Enemy>().IsDead()) {
+                        other.gameObject.GetComponent<Enemy>().UpdateHp(damage);
 
-                    if (destroysOnHit)
-                        Destroy(gameObject);
+                        if (destroysOnHit)
+                            Destroy(gameObject);
+                    }
+                }// Hit homing bomb
+                else if (other.gameObject.GetComponent<HomingBomb>() != null) {
+                    other.gameObject.GetComponent<HomingBomb>().SetHit();
                 }
             }
 

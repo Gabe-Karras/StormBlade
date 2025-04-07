@@ -189,9 +189,9 @@ public class CutsceneManager : MonoBehaviour
         player.GetComponent<PlayerController>().SetHasControl(false);
         goToMiddle = true;
 
-        // Fade out action UI and music
+        // Fade out action UI and stop any music
         uiTarget = 0;
-        StartCoroutine(musicManager.FadeOut());
+        musicManager.StopAllMusic();
 
         // Withdraw black bars from the side of screen
         StartCoroutine(MoveBars(BAR_OFF_SCREEN));

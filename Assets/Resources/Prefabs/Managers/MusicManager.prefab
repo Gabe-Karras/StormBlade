@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   volume: 1.2
-  fadeSpeed: 2
+  fadeSpeed: 5
 --- !u!82 &9154081718030388017
 AudioSource:
   m_ObjectHideFlags: 0

@@ -46,9 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaver: {fileID: 3806737102023566361, guid: b90d76fbad3094961b2671c805ca1feb, type: 3}
   weaverLv2: {fileID: 3806737102023566361, guid: 4627206d192bb464092ff1468b0731da, type: 3}
-  shuffler: {fileID: 0}
-  kamikaze: {fileID: 0}
-  dragonfly: {fileID: 0}
+  shuffler: {fileID: 1838379910271495311, guid: 48c438d0cd24143b9bd0a47133b46ffc, type: 3}
+  kamikaze: {fileID: 8376057093243425645, guid: 33adfd522096d4a51a553721781cadf3, type: 3}
+  dragonfly: {fileID: 1185163150896647010, guid: 7d585aad10bb947e7b46bca75524c8c9, type: 3}
   stalker: {fileID: 8545996803992707877, guid: e984411472ca14ea28975eef8fa85c52, type: 3}
   smallHealth: {fileID: 83177742325960584, guid: fccd62b407cce4fb5a54c75d494a41d4, type: 3}
   bigHealth: {fileID: 3116642203537047192, guid: 4c2d2570c2249496e8cb2f8c7bcd3e11, type: 3}

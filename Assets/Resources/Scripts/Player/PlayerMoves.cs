@@ -141,8 +141,7 @@ public class PlayerMoves : MonoBehaviour
             // Shoot red lasers
             for (int i = 0; i < 3; i ++) {
                 SpawnLasers(laser1, target);
-                laserSource.pitch = 1;
-                GameSystem.PlaySoundEffect(laserSound, laserSource, 0);
+                GameSystem.PlaySoundEffect(laserSound, laserSource, 0, pitch: 1);
                 yield return new WaitForSeconds(shootSpeed);
             }
         }
@@ -151,8 +150,7 @@ public class PlayerMoves : MonoBehaviour
             // Shoot wave lasers
             for (int i = 0; i < 3; i ++) {
                 SpawnLasers(laser2, target);
-                laserSource.pitch = 0.5f;
-                GameSystem.PlaySoundEffect(laserSound, laserSource, 0);
+                GameSystem.PlaySoundEffect(laserSound, laserSource, 0, pitch: 0.5f);
                 yield return new WaitForSeconds(shootSpeed);
             }
         }
@@ -161,8 +159,7 @@ public class PlayerMoves : MonoBehaviour
             // Shoot yellow lasers
             for (int i = 0; i < 3; i ++) {
                 SpawnLasers(laser0, target);
-                laserSource.pitch = 0.75f;
-                GameSystem.PlaySoundEffect(laserSound, laserSource, 0);
+                GameSystem.PlaySoundEffect(laserSound, laserSource, 0, pitch: 0.75f);
                 yield return new WaitForSeconds(shootSpeed);
             }
         }

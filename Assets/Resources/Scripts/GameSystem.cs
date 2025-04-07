@@ -13,7 +13,7 @@ public class GameSystem : MonoBehaviour
     public const int SPEED_DIVISOR = 50;
 
     // Boundaries of action game screen
-    public const float X_ACTION_BOUNDARY = 1.06f;
+    public const float X_ACTION_BOUNDARY = 1;
     public const float Y_ACTION_BOUNDARY = 1.28f;
 
     // Divide pixel distances by this to reflect in game space
@@ -222,7 +222,7 @@ public class GameSystem : MonoBehaviour
 
     // Plays a sound effect through given source at appropriate volume.
     // Will randomize pitch between 0 and 1.
-    public static void PlaySoundEffect(AudioClip sound, AudioSource source, float pitchVar, float volume=SOUND_EFFECT_VOLUME) {
+    public static void PlaySoundEffect(AudioClip sound, AudioSource source, float pitchVar, float volume=SOUND_EFFECT_VOLUME, float pitch=1) {
         // Don't play sound if source is out of bounds
         if (OutOfBounds(source.gameObject))
             return;
@@ -231,7 +231,7 @@ public class GameSystem : MonoBehaviour
         System.Random r = new System.Random();
         pitchVar *= r.Next(0, 101) / 100.0f;
 
-        source.pitch = 1;
+        source.pitch = pitch;
         if (pitchVar != 0)
             source.pitch += 1 * pitchVar * RandomSign();
         source.PlayOneShot(sound, volume);

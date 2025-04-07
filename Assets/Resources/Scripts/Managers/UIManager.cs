@@ -673,6 +673,11 @@ public class UIManager : MonoBehaviour
             
             case 2:
                 // Only item selector is visible
+                
+                // On opening item menu selection bugfix
+                if (turnSelectorPosition == 0 && gameManager.GetBombCount() == 0)
+                    FindNextTurnItem(0);
+
                 SetImageInvisible(menuSelector.GetComponent<Image>());
                 SetImageVisible(turnItemSelector.GetComponent<Image>());
                 break;
