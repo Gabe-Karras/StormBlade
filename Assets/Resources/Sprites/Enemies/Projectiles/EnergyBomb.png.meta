@@ -131,8 +131,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3c10bba32253949ceaa77db54812cba0
-      internalID: 1186435047
+      spriteID: 67a4c0037519e4382b9b47caefb771f1
+      internalID: -1269758203
       vertices: []
       indices: 
       edges: []
@@ -152,8 +152,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e85c044a96f98480985e68926c181d4a
-      internalID: 1288223700
+      spriteID: 1042dab3723f24f158a2d9eb9e29d63e
+      internalID: -198206062
       vertices: []
       indices: 
       edges: []
@@ -173,8 +173,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 88c7f22b3da6c4c1b9039309c1b18f05
-      internalID: 2061614984
+      spriteID: fbf377d2397434f0da7bfac610599371
+      internalID: -1090190168
       vertices: []
       indices: 
       edges: []
@@ -194,8 +194,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 40f028d1cfcf440e9a8b7bdc0a6ae359
-      internalID: 1116978605
+      spriteID: e23622e69834a4c48812f649861b4362
+      internalID: 2073585015
       vertices: []
       indices: 
       edges: []
@@ -215,8 +215,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 67f1bc024fa6540fcbf44212248681f9
-      internalID: -222835356
+      spriteID: 56274d21430ea4e6b8eef9869f3af5a2
+      internalID: 681946667
       vertices: []
       indices: 
       edges: []
@@ -236,8 +236,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 42afdf09dc1f248a8a1b9eb4234021d6
-      internalID: -1101051845
+      spriteID: cc27a813c15c14e48b1cfc1d4eaa53df
+      internalID: 1083647356
       vertices: []
       indices: 
       edges: []
@@ -253,12 +253,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      EnergyBomb_0: 1186435047
-      EnergyBomb_1: 1288223700
-      EnergyBomb_2: 2061614984
-      EnergyBomb_3: 1116978605
-      EnergyBomb_4: -222835356
-      EnergyBomb_5: -1101051845
+      EnergyBomb_0: -1269758203
+      EnergyBomb_1: -198206062
+      EnergyBomb_2: -1090190168
+      EnergyBomb_3: 2073585015
+      EnergyBomb_4: 681946667
+      EnergyBomb_5: 1083647356
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

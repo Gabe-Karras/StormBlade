@@ -57,14 +57,19 @@ public class BombExplosion : MonoBehaviour
     // Will constantly hurt a given enemy until told to stop
     private IEnumerator HurtEnemy(GameObject enemy) {
         while (enemy != null && overlappingEnemies.Contains(enemy)) {
-            // If enemy is about to die from explosion, set death animation to scorch
-            if (enemy.GetComponent<Enemy>().GetHp() <= 5) {
-                enemy.AddComponent<Scorch>();
-                enemy.GetComponent<Enemy>().SetDeathBehavior(enemy.GetComponent<Scorch>());
-            }
+            if (enemy.GetComponent<Enemy>() != null) {
+                // If enemy is about to die from explosion, set death animation to scorch
+                if (enemy.GetComponent<Enemy>().GetHp() <= 5) {
+                    enemy.AddComponent<Scorch>();
+                    enemy.GetComponent<Enemy>().SetDeathBehavior(enemy.GetComponent<Scorch>());
+                }
 
-            // Deal damage
-            enemy.GetComponent<Enemy>().UpdateHp(-5);
+                // Deal damage
+                enemy.GetComponent<Enemy>().UpdateHp(-5);
+            }
+            // Homing bombs
+            else if (enemy.GetComponent<HomingBomb>() != null)
+                enemy.GetComponent<HomingBomb>().SetHit();
 
             // Wait
             yield return new WaitForSeconds(0.3f);

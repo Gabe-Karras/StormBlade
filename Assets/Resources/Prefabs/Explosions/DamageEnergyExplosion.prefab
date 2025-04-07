@@ -140,7 +140,7 @@ MonoBehaviour:
   explosionSound: {fileID: 8300000, guid: 6b25c20d8fb004d28a47f21cffdcd6fb, type: 3}
   hurtsPlayer: 1
   hurtsEnemies: 1
-  damage: 3
+  damage: 2
 --- !u!82 &5792655442260397514
 AudioSource:
   m_ObjectHideFlags: 0

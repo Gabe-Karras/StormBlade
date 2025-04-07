@@ -80,6 +80,7 @@ public class PlayerController : MonoBehaviour
     // Game manager
     private GameManager gameManager;
     private MusicManager musicManager;
+    private UIManager uiManager;
 
     // Player moves class
     private PlayerMoves playerMoves;
@@ -89,6 +90,9 @@ public class PlayerController : MonoBehaviour
     private bool dead = false;
     private bool iframes = false;
     private const float IFRAME_SECONDS = 1;
+
+    // Broken materials bugfix
+    private bool isFlashing = false;
 
     // Start is called before the first frame update
     void Start()
@@ -108,6 +112,7 @@ public class PlayerController : MonoBehaviour
 
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         musicManager = gameManager.GetMusicManager();
+        uiManager = gameManager.GetUIManager();
         playerMoves = GetComponent<PlayerMoves>();
     }
 
@@ -173,13 +178,23 @@ public class PlayerController : MonoBehaviour
             }
 
             // Flash player sprite and destroy pickup
-            if (playerSprite.material != Resources.Load<Material>("Materials/SolidWhite") && playerSprite.material != Resources.Load<Material>("Materials/SolidRed"))
-                StartCoroutine(GameSystem.FlashSprite(playerSprite, Resources.Load<Material>("Materials/SolidWhite")));
+            if (!isFlashing) {
+                StartCoroutine(GameSystem.FlashSprite(playerSprite, Resources.Load<Material>("Materials/SolidWhite"), time: 0.05f));
+                isFlashing = true;
+                StartCoroutine(FlashTimer(0.06f));
+            }
             Destroy(other.gameObject);
 
             // Play sound effect
             GameSystem.PlaySoundEffect(pickupSound, pickupSource, 0);
         }
+    }
+
+    // Method to reset flash variable. Call after flashing sprite
+    private IEnumerator FlashTimer(float seconds) {
+        yield return new WaitForSeconds(seconds);
+
+        isFlashing = false;
     }
 
     // Move player with arrow keys
@@ -424,8 +439,11 @@ public class PlayerController : MonoBehaviour
 
     // Flash sprite red, emit particles, and play heal sound
     public void PlayHealAnimation(float particleTime) {
-        if (playerSprite.material != Resources.Load<Material>("Materials/SolidWhite"))
+        if (!isFlashing) {
             StartCoroutine(GameSystem.FlashSprite(playerSprite, Resources.Load<Material>("Materials/SolidRed"), time: particleTime + 0.2f));
+            isFlashing = true;
+            StartCoroutine(FlashTimer(particleTime + 0.21f));
+        }
             
         StartCoroutine(GameSystem.EmitParticles(gameObject, Resources.Load<GameObject>("Prefabs/Explosions/RedParticle"), 0, 0, particleTime));
         GameSystem.PlaySoundEffect(healSound, healSource, 0);
@@ -473,6 +491,9 @@ public class PlayerController : MonoBehaviour
 
         // Stop music
         musicManager.StopAllMusic();
+
+        // If in turn-based mode, get rid of menu
+        uiManager.SetTurnAlpha(0);
     }
 
     // Shoot out shrapnel in accordance to animation

@@ -43,6 +43,10 @@ public class Kamikaze : EnemyBehavior
 
         // Move down
         transform.position -= new Vector3(0, downSpeed, 0);
+
+        // Destroy if falls off screen
+        if (GameSystem.OutOfBounds(gameObject) && transform.position.y < GameSystem.Y_ACTION_BOUNDARY * -1)
+            Destroy(gameObject);
     }
 
     // If collision with player, destroy and explode!

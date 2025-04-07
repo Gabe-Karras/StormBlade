@@ -28,8 +28,8 @@ public class HomingLaser : Laser
 
         // Move towards/face target
         if (target != null) {
-            // Set target to null if enemy is dead
-            if (target.GetComponent<Enemy>().IsDead())
+            // Set target to null if enemy is dead in action mode
+            if (gameManager.GetComponent<GameManager>().GetGameMode() == 0 && target.GetComponent<Enemy>().IsDead())
                 target = null;
             else {
                 currentMovement = GameSystem.MoveTowardsPointWithMomentum(transform.position, target.transform.position, speed, previousMovement);
@@ -71,7 +71,7 @@ public class HomingLaser : Laser
 
     // Wait for a second before seeking targets
     private IEnumerator WaitToSeek() {
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(0.3f);
 
         readyToSeek = true;
     }

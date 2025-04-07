@@ -99,7 +99,6 @@ public class LevelManager : MonoBehaviour
 
         switch (level) {
             case 1: // LEVEL 1
-                /*
                 // Intro to weavers
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 3));
                 result.AddEntity(new LevelEntity(weaver, TOP));
@@ -192,6 +191,7 @@ public class LevelManager : MonoBehaviour
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
                 result.AddEntity(new LevelEntity(weaver, TOP - new Vector3(HALF, 0, 0)));
                 result.AddEntity(new LevelEntity(weaver, TOP + new Vector3(HALF, 0, 0)));
+                result.AddEntity(new LevelEntity(missile, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
                 result.AddEntity(new LevelEntity(shuffler, TOP_LEFT));
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
@@ -222,10 +222,11 @@ public class LevelManager : MonoBehaviour
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
                 result.AddEntity(new LevelEntity(shuffler, TOP_LEFT));
                 result.AddEntity(new LevelEntity(kamikaze, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(missile, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
                 result.AddEntity(new LevelEntity(kamikaze, TOP_LEFT));
                 result.AddEntity(new LevelEntity(shuffler, TOP_RIGHT));
-
+                
                 // Bombs!!!
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
@@ -235,7 +236,7 @@ public class LevelManager : MonoBehaviour
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
                 result.AddEntity(new LevelEntity(bomb, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 5));
-                */
+                
 
                 // Intro to dragonflies
                 result.AddEntity(new LevelEntity(dragonfly, TOP));
@@ -264,6 +265,7 @@ public class LevelManager : MonoBehaviour
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
                 result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
                 result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(bomb, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
                 result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
                 result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
@@ -271,13 +273,91 @@ public class LevelManager : MonoBehaviour
                 result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
                 result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
 
-                // Shufflers and dragonflies
+                // Weavers and dragonflies
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(weaverLv2, TOP));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 2));
+                result.AddEntity(new LevelEntity(weaverLv2, TOP_LEFT));
+                result.AddEntity(new LevelEntity(weaverLv2, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(weaver, TOP_LEFT - new Vector3(HALF, 0, 0)));
+                result.AddEntity(new LevelEntity(weaver, TOP_RIGHT + new Vector3(HALF, 0, 0)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(dragonfly, TOP));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(missile, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(bomb, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(missile, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 3));
 
                 // Mix of everything
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(shuffler, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_LEFT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(shuffler, TOP_LEFT));
+                result.AddEntity(new LevelEntity(missile, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_LEFT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(shuffler, TOP));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_LEFT));
 
                 // Blaster 5
+                result.AddEntity(new LevelEntity(blaster, TOP));
+
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(shuffler, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(shuffler, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(weaver, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(weaver, TOP_LEFT));
+
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(kamikaze, TOP));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_LEFT + new Vector3(HALF, 0, 0)));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_RIGHT - new Vector3(HALF, 0, 0)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_LEFT));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(bomb, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_LEFT - new Vector3(HALF, 0, 0)));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_RIGHT + new Vector3(HALF, 0, 0)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_LEFT));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_LEFT + new Vector3(HALF, 0, 0)));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_RIGHT - new Vector3(HALF, 0, 0)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(kamikaze, TOP));
 
                 // Intro to stalkers
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(stalker, TOP));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(stalker, TOP));
 
                 // Boss
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));

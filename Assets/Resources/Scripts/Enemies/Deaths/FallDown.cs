@@ -24,7 +24,6 @@ public class FallDown : EnemyDeath
     {
         fallSpeed /= GameSystem.SPEED_DIVISOR;
         sRenderer = GetComponent<SpriteRenderer>();
-        currentRotation = transform.rotation.eulerAngles.z;
 
         // Slightly randomize variables
         rotSpeed += rotSpeed / 3 * GameSystem.RandomPercentage() * GameSystem.RandomSign();
@@ -37,6 +36,7 @@ public class FallDown : EnemyDeath
             // Start exploding
             StartCoroutine(GameSystem.FlickerSprite(sRenderer, 0));
             StartCoroutine(GameSystem.StartExploding(sRenderer, (GameObject) Resources.Load("Prefabs/Explosions/SmallExplosion")));
+            currentRotation = transform.rotation.eulerAngles.z;
             startDying = false;
         }
 

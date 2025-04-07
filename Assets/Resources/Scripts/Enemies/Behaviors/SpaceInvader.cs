@@ -86,11 +86,11 @@ public class SpaceInvader : EnemyBehavior
     // Attack at set intervals
     private IEnumerator AttackWait() {
         attacking = true;
-        yield return new WaitForSeconds(attackTime);
 
         if (attack != null)
             attack.ExecuteAttack();
 
+        yield return new WaitForSeconds(attackTime);
         attacking = false;
     }
 }

@@ -1248,7 +1248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26255b1b953ce40ad8b04ac3b6988995, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 1000
+  maxHp: 750
   deathTime: 5
   components:
   - {fileID: 1576303016245721750}

@@ -83,11 +83,9 @@ public class Enemy : MonoBehaviour
                 System.Random r = new System.Random();
                 int chance = r.Next(1, 101);
 
-                if (chance == 1) // 1% chance
-                    Instantiate(Resources.Load<GameObject>("Prefabs/Items/Pickups/BlasterItem"), transform.position, Quaternion.Euler(0, 0, 0));
-                else if (chance <= 6) // 5% chance
+                if (chance <= 5) // 5% chance
                     Instantiate(Resources.Load<GameObject>("Prefabs/Items/Pickups/BigHealthItem"), transform.position, Quaternion.Euler(0, 0, 0));
-                else if (chance <= 16) // 10% chance
+                else if (chance <= 15) // 10% chance
                     Instantiate(Resources.Load<GameObject>("Prefabs/Items/Pickups/SmallHealthItem"), transform.position, Quaternion.Euler(0, 0, 0));
                 
                 return;
