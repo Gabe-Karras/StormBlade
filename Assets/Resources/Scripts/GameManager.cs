@@ -68,8 +68,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Set framerate
-        Application.targetFrameRate = GameSystem.FRAME_RATE;
+        // Load data from data manager
+        LoadData();
 
         // Create managers
         scrollManager = Instantiate(scrollManager, transform.position, transform.rotation);
@@ -112,6 +112,25 @@ public class GameManager : MonoBehaviour
                 Instantiate(Resources.Load("Prefabs/Player/LaserRing"));
             }
         }
+    }
+
+    // Load data from data manager
+    private void LoadData() {
+        int[] data = DataManager.Instance.GetData();
+        level = data[0];
+        bp = data[1];
+        bombCount = data[2];
+        lightningCount = data[3];
+        missileCount = data[4];
+        shieldCount = data[5];
+        smallHealthCount = data[6];
+        bigHealthCount = data[7];
+    }
+
+    // Send current data to data manager
+    private void SaveData() {
+        int[] data = {level, bp, bombCount, lightningCount, missileCount, shieldCount, smallHealthCount, bigHealthCount};
+        DataManager.Instance.SetData(data);
     }
 
     // Set up player to take a turn in turn-based mode

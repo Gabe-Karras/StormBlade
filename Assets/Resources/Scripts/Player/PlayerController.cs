@@ -451,8 +451,11 @@ public class PlayerController : MonoBehaviour
 
     // Enter invincibility frames if hit
     public void Invincibility(float seconds) {
-        // Play hit sound
-        GameSystem.PlaySoundEffect(hitSound, hitSource, 0);
+        // Play hit sound (louder in action mode)
+        if (gameManager.GetGameMode() == 0)
+            GameSystem.PlaySoundEffect(hitSound, hitSource, 0, volume: 0.5f);
+        else
+            GameSystem.PlaySoundEffect(hitSound, hitSource, 0);
 
         // Set iframes to true
         iframes = true;

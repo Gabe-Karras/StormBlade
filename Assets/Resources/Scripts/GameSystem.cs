@@ -15,6 +15,7 @@ public class GameSystem : MonoBehaviour
     // Boundaries of action game screen
     public const float X_ACTION_BOUNDARY = 1;
     public const float Y_ACTION_BOUNDARY = 1.28f;
+    public const float X_FULL_BOUNDARY = 1.6f;
 
     // Divide pixel distances by this to reflect in game space
     public const float PIXELS_PER_UNIT = 100;

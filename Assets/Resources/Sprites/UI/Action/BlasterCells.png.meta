@@ -131,8 +131,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9edd553d2e64449d49e53edb7452ed3a
-      internalID: -605817580
+      spriteID: 77ff0324f02a1456f8cdd61ff2e74112
+      internalID: -250697136
       vertices: []
       indices: 
       edges: []
@@ -152,8 +152,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cff3c6186f26f4215a0e079e6f97ac64
-      internalID: 671041309
+      spriteID: 034907ae257074126bae28788dee04b5
+      internalID: 1456166724
       vertices: []
       indices: 
       edges: []
@@ -173,8 +173,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9fe359c7a6371485384bf67b785cb98f
-      internalID: 400264327
+      spriteID: e559a5b70086143b5bcd7c26b0c40c1c
+      internalID: 1956150004
       vertices: []
       indices: 
       edges: []
@@ -194,8 +194,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1f56317e2d94842dcbfeedc61f80085d
-      internalID: -1501311390
+      spriteID: ce2f0643ad1bf4fa99ab6026e1da3658
+      internalID: -147066987
       vertices: []
       indices: 
       edges: []
@@ -215,8 +215,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ef4a4b59d9a3d4091b77984e9c5b05a6
-      internalID: -266469761
+      spriteID: 849f52477aa4242338e0a82953022d2d
+      internalID: 1838596341
       vertices: []
       indices: 
       edges: []
@@ -236,8 +236,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a94c51b4eb4b24eedba3ce368dd1386d
-      internalID: -1179860075
+      spriteID: d8b87d9a278604aa8b9ccf2a7a6c5b1f
+      internalID: -1834674212
       vertices: []
       indices: 
       edges: []
@@ -253,12 +253,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      BlasterCells_0: -605817580
-      BlasterCells_1: 671041309
-      BlasterCells_2: 400264327
-      BlasterCells_3: -1501311390
-      BlasterCells_4: -266469761
-      BlasterCells_5: -1179860075
+      BlasterCells_0: -250697136
+      BlasterCells_1: 1456166724
+      BlasterCells_2: 1956150004
+      BlasterCells_3: -147066987
+      BlasterCells_4: 1838596341
+      BlasterCells_5: -1834674212
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -131,8 +131,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ef7c86f97764f44b3891ef5df6f3ffff
-      internalID: 1021495209
+      spriteID: 653fd2d4bc4934d7fa17fb9ca1866228
+      internalID: -73014084
       vertices: []
       indices: 
       edges: []
@@ -152,8 +152,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 87c2978d326214b1997b54f75d2136d4
-      internalID: 1697645179
+      spriteID: bf0fbe60fa3cb426cae80b7db3fe135f
+      internalID: -1760177417
       vertices: []
       indices: 
       edges: []
@@ -173,8 +173,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7e91ed35947674a0687404299626d80d
-      internalID: -1140382027
+      spriteID: aef20768d5fc741dd86524b1302be9f6
+      internalID: 1225595045
       vertices: []
       indices: 
       edges: []
@@ -194,8 +194,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9dbe46616a2fd422c8ac0de97eb977be
-      internalID: -1940156376
+      spriteID: ab6989f579573444ca715fd2a7cef215
+      internalID: 772724691
       vertices: []
       indices: 
       edges: []
@@ -215,8 +215,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4619a0d722c2148289cf4eb7e906accb
-      internalID: -934000272
+      spriteID: d96b321f9b2064e06b21c908c3038e4f
+      internalID: -1958752062
       vertices: []
       indices: 
       edges: []
@@ -236,8 +236,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5f23b17f938f44fa49fb24dc38b22639
-      internalID: -352143345
+      spriteID: e5f8165e20391478ca7d38db0fec6214
+      internalID: -134787192
       vertices: []
       indices: 
       edges: []
@@ -257,8 +257,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bbb97c9afd50f4e539469401ba95cf2f
-      internalID: -174967620
+      spriteID: 54d7418f28e8045efb1a149f35a61389
+      internalID: 343002603
       vertices: []
       indices: 
       edges: []
@@ -278,8 +278,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 79186d7c484b84ee7b31f6e6e01dc643
-      internalID: -1213351734
+      spriteID: 1d4a535f80c6641ed8600238a4ad35fe
+      internalID: 873602854
       vertices: []
       indices: 
       edges: []
@@ -299,8 +299,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cd1fe126d4ea7444fb7e1001408c0cf8
-      internalID: 1386024622
+      spriteID: 896faad9491064476bf6a07330caf195
+      internalID: -1191284479
       vertices: []
       indices: 
       edges: []
@@ -320,8 +320,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fe8601c6ed1904532bad69d7ffd21484
-      internalID: 375810576
+      spriteID: 225906dd4e24d428d956c94d562ac7db
+      internalID: 865542266
       vertices: []
       indices: 
       edges: []
@@ -341,8 +341,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7c4abe72129c64442a51ffdcacdab0b3
-      internalID: 367032154
+      spriteID: 61956aa77afce4ce99a3ac86e90a30fc
+      internalID: -1177400110
       vertices: []
       indices: 
       edges: []
@@ -358,17 +358,17 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      HealthCells_0: 1021495209
-      HealthCells_1: 1697645179
-      HealthCells_10: 367032154
-      HealthCells_2: -1140382027
-      HealthCells_3: -1940156376
-      HealthCells_4: -934000272
-      HealthCells_5: -352143345
-      HealthCells_6: -174967620
-      HealthCells_7: -1213351734
-      HealthCells_8: 1386024622
-      HealthCells_9: 375810576
+      HealthCells_0: -73014084
+      HealthCells_1: -1760177417
+      HealthCells_10: -1177400110
+      HealthCells_2: 1225595045
+      HealthCells_3: 772724691
+      HealthCells_4: -1958752062
+      HealthCells_5: -134787192
+      HealthCells_6: 343002603
+      HealthCells_7: 873602854
+      HealthCells_8: -1191284479
+      HealthCells_9: 865542266
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
