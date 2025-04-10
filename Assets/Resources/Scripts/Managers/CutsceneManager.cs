@@ -2,13 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 
 // This class will contain the programming for all in-game cutscenes.
 public class CutsceneManager : MonoBehaviour
 {
-    // Start text that flashes when level begins
+    // Splash text throughout level
     [SerializeField]
     private GameObject startMessage;
+    [SerializeField]
+    private GameObject gameOverMessage;
+    [SerializeField]
+    private GameObject victoryMessage;
+    [SerializeField]
+    private GameObject screenFade;
+
+    // Song that plays in level intro
+    [SerializeField]
+    private AudioClip startSong;
+    [SerializeField]
+    private AudioClip winSong;
 
     // Constants for action UI bar positions
     private const float BAR_ON_SCREEN = 1.25f;
@@ -201,6 +214,16 @@ public class CutsceneManager : MonoBehaviour
         boss = gameManager.GetBoss().gameObject;
     }
 
+    // Create game over text
+    public void GameOverCutscene() {
+        StartCoroutine(SplashText(gameOverMessage));
+    }
+
+    // Play victory music, create victory text, and fly player off screen
+    public void VictoryCutscene() {
+        StartCoroutine(WinMusic());
+    }
+
     // Fly ship by, play sound, shake screen
     private IEnumerator FlyBy() {
 
@@ -217,7 +240,11 @@ public class CutsceneManager : MonoBehaviour
         yield return new WaitForSeconds(1);
 
         scrollTarget = tempScrollSpeed * 3;
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(2);
+        // Play intro song
+        GetComponent<AudioSource>().PlayOneShot(startSong);
+
+        yield return new WaitForSeconds(3);
 
         scrollTarget = tempScrollSpeed;
 
@@ -243,5 +270,33 @@ public class CutsceneManager : MonoBehaviour
             yield return new WaitForSeconds(1);
 
         uiBarTarget = target;
+    }
+
+    // Place splash text on the screen after a few seconds, then fade to transition screen
+    private IEnumerator SplashText(GameObject text) {
+        yield return new WaitForSeconds(3);
+        uiManager.SetActionAlpha(0);
+        uiTarget = 0;
+        Instantiate(text, new Vector3(0, 0.5f, 0), Quaternion.Euler(0, 0, 0));
+
+        yield return new WaitForSeconds(2);
+        Instantiate(screenFade, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));
+
+        yield return new WaitForSeconds(1.5f);
+        // Update data manager before switching scenes
+        gameManager.SaveData();
+
+        SceneManager.LoadScene("Transition");
+    }
+
+    // Play win music, fly ship out of frame, and display victory text
+    private IEnumerator WinMusic() {
+        yield return new WaitForSeconds(2);
+        GetComponent<AudioSource>().PlayOneShot(winSong);
+        yield return new WaitForSeconds(2);
+        StartCoroutine(SplashText(victoryMessage));
+        yield return new WaitForSeconds(1);
+        flyUp = true;
+        flyUpSpeed = 3 / GameSystem.SPEED_DIVISOR;
     }
 }

@@ -28,6 +28,10 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject damageText;
 
+    // Selection audio clip
+    [SerializeField]
+    private AudioClip select;
+
     // Elements of action canvas
     private GameObject healthCells;
     private GameObject blasterCells;
@@ -249,7 +253,7 @@ public class UIManager : MonoBehaviour
             else {
                 // Check for next available item to select (Starting at current selection)
                 if (FindNextActionItem()) {
-                    GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
+                    GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
                 }
             }
         }
@@ -278,19 +282,19 @@ public class UIManager : MonoBehaviour
         }
 
         if (playSound)
-            GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
+            GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
 
         // If player presses esc, go back
         if (Input.GetKeyDown(KeyCode.Escape)) {
             SetUIMode(1);
-            GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
+            GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
             return;
         }
 
         // If player presses enter, move forward to component selection and set player move
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
             playerMove = turnSelectorPosition;
-            GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
+            GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
             SetUIMode(3);
         }
     }
@@ -331,18 +335,18 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.DownArrow) && menuSelector.transform.position.y == attackText.transform.position.y) {
             // Move down
             menuSelector.transform.position = new Vector3(menuSelector.transform.position.x, itemText.transform.position.y, 0);
-            GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
+            GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
         } else if (Input.GetKeyDown(KeyCode.UpArrow) && menuSelector.transform.position.y == itemText.transform.position.y) {
             // Move up
             menuSelector.transform.position = new Vector3(menuSelector.transform.position.x, attackText.transform.position.y, 0);
-            GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
+            GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
         }
 
         // Enter/Space to confirm
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
             if (menuSelector.transform.position.y == attackText.transform.position.y) {
                 // Switch straight to mode three with intent to attack
-                GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
+                GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
                 playerMove = 6; // Normal attack
                 SetUIMode(3);
             } else {
@@ -357,7 +361,7 @@ public class UIManager : MonoBehaviour
 
                 if (foundItems) {
                     SetUIMode(2);
-                    GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
+                    GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
                 }
             }
         }
@@ -400,12 +404,12 @@ public class UIManager : MonoBehaviour
                 enemySelectorPosition = 0;
             else if (enemySelectorPosition < 0)
                 enemySelectorPosition = bossComponents.Count - 1;
-            GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
+            GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
         }
 
         // Back out to previous menu if esc is pressed
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
+            GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
 
             // Back out to correct menu
             if (playerMove == 6)
@@ -421,7 +425,7 @@ public class UIManager : MonoBehaviour
             if (playerMove != 3 || (playerMove == 3 && gameManager.GetActiveShield() == null)) {
                 playerController.PerformMove(playerMove, bossComponents[enemySelectorPosition].gameObject, selected);
                 SetUIMode(0);
-                GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/Select"), GetComponent<AudioSource>(), 0);
+                GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
             }
         }
     }

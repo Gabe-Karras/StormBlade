@@ -81,6 +81,7 @@ public class PlayerController : MonoBehaviour
     private GameManager gameManager;
     private MusicManager musicManager;
     private UIManager uiManager;
+    private CutsceneManager cutsceneManager;
 
     // Player moves class
     private PlayerMoves playerMoves;
@@ -93,6 +94,8 @@ public class PlayerController : MonoBehaviour
 
     // Broken materials bugfix
     private bool isFlashing = false;
+
+    private bool initializing = true;
 
     // Start is called before the first frame update
     void Start()
@@ -109,16 +112,22 @@ public class PlayerController : MonoBehaviour
         hitSound = Resources.Load<AudioClip>("SoundEffects/Damage/Hit");
         pickupSound = Resources.Load<AudioClip>("SoundEffects/Items/Pickup");
         healSound = Resources.Load<AudioClip>("SoundEffects/Items/Heal");
-
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        musicManager = gameManager.GetMusicManager();
-        uiManager = gameManager.GetUIManager();
-        playerMoves = GetComponent<PlayerMoves>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Initialization on the first update frame to give game manager time to initialize
+        if (initializing) {
+            gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+            musicManager = gameManager.GetMusicManager();
+            uiManager = gameManager.GetUIManager();
+            cutsceneManager = gameManager.GetCutsceneManager();
+            playerMoves = GetComponent<PlayerMoves>();
+
+            initializing = false;
+        }
+
         // Animate/control when alive
         if (!dead) {
 
@@ -523,6 +532,9 @@ public class PlayerController : MonoBehaviour
 
             // Teleport out of camera
             transform.position += new Vector3(0, -5, 0);
+
+            // Start game over cutscene
+            cutsceneManager.GameOverCutscene();
         }
     }
     

@@ -16,6 +16,14 @@ public class TitleScreen : MonoBehaviour
     [SerializeField]
     private GameObject star;
 
+    // Ship cutscene elements
+    [SerializeField]
+    private GameObject smallShipPrefab;
+    private GameObject smallShip;
+    [SerializeField]
+    private GameObject bigShipPrefab;
+    private GameObject bigShip;
+
     // Canvas elements
     [SerializeField]
     private GameObject titleCanvas;
@@ -31,6 +39,8 @@ public class TitleScreen : MonoBehaviour
     private AudioClip select;
     [SerializeField]
     private AudioClip flyby;
+    [SerializeField]
+    private AudioClip titleSong;
     private AudioSource source;
 
     // UI state (0 for no interaction, 1 for waiting enter, 2 for selection)
@@ -57,7 +67,7 @@ public class TitleScreen : MonoBehaviour
         group = titleCanvas.GetComponent<CanvasGroup>();
 
         // Set canvas alpha to zero
-        //group.alpha = 0;
+        group.alpha = 0;
 
         // Remove all text
         enterText.text = "";
@@ -70,16 +80,27 @@ public class TitleScreen : MonoBehaviour
         selector.GetComponent<Image>().color = temp;
 
         // Set state
-        state = 1;
+        state = 0;
 
         source = GetComponent<AudioSource>();
+
+        // Play cutscene
+        StartCoroutine(PlayTitleCutscene());
     }
 
     // Update is called once per frame
     void Update()
     {
         // Operate UI based on state
-        if (state == 1) {
+        if (state == 0) {
+            // Skip cutscene and immediately activate canvas if player presses enter
+            if (Input.GetKeyDown(KeyCode.Return)) {
+                // Stop sound effect
+                source.Stop();
+
+                StartCoroutine(ActivateCanvas());
+            }
+        } else if (state == 1) {
             // Wait for enter press to move to next state
             if (Input.GetKeyDown(KeyCode.Return)) {
                 state = 2;
@@ -131,6 +152,71 @@ public class TitleScreen : MonoBehaviour
         }
     }
 
+    // Play the cutscene of the ship flying by and coming around to form the title
+    private IEnumerator PlayTitleCutscene() {
+        // Play sound effect
+        yield return new WaitForSeconds(1);
+        if (state != 0)
+            yield break;
+        GameSystem.PlaySoundEffect(flyby, source, 0);
+
+        // Fly small ship across screen to the right
+        yield return new WaitForSeconds(1);
+        if (state != 0)
+            yield break;
+        smallShip = Instantiate(smallShipPrefab, new Vector3(-1 * GameSystem.X_FULL_BOUNDARY - 0.5f, -0.5f, 0), Quaternion.Euler(0, 0, 0));
+
+        // Fly big ship to the left until it aligns with canvas
+        yield return new WaitForSeconds(2);
+        if (state != 0)
+            yield break;
+        bigShip = Instantiate(bigShipPrefab, new Vector3(1 * GameSystem.X_FULL_BOUNDARY + 0.5f, 0, 0), Quaternion.Euler(0, 0, 0));
+
+        while (true) {
+            if (state != 0)
+            yield break;
+
+            if (bigShip.transform.position.x <= -0.75f) {
+                Destroy(bigShip);
+                StartCoroutine(ActivateCanvas());
+                yield break;
+            }
+            
+            yield return new WaitForSeconds(0.01f);
+        }
+    }
+
+    // Flashes the screen, plays title song, and turns on canvas!
+    private IEnumerator ActivateCanvas() {
+        // If big/little ships exist, destroy them
+        if (bigShip != null)
+            Destroy(bigShip);
+        if (smallShip != null)
+            Destroy(smallShip);
+
+        // Play music
+        source.PlayOneShot(titleSong);
+
+        // Change canvas mode and activate title screen
+        group.alpha = 1;
+        state = 1;
+
+        // Flash screen
+        for (int i = 0; i < 2; i ++) {
+            Color temp = flash.color;
+            temp.a = 1;
+            flash.color = temp;
+
+            yield return new WaitForSeconds(0.05f);
+            temp = flash.color;
+            temp.a = 0;
+            flash.color = temp;
+
+            yield return new WaitForSeconds(0.1f);
+        }
+
+    }
+
     // Flash 'press enter' text
     private IEnumerator flashText() {
         textFlashing = true;
@@ -160,7 +246,7 @@ public class TitleScreen : MonoBehaviour
         // If enter is pressed, execute the current selection
         if (Input.GetKeyDown(KeyCode.Return)) {
             if (selection == 0) {
-                SceneManager.LoadScene("SampleScene");
+                SceneManager.LoadScene("Level");
             } else if (selection == 1) {
                 Application.Quit();
             }

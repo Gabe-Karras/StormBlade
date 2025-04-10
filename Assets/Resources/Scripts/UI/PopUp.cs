@@ -14,7 +14,9 @@ public class PopUp : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(GameSystem.DelayedDestroy(gameObject, existTime));
+        // If exist time = 0, exist forever
+        if (existTime != 0)
+            StartCoroutine(GameSystem.DelayedDestroy(gameObject, existTime));
         if (flash)
             StartCoroutine(GameSystem.FlickerSprite(gameObject.GetComponent<SpriteRenderer>(), existTime, flashTime: 0.1f));
     }

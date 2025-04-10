@@ -46,6 +46,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startMessage: {fileID: 5342182459443391846, guid: 580886e34232a490b99d3ee8aa0864ed, type: 3}
+  gameOverMessage: {fileID: 4490081804708247464, guid: 4a0fcb1b7b8a64161994e75327d2dc89, type: 3}
+  victoryMessage: {fileID: 6945580493494749171, guid: 7537ad0a5c56745adb03f46d75eeefea, type: 3}
+  screenFade: {fileID: 6920225912007772044, guid: 0327b65e1bb3d41deb6a00f042580ada, type: 3}
+  startSong: {fileID: 8300000, guid: d52b76c15b93c47dab0accc35214443d, type: 3}
+  winSong: {fileID: 8300000, guid: 731ea0e2d918541e29cc3fbd6c3fcecc, type: 3}
 --- !u!82 &4025384888925915785
 AudioSource:
   m_ObjectHideFlags: 0

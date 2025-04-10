@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviour
     // Boss of the level
     private GameObject boss;
     private bool bossTurn = false;
+    private bool levelEnded = false;
 
     // Start is called before the first frame update
     void Start()
@@ -112,10 +113,15 @@ public class GameManager : MonoBehaviour
                 Instantiate(Resources.Load("Prefabs/Player/LaserRing"));
             }
         }
+
+        // End level when boss is defeated
+        if (boss == null && !levelEnded) {
+            cutsceneManager.GetComponent<CutsceneManager>().VictoryCutscene();
+        }
     }
 
     // Load data from data manager
-    private void LoadData() {
+    public void LoadData() {
         int[] data = DataManager.Instance.GetData();
         level = data[0];
         bp = data[1];
@@ -128,7 +134,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Send current data to data manager
-    private void SaveData() {
+    public void SaveData() {
         int[] data = {level, bp, bombCount, lightningCount, missileCount, shieldCount, smallHealthCount, bigHealthCount};
         DataManager.Instance.SetData(data);
     }

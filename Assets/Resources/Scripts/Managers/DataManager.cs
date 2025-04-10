@@ -24,6 +24,9 @@ public class DataManager : MonoBehaviour
     [SerializeField]
     private int bigHealthCount;
 
+    // Used to tell transition screen what splash text to display
+    private bool won = false;
+
     // Static reference to this class
     public static DataManager Instance;
 
@@ -44,6 +47,11 @@ public class DataManager : MonoBehaviour
 
     // Update data from game manager
     public void SetData(int[] data) {
+        if (data[0] > level)
+            won = true;
+        else
+            won = false;
+
         level = data[0];
         bp = data[1];
         bombCount = data[2];
@@ -52,5 +60,9 @@ public class DataManager : MonoBehaviour
         shieldCount = data[5];
         smallHealthCount = data[6];
         bigHealthCount = data[7];
+    }
+
+    public bool Won() {
+        return won;
     }
 }
