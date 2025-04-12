@@ -105,7 +105,7 @@ public class TransitionScreen : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Return)) {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
             // If continue is selected, go to current level
             if (mainSelection == 0) {
                 SceneManager.LoadScene("Level");
@@ -134,7 +134,7 @@ public class TransitionScreen : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Return)) {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
             // If yes is selected, destroy data and return to title screen
             if (quitSelection == 0) {
                 Destroy(DataManager.Instance.gameObject);

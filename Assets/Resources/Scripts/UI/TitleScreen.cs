@@ -94,7 +94,7 @@ public class TitleScreen : MonoBehaviour
         // Operate UI based on state
         if (state == 0) {
             // Skip cutscene and immediately activate canvas if player presses enter
-            if (Input.GetKeyDown(KeyCode.Return)) {
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
                 // Stop sound effect
                 source.Stop();
 
@@ -102,7 +102,7 @@ public class TitleScreen : MonoBehaviour
             }
         } else if (state == 1) {
             // Wait for enter press to move to next state
-            if (Input.GetKeyDown(KeyCode.Return)) {
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
                 state = 2;
                 // Set enter text to blank
                 enterText.text = "";
@@ -170,7 +170,7 @@ public class TitleScreen : MonoBehaviour
         yield return new WaitForSeconds(2);
         if (state != 0)
             yield break;
-        bigShip = Instantiate(bigShipPrefab, new Vector3(1 * GameSystem.X_FULL_BOUNDARY + 0.5f, 0, 0), Quaternion.Euler(0, 0, 0));
+        bigShip = Instantiate(bigShipPrefab, new Vector3(1 * GameSystem.X_FULL_BOUNDARY + 0.5f, 0.05f, 0), Quaternion.Euler(0, 0, 0));
 
         while (true) {
             if (state != 0)
@@ -244,7 +244,7 @@ public class TitleScreen : MonoBehaviour
         }
 
         // If enter is pressed, execute the current selection
-        if (Input.GetKeyDown(KeyCode.Return)) {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
             if (selection == 0) {
                 SceneManager.LoadScene("Level");
             } else if (selection == 1) {

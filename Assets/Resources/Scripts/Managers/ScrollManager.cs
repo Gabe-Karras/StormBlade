@@ -6,21 +6,18 @@ using UnityEngine.Tilemaps;
 // This script will control the scrolling backgrounds throughout the game.
 public class ScrollManager : MonoBehaviour
 {
-
-    // Which level is this taking place in? (to tell it where to find tilemaps)
-    [SerializeField]
-    private int level;
-
-    // Directly corresponds to background0 speed
-    [SerializeField]
-    private float scrollSpeed;
-
+    // Background objects - these will adopt sprites based on the level
     [SerializeField]
     private GameObject background0;
     [SerializeField]
     private GameObject background1;
     [SerializeField]
     private GameObject foreground;
+
+    // Directly corresponds to background0 speed
+    private float scrollSpeed;
+
+    private int level;
 
     // Vars used in screenshake
     private float shakeSpeed = 4;
@@ -35,9 +32,24 @@ public class ScrollManager : MonoBehaviour
     // Odd numbers are the 'next' background objects.
     private GameObject[] backgrounds = new GameObject[6];
 
+    private GameManager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        level = gameManager.GetLevel();
+
+        // Decide scroll speed based on level
+        switch (level) {
+            case 1:
+                scrollSpeed = 2.5f;
+                break;
+            case 2:
+                scrollSpeed = 1.5f;
+                break;
+        }
+
         scrollSpeed /= GameSystem.SPEED_DIVISOR;
         shakeSpeed /= GameSystem.SPEED_DIVISOR;
 

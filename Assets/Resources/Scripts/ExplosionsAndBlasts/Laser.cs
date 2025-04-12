@@ -64,13 +64,15 @@ public class Laser : MonoBehaviour
 
     // Destroy laser when it leaves the camera
     protected virtual void OnBecameInvisible() {
-        // Destroy immediately in action mode
-        if (gameManager.GetComponent<GameManager>().GetGameMode() == 0)
-            Destroy(gameObject);
+        if (gameManager != null) {
+            // Destroy immediately in action mode
+            if (gameManager.GetComponent<GameManager>().GetGameMode() == 0)
+                Destroy(gameObject);
 
-        // For purposes of running animation, keep alive for a short time in turn-based mode
-        else
-            StartCoroutine(GameSystem.DelayedDestroy(gameObject, 0.1f));
+            // For purposes of running animation, keep alive for a short time in turn-based mode
+            else
+                StartCoroutine(GameSystem.DelayedDestroy(gameObject, 0.1f));
+        }
     }
 
     // Move towards target in turn-based mode

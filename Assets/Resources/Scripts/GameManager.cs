@@ -13,13 +13,13 @@ public class GameManager : MonoBehaviour
 
     // This one's a pretty big deal too!
     [SerializeField]
-    private int level = 1;
+    private int level;
 
     // Important player variables
     [SerializeField]
     private int hp = 10;
     [SerializeField]
-    private int bp = 1;
+    private int bp;
     [SerializeField]
     private float shieldDefense = 2;
     [SerializeField]
@@ -105,7 +105,6 @@ public class GameManager : MonoBehaviour
 
             // Play level intro
             cutsceneManager.GetComponent<CutsceneManager>().IntroCutscene();
-            //cutsceneManager.GetComponent<CutsceneManager>().TransitionToTurnBased();
             initializing = false;
 
             // Case where ship starts at level 5
@@ -117,6 +116,8 @@ public class GameManager : MonoBehaviour
         // End level when boss is defeated
         if (boss == null && !levelEnded) {
             cutsceneManager.GetComponent<CutsceneManager>().VictoryCutscene();
+            level ++;
+            levelEnded = true;
         }
     }
 

@@ -282,7 +282,7 @@ public class CutsceneManager : MonoBehaviour
         yield return new WaitForSeconds(2);
         Instantiate(screenFade, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2);
         // Update data manager before switching scenes
         gameManager.SaveData();
 
@@ -297,6 +297,6 @@ public class CutsceneManager : MonoBehaviour
         StartCoroutine(SplashText(victoryMessage));
         yield return new WaitForSeconds(1);
         flyUp = true;
-        flyUpSpeed = 3 / GameSystem.SPEED_DIVISOR;
+        flyUpSpeed = 3.0f / GameSystem.SPEED_DIVISOR;
     }
 }

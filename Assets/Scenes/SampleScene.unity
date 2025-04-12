@@ -305,6 +305,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DataManager
       objectReference: {fileID: 0}
+    - target: {fileID: 7005170259837200758, guid: 416f1f641b53a4325b3da75736b85f88, type: 3}
+      propertyPath: level
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7005170259837200759, guid: 416f1f641b53a4325b3da75736b85f88, type: 3}
       propertyPath: m_RootOrder
       value: 4

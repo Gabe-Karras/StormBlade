@@ -33,6 +33,12 @@ public class LevelManager : MonoBehaviour
     public GameObject dragonfly;
     [SerializeField]
     public GameObject stalker;
+    [SerializeField]
+    public GameObject ufo;
+    [SerializeField]
+    public GameObject chomper;
+    [SerializeField]
+    public GameObject juggler;
 
     // References to every item
     [SerializeField]
@@ -83,7 +89,7 @@ public class LevelManager : MonoBehaviour
     {
         // Execute the level
         if (playerController.HasControl() && levelQueue.Count != 0) {
-            // Spawn entities from the list as long a a wavetimer is not present
+            // Spawn entities from the list as long as a wavetimer is not present
             if (GameObject.FindGameObjectsWithTag("WaveTimer").Length == 0) {
                 InstantiateEntity(levelQueue.Dequeue());
             }
@@ -360,6 +366,14 @@ public class LevelManager : MonoBehaviour
                 result.AddEntity(new LevelEntity(stalker, TOP));
 
                 // Boss
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 5));
+                break;
+
+            case 2: // LEVEL 2 --------------------------------------------------------------------------------
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 3));
+                result.AddEntity(new LevelEntity(chomper, TOP));
+
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 5));
                 break;
