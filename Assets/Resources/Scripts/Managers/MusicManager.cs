@@ -75,4 +75,14 @@ public class MusicManager : MonoBehaviour
         StopMusic();
         source.volume = volume;
     }
+
+    // Pause the current song
+    public void PauseMusic() {
+        source.Pause();
+    }
+
+    // Resume current song
+    public void ResumeMusic() {
+        source.Play();
+    }
 }

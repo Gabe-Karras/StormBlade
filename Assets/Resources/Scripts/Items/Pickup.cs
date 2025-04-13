@@ -16,6 +16,7 @@ public class Pickup : MonoBehaviour
     private float verticalSpeed = 0.3f;
 
     private SpriteRenderer spriteRenderer;
+    private GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
@@ -23,21 +24,25 @@ public class Pickup : MonoBehaviour
         verticalSpeed /= GameSystem.SPEED_DIVISOR;
         maxHorizontalSpeed /= GameSystem.SPEED_DIVISOR;
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Move down
-        transform.position += new Vector3(0, -1 * verticalSpeed, 0);
+        if (!gameManager.IsPaused()) {
+            // Move down
+            transform.position += new Vector3(0, -1 * verticalSpeed, 0);
 
-        // Loiter back and forth
-        CalculateHorizontalSpeed();
-        transform.position += new Vector3(horizontalSpeed, 0, 0);
+            // Loiter back and forth
+            CalculateHorizontalSpeed();
+            transform.position += new Vector3(horizontalSpeed, 0, 0);
 
-        // Destroy object if it gets below the screen
-        if (transform.position.y <= GameSystem.Y_ACTION_BOUNDARY * -1 - spriteRenderer.bounds.extents.y) {
-            Destroy(gameObject);
+            // Destroy object if it gets below the screen
+            if (transform.position.y <= GameSystem.Y_ACTION_BOUNDARY * -1 - spriteRenderer.bounds.extents.y) {
+                Destroy(gameObject);
+            }
         }
     }
 

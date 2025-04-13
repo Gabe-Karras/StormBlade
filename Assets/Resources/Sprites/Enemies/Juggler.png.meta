@@ -131,8 +131,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3ddd2979bfb5a432abb4a6f6ceac5bb8
-      internalID: -1993081278
+      spriteID: 51fe38e8c3a5241bcaf6b969d01932fa
+      internalID: 1415321644
       vertices: []
       indices: 
       edges: []
@@ -152,8 +152,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 18be8a52d83ad49f2bd3b62a98fddf11
-      internalID: -361494781
+      spriteID: 5c34a8c440f0948388b982d3b55b914d
+      internalID: 1506018542
       vertices: []
       indices: 
       edges: []
@@ -173,8 +173,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8439f69a23d5846559bda4e0272ad239
-      internalID: -1962537367
+      spriteID: 39d214a02144049fa9817c1962109d2c
+      internalID: 1766996441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Juggler_3
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 0
+        width: 42
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 64ca42e6e7ab841f9accd7eb3e5d3157
+      internalID: 660603558
       vertices: []
       indices: 
       edges: []
@@ -190,9 +211,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Juggler_0: -1993081278
-      Juggler_1: -361494781
-      Juggler_2: -1962537367
+      Juggler_0: 1415321644
+      Juggler_1: 1506018542
+      Juggler_2: 1766996441
+      Juggler_3: 660603558
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

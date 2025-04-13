@@ -29,6 +29,8 @@ public class Bomb : MonoBehaviour
     // player reference
     private PlayerMoves playerMoves;
 
+    private GameManager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,30 +40,34 @@ public class Bomb : MonoBehaviour
         startPos = transform.position.y;
 
         playerMoves = GameObject.Find("Player").GetComponent<PlayerMoves>();
+
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Move forwards until travel distance is achieved
-        if (transform.position.y - startPos < travelDistance) {
-            transform.position += new Vector3(0, travelSpeed, 0);
-            rotate();
-        } else {
-            finalRotation = true;
-
-            // Rotate until at correct alignment
-            if (transform.rotation.z != 0)
+        if (!gameManager.IsPaused()) {
+            // Move forwards until travel distance is achieved
+            if (transform.position.y - startPos < travelDistance) {
+                transform.position += new Vector3(0, travelSpeed, 0);
                 rotate();
-            
-            // When light effect is finished, destroy and spawn explosion
-            if (effectFinished) {
-                GameObject temp = Instantiate(explosion, transform.position, transform.rotation);
+            } else {
+                finalRotation = true;
 
-                // Send explosion to moves class for animation
-                playerMoves.SetBombExplosion(temp);
+                // Rotate until at correct alignment
+                if (transform.rotation.z != 0)
+                    rotate();
                 
-                Destroy(gameObject);
+                // When light effect is finished, destroy and spawn explosion
+                if (effectFinished) {
+                    GameObject temp = Instantiate(explosion, transform.position, transform.rotation);
+
+                    // Send explosion to moves class for animation
+                    playerMoves.SetBombExplosion(temp);
+                    
+                    Destroy(gameObject);
+                }
             }
         }
     }

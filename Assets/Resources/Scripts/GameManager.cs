@@ -39,6 +39,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject shieldPrefab;
 
+    // Whether game is paused or not
+    private bool paused = false;
+
     private const int MAX_ACTION_HP = 10;
     private const int MAX_TURN_HP = 500;
     private const int MAX_ACTION_BP = 5;
@@ -64,7 +67,7 @@ public class GameManager : MonoBehaviour
     // Boss of the level
     private GameObject boss;
     private bool bossTurn = false;
-    private bool levelEnded = false;
+    private bool levelEnded = true;
 
     // Start is called before the first frame update
     void Start()
@@ -193,6 +196,14 @@ public class GameManager : MonoBehaviour
     // Get reference to boss instance
     public Boss GetBoss() {
         return boss.GetComponent<Boss>();
+    }
+
+    public bool IsPaused() {
+        return paused;
+    }
+
+    public void SetPaused(bool paused) {
+        this.paused = paused;
     }
 
     // Getters and setters for hp/bp

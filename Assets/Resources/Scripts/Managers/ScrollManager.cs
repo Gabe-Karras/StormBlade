@@ -67,14 +67,16 @@ public class ScrollManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        scrollBackground(0, 1, scrollSpeed, background0);
-        scrollBackground(2, 3, scrollSpeed * background1Factor, background1);
-        scrollBackground(4, 5, scrollSpeed * foregroundFactor, foreground);
+        if (!gameManager.IsPaused()) {
+            scrollBackground(0, 1, scrollSpeed, background0);
+            scrollBackground(2, 3, scrollSpeed * background1Factor, background1);
+            scrollBackground(4, 5, scrollSpeed * foregroundFactor, foreground);
 
-        // Code executes during screen shake
-        backgrounds[0].transform.position += new Vector3(shakeSpeed * shakeFactor, 0, 0);
-        backgrounds[2].transform.position += new Vector3(shakeSpeed * shakeFactor, 0, 0);
-        backgrounds[4].transform.position += new Vector3(shakeSpeed * shakeFactor, 0, 0);
+            // Code executes during screen shake
+            backgrounds[0].transform.position += new Vector3(shakeSpeed * shakeFactor, 0, 0);
+            backgrounds[2].transform.position += new Vector3(shakeSpeed * shakeFactor, 0, 0);
+            backgrounds[4].transform.position += new Vector3(shakeSpeed * shakeFactor, 0, 0);
+        }
     }
 
     // Scroll background at speed

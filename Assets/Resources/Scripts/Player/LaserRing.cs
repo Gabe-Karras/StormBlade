@@ -39,26 +39,28 @@ public class LaserRing : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Always circle around the target
-        transform.position = target.transform.position;
+        if (!gameManager.IsPaused()) {
+            // Always circle around the target
+            transform.position = target.transform.position;
 
-        // In action mode, constantly shoot lasers everywhere!
-        if (gameManager.GetGameMode() == 0 && target.GetComponent<PlayerController>().HasControl()) {
-            // Shoot when the time is right
-            if (GetComponent<SpriteRenderer>().sprite.name.Equals(fireFrame)) {
-                SpawnLasers(fireFrame);
+            // In action mode, constantly shoot lasers everywhere!
+            if (gameManager.GetGameMode() == 0 && target.GetComponent<PlayerController>().HasControl()) {
+                // Shoot when the time is right
+                if (GetComponent<SpriteRenderer>().sprite.name.Equals(fireFrame)) {
+                    SpawnLasers(fireFrame);
 
-                // Alternate frame
-                if (fireFrame.Equals("LaserRing_0"))
-                    fireFrame = "LaserRing_2";
-                else
-                    fireFrame = "LaserRing_0";
+                    // Alternate frame
+                    if (fireFrame.Equals("LaserRing_0"))
+                        fireFrame = "LaserRing_2";
+                    else
+                        fireFrame = "LaserRing_0";
+                }
             }
-        }
 
-        // In turn-based mode, only fire when attack animation is playing
-        else if (target.GetComponent<PlayerMoves>().IsAttacking()){
-            ShootUp();
+            // In turn-based mode, only fire when attack animation is playing
+            else if (target.GetComponent<PlayerMoves>().IsAttacking()){
+                ShootUp();
+            }
         }
     }
 

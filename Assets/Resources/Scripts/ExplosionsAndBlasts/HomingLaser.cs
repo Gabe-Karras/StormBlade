@@ -23,34 +23,36 @@ public class HomingLaser : Laser
     // Update is called once per frame
     protected override void Update()
     {
-        // Update previous movement
-        previousMovement = currentMovement;
+        if (!gameManager.GetComponent<GameManager>().IsPaused()) {
+            // Update previous movement
+            previousMovement = currentMovement;
 
-        // Move towards/face target
-        if (target != null) {
-            // Set target to null if enemy is dead in action mode
-            if (gameManager.GetComponent<GameManager>().GetGameMode() == 0 && target.GetComponent<Enemy>().IsDead())
-                target = null;
+            // Move towards/face target
+            if (target != null) {
+                // Set target to null if enemy is dead in action mode
+                if (gameManager.GetComponent<GameManager>().GetGameMode() == 0 && target.GetComponent<Enemy>().IsDead())
+                    target = null;
+                else {
+                    currentMovement = GameSystem.MoveTowardsPointWithMomentum(transform.position, target.transform.position, speed, previousMovement);
+                    transform.rotation = Quaternion.Euler(0, 0, GameSystem.FacePoint(transform.position, target.transform.position));
+                }
+            }
+            // If no target, move up and look for new target
             else {
-                currentMovement = GameSystem.MoveTowardsPointWithMomentum(transform.position, target.transform.position, speed, previousMovement);
-                transform.rotation = Quaternion.Euler(0, 0, GameSystem.FacePoint(transform.position, target.transform.position));
+                currentMovement = transform.up * speed + previousMovement;
+
+                if (readyToSeek) {
+                    FindTarget();
+
+                    // If out of bounds without a target, destroy
+                    if (target == null && GameSystem.OutOfBounds(gameObject))
+                        Destroy(gameObject);
+                }
             }
+
+            // Commit to movement
+            transform.position += currentMovement;
         }
-        // If no target, move up and look for new target
-        else {
-            currentMovement = transform.up * speed + previousMovement;
-
-            if (readyToSeek) {
-                FindTarget();
-
-                // If out of bounds without a target, destroy
-                if (target == null && GameSystem.OutOfBounds(gameObject))
-                    Destroy(gameObject);
-            }
-        }
-
-        // Commit to movement
-        transform.position += currentMovement;
     }
 
     // Find enemy target

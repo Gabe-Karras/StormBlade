@@ -10,15 +10,20 @@ public class MoveDirection : MonoBehaviour
     [SerializeField]
     private float speed;
 
+    private GameManager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
         speed /= GameSystem.SPEED_DIVISOR;
+
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position += GameSystem.MoveAtAngle(angle, speed);
+        if (!gameManager.IsPaused())
+            transform.position += GameSystem.MoveAtAngle(angle, speed);
     }
 }

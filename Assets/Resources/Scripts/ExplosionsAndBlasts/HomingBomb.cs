@@ -18,6 +18,8 @@ public class HomingBomb : MonoBehaviour
 
     private bool hit = false;
 
+    private GameManager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,17 +27,20 @@ public class HomingBomb : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, 0);
 
         target = GameObject.Find("Player");
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position += GameSystem.MoveTowardsPoint(transform.position, target.transform.position, speed);
+        if (!gameManager.IsPaused()) {
+            transform.position += GameSystem.MoveTowardsPoint(transform.position, target.transform.position, speed);
 
-        // Destroy and explode if hit
-        if (hit) {
-            Instantiate(explosion, transform.position, transform.rotation);
-            Destroy(gameObject);
+            // Destroy and explode if hit
+            if (hit) {
+                Instantiate(explosion, transform.position, transform.rotation);
+                Destroy(gameObject);
+            }
         }
     }
 

@@ -18,21 +18,27 @@ public class Shrapnel : MonoBehaviour
     [SerializeField]
     private float angle;
 
+    private GameManager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
         speed /= 50;
+
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Move in direction of angle
-        transform.position += GameSystem.MoveAtAngle(angle, speed);
+        if (!gameManager.IsPaused()) {
+            // Move in direction of angle
+            transform.position += GameSystem.MoveAtAngle(angle, speed);
 
-        // Spin sprite with rotation speed
-        transform.rotation = Quaternion.Euler(0f, 0f, currentRotation);
-        currentRotation = (currentRotation + rotSpeed) % 360;
+            // Spin sprite with rotation speed
+            transform.rotation = Quaternion.Euler(0f, 0f, currentRotation);
+            currentRotation = (currentRotation + rotSpeed) % 360;
+        }
     }
 
     // Destroy shrapnel when it leaves the camera

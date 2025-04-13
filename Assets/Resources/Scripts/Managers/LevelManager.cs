@@ -11,6 +11,13 @@ public class LevelManager : MonoBehaviour
     private Vector3 TOP_RIGHT;
     private Vector3 TOP_LEFT_CORNER;
     private Vector3 TOP_RIGHT_CORNER;
+    private Vector3 LEFT;
+    private Vector3 RIGHT;
+    private Vector3 BOTTOM;
+    private Vector3 BOTTOM_LEFT;
+    private Vector3 BOTTOM_RIGHT;
+    private Vector3 BOTTOM_LEFT_CORNER;
+    private Vector3 BOTTOM_RIGHT_CORNER;
 
     // Steps between defined values
     private const float HALF = 0.26f;
@@ -74,6 +81,13 @@ public class LevelManager : MonoBehaviour
         TOP_RIGHT = new Vector3(0.53f, GameSystem.Y_ACTION_BOUNDARY, 0);
         TOP_LEFT_CORNER = new Vector3(-1.06f, GameSystem.Y_ACTION_BOUNDARY, 0);
         TOP_RIGHT_CORNER = new Vector3(1.06f, GameSystem.Y_ACTION_BOUNDARY, 0);
+        LEFT = new Vector3(GameSystem.X_ACTION_BOUNDARY * -1, 0, 0);
+        RIGHT = new Vector3(GameSystem.X_ACTION_BOUNDARY, 0, 0);
+        BOTTOM = new Vector3(0, GameSystem.Y_ACTION_BOUNDARY * -1, 0);
+        BOTTOM_LEFT = new Vector3(-0.53f, GameSystem.Y_ACTION_BOUNDARY * -1, 0);
+        BOTTOM_RIGHT = new Vector3(0.53f, GameSystem.Y_ACTION_BOUNDARY * -1, 0);
+        BOTTOM_LEFT_CORNER = new Vector3(GameSystem.X_ACTION_BOUNDARY * -1, GameSystem.Y_ACTION_BOUNDARY * -1, 0);
+        BOTTOM_RIGHT_CORNER = new Vector3(GameSystem.X_ACTION_BOUNDARY, GameSystem.Y_ACTION_BOUNDARY * -1, 0);
 
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         cutsceneManager = gameManager.GetCutsceneManager();
@@ -371,8 +385,54 @@ public class LevelManager : MonoBehaviour
                 break;
 
             case 2: // LEVEL 2 --------------------------------------------------------------------------------
+
+                // Dragonflies and bombs
+
+                // Kamikazes
+
+                // Blaster 2
+
+                // Introduction to UFOs
+
+                // Weavers and UFO
+
+                // Lightning
+
+                // Dragonflies and UFO
+
+                // Blaster 3
+
+                // Stalker and UFO
+
+                // Introduction to Chompers
+
+                // Chompers and Shufflers
+
+                // Shield
+
+                // Chompers and Dragonflies
+
+                // Blaster 4
+
+                // Introduction to Jugglers
+
+                // Jugglers and Kamikazes
+
+                // Jugglers and Shufflers
+
+                // Blaster 5
+
+                // Chompers and UFO
+
+                // Two Stalkers
+
+                // Boss
+
+
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 3));
-                result.AddEntity(new LevelEntity(chomper, TOP));
+                result.AddEntity(new LevelEntity(chomper, BOTTOM));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(juggler, GameSystem.RandomPoint(LEFT, TOP_LEFT_CORNER - new Vector3(0, 0.64f, 0))));
 
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 5));

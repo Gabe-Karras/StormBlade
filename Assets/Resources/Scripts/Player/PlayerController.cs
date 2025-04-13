@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour
     private AudioClip hitSound;
     private AudioClip pickupSound;
     private AudioClip healSound;
+    private AudioClip pauseSound;
 
     // X coordinates for animation
     private float x;
@@ -112,6 +113,7 @@ public class PlayerController : MonoBehaviour
         hitSound = Resources.Load<AudioClip>("SoundEffects/Damage/Hit");
         pickupSound = Resources.Load<AudioClip>("SoundEffects/Items/Pickup");
         healSound = Resources.Load<AudioClip>("SoundEffects/Items/Heal");
+        pauseSound = Resources.Load<AudioClip>("SoundEffects/Other/Select");
     }
 
     // Update is called once per frame
@@ -133,19 +135,23 @@ public class PlayerController : MonoBehaviour
 
             // Action controls
             if (hasControl) {
-                MovePlayer();
+                PauseGame();
 
-                // Get current animation
-                currentAnimation = playerAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+                if (!gameManager.IsPaused()) {
+                    MovePlayer();
 
-                Shoot();
+                    // Get current animation
+                    currentAnimation = playerAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
 
-                UseItem();
+                    Shoot();
 
-                // Check if hit and activate iframes
-                if (hit) {
-                    Invincibility(0);
-                    hit = false;
+                    UseItem();
+
+                    // Check if hit and activate iframes
+                    if (hit) {
+                        Invincibility(0);
+                        hit = false;
+                    }
                 }
             }
 
@@ -301,6 +307,36 @@ public class PlayerController : MonoBehaviour
                 SpawnLasersWave(laser2);
                 GameSystem.PlaySoundEffect(laserSound, laserSource, 0, pitch: 0.5f);
             }
+        }
+    }
+
+    // Pause game when enter is pressed
+    private void PauseGame() {
+        if (Input.GetKeyDown(KeyCode.Return)) {
+            // If game is running, pause
+            if (!gameManager.IsPaused()) {
+                // Set timescale to 0
+                Time.timeScale = 0;
+
+                // Set pause boolean
+                gameManager.SetPaused(true);
+
+                // Pause music
+                musicManager.PauseMusic();
+
+                // Activate pause fade
+                uiManager.UpdatePauseFade();
+            }
+            // If game is paused, resume
+            else {
+                Time.timeScale = 1;
+                gameManager.SetPaused(false);
+                musicManager.ResumeMusic();
+                uiManager.UpdatePauseFade();
+            }
+
+            // Play pause sound effect
+            GameSystem.PlaySoundEffect(pauseSound, pickupSource, 0);
         }
     }
 

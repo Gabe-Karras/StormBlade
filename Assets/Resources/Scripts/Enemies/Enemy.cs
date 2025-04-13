@@ -51,22 +51,24 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!dead) {
-            // Face player if required
-            if (facePlayer) {
-                transform.rotation = Quaternion.Euler(0, 0, GameSystem.FacePoint(transform.position, player.transform.position));
-            }
+        if (!gameManager.GetComponent<GameManager>().IsPaused()) {
+            if (!dead) {
+                // Face player if required
+                if (facePlayer) {
+                    transform.rotation = Quaternion.Euler(0, 0, GameSystem.FacePoint(transform.position, player.transform.position));
+                }
 
-            // Deal physical damage if colliding with player
-            if (touchingPlayer) {
-                gameManager.GetComponent<GameManager>().UpdateHp(physicalDamage);
-            }
+                // Deal physical damage if colliding with player
+                if (touchingPlayer) {
+                    gameManager.GetComponent<GameManager>().UpdateHp(physicalDamage);
+                }
 
-            // Execute behavior
-            behavior.ExecuteBehavior();
-        } else {
-            // Play death animation
-            death.ExecuteDeath();
+                // Execute behavior
+                behavior.ExecuteBehavior();
+            } else {
+                // Play death animation
+                death.ExecuteDeath();
+            }
         }
     }
 

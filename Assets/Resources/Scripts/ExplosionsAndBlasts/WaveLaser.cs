@@ -30,19 +30,21 @@ public class WaveLaser : Laser
     // Update is called once per frame
     protected override void Update()
     {
-        // Reverse direction if speed gets too great
-        if (realSpeed >= horizontalSpeed) {
-            velocity *= -1;
-            realSpeed = horizontalSpeed;
-        } else if (realSpeed <= horizontalSpeed * -1) {
-            velocity *= -1;
-            realSpeed = horizontalSpeed * -1;
-        }
+        if (!gameManager.GetComponent<GameManager>().IsPaused()) {
+            // Reverse direction if speed gets too great
+            if (realSpeed >= horizontalSpeed) {
+                velocity *= -1;
+                realSpeed = horizontalSpeed;
+            } else if (realSpeed <= horizontalSpeed * -1) {
+                velocity *= -1;
+                realSpeed = horizontalSpeed * -1;
+            }
 
-        // Move in wave
-        base.MoveForward();
-        transform.position += transform.right * realSpeed;
-        realSpeed += velocity;
+            // Move in wave
+            base.MoveForward();
+            transform.position += transform.right * realSpeed;
+            realSpeed += velocity;
+        }
     }
 
     // Accepts 1 or -1. Sets immediate wave direction.

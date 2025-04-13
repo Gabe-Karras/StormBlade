@@ -10,12 +10,6 @@ public class UIManager : MonoBehaviour
     // Reference to game manager
     private GameManager gameManager;
 
-    // UI canvases
-    [SerializeField]
-    private GameObject actionCanvas;
-    [SerializeField]
-    private GameObject turnCanvas;
-
     // UI Boundaries
     [SerializeField]
     private GameObject boundaries;
@@ -31,6 +25,14 @@ public class UIManager : MonoBehaviour
     // Selection audio clip
     [SerializeField]
     private AudioClip select;
+
+    // Screenfade when paused
+    [SerializeField]
+    private GameObject pauseFade;
+
+    // UI canvases
+    private GameObject actionCanvas;
+    private GameObject turnCanvas;
 
     // Elements of action canvas
     private GameObject healthCells;
@@ -90,9 +92,11 @@ public class UIManager : MonoBehaviour
         // Create boundaries
         boundaries = Instantiate(boundaries);
 
-        // Create canvas and get references to UI objects
-        actionCanvas = Instantiate(actionCanvas);
-        turnCanvas = Instantiate(turnCanvas);
+        pauseFade = Instantiate(pauseFade);
+
+        // Find canvas and get references to UI objects
+        actionCanvas = GameObject.Find("ActionCanvas");
+        turnCanvas = GameObject.Find("TurnBasedCanvas");
 
         // Health/blaster ui
         healthCells = actionCanvas.transform.Find("HealthCells").gameObject;
@@ -654,6 +658,18 @@ public class UIManager : MonoBehaviour
     // Alpha value for turn-based menu
     public void SetTurnAlpha(float alpha) {
         turnCanvas.GetComponent<CanvasGroup>().alpha = alpha;
+    }
+
+    // Set pause shade correctly
+    public void UpdatePauseFade() {
+        Color temp = pauseFade.GetComponent<SpriteRenderer>().color;
+
+        if (!gameManager.IsPaused())
+            temp.a = 0;
+        else
+            temp.a = 0.5f;
+
+        pauseFade.GetComponent<SpriteRenderer>().color = temp;
     }
  
     // Changes ui mode in turn-based and updates alphas accordingly

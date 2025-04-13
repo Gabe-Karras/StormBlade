@@ -49,11 +49,13 @@ public class Laser : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        // Move forward in action mode or to target in turn-based mode
-        if (gameManager.GetComponent<GameManager>().GetGameMode() == 0 || !destroysOnHit)
-            MoveForward();
-        else {
-            MoveTowardsTarget();
+        if (!gameManager.GetComponent<GameManager>().IsPaused()) {
+            // Move forward in action mode or to target in turn-based mode
+            if (gameManager.GetComponent<GameManager>().GetGameMode() == 0 || !destroysOnHit)
+                MoveForward();
+            else {
+                MoveTowardsTarget();
+            }
         }
     }
 
