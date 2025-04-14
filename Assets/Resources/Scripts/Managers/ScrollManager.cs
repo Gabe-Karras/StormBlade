@@ -35,7 +35,7 @@ public class ScrollManager : MonoBehaviour
     private GameManager gameManager;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         level = gameManager.GetLevel();
@@ -67,7 +67,7 @@ public class ScrollManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!gameManager.IsPaused()) {
+        if (!GameSystem.IsPaused()) {
             scrollBackground(0, 1, scrollSpeed, background0);
             scrollBackground(2, 3, scrollSpeed * background1Factor, background1);
             scrollBackground(4, 5, scrollSpeed * foregroundFactor, foreground);

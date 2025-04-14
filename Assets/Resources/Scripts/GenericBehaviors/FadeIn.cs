@@ -9,8 +9,6 @@ public class FadeIn : MonoBehaviour
     private float fadeSpeed;
     private SpriteRenderer sRenderer;
 
-    private GameManager gameManager;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -18,14 +16,12 @@ public class FadeIn : MonoBehaviour
         Color temp = sRenderer.color;
         temp.a = 0;
         sRenderer.color = temp;
-
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!gameManager.IsPaused()) {
+        if (!GameSystem.IsPaused()) {
             Color temp = sRenderer.color;
             temp.a += fadeSpeed;
             sRenderer.color = temp;

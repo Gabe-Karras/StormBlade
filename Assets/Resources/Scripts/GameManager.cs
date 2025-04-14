@@ -39,9 +39,6 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject shieldPrefab;
 
-    // Whether game is paused or not
-    private bool paused = false;
-
     private const int MAX_ACTION_HP = 10;
     private const int MAX_TURN_HP = 500;
     private const int MAX_ACTION_BP = 5;
@@ -67,7 +64,7 @@ public class GameManager : MonoBehaviour
     // Boss of the level
     private GameObject boss;
     private bool bossTurn = false;
-    private bool levelEnded = true;
+    private bool levelEnded = false;
 
     // Start is called before the first frame update
     void Start()
@@ -94,6 +91,15 @@ public class GameManager : MonoBehaviour
     {
         // Stuff is done here to give managers time to initialize
         if (initializing) {
+            // Play level intro
+            cutsceneManager.GetComponent<CutsceneManager>().IntroCutscene();
+            initializing = false;
+
+            // Case where ship starts at level 5
+            if (bp == 5) {
+                Instantiate(Resources.Load("Prefabs/Player/LaserRing"));
+            }
+
             // Updates to initialize appearances and settings
             UpdateHp(0);
             UpdateBp(0);
@@ -105,15 +111,6 @@ public class GameManager : MonoBehaviour
             UpdateShieldCount(0);
             // This is called once more for initializing the turn-based menu
             UpdateBombCount(0);
-
-            // Play level intro
-            cutsceneManager.GetComponent<CutsceneManager>().IntroCutscene();
-            initializing = false;
-
-            // Case where ship starts at level 5
-            if (bp == 5) {
-                Instantiate(Resources.Load("Prefabs/Player/LaserRing"));
-            }
         }
 
         // End level when boss is defeated
@@ -196,14 +193,6 @@ public class GameManager : MonoBehaviour
     // Get reference to boss instance
     public Boss GetBoss() {
         return boss.GetComponent<Boss>();
-    }
-
-    public bool IsPaused() {
-        return paused;
-    }
-
-    public void SetPaused(bool paused) {
-        this.paused = paused;
     }
 
     // Getters and setters for hp/bp

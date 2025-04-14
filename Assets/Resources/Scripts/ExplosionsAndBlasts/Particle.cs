@@ -20,8 +20,6 @@ public class Particle : MonoBehaviour
     private float angle;
     private float scale;
 
-    private GameManager gameManager;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -44,8 +42,6 @@ public class Particle : MonoBehaviour
         // Set scale
         transform.localScale = new Vector3(scale, scale, 1);
 
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-
         // Set up destruction
         StartCoroutine(GameSystem.DelayedDestroy(gameObject, existenceTime));
     }
@@ -53,7 +49,7 @@ public class Particle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!gameManager.IsPaused()) {
+        if (!GameSystem.IsPaused()) {
             // Move in decided angle
             transform.position += GameSystem.MoveAtAngle(angle, speed);
         }

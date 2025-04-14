@@ -23,7 +23,7 @@ public class HomingLaser : Laser
     // Update is called once per frame
     protected override void Update()
     {
-        if (!gameManager.GetComponent<GameManager>().IsPaused()) {
+        if (!GameSystem.IsPaused()) {
             // Update previous movement
             previousMovement = currentMovement;
 

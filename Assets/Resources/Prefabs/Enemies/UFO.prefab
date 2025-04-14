@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 10
-  physicalDamage: 4
+  physicalDamage: 3
   facePlayer: 0
   behavior: {fileID: 665747968045333119}
   death: {fileID: 8163674316732176585}
@@ -194,10 +194,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chaseSpeed: 3
-  orbitSpeed: 5
+  orbitSpeed: 4
   radius: 125
   divebomb: 1
-  radiusSpeed: 0.1
+  radiusSpeed: 0.06
   explosion: {fileID: 97584526808370060, guid: 4d99ecb9240b7469680760a46c7d5afe, type: 3}
 --- !u!82 &-5748674986823073249
 AudioSource:

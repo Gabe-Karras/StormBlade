@@ -26,7 +26,7 @@ public class GravityLaser : Laser
     // Update is called once per frame
     protected override void Update()
     {
-        if (!gameManager.GetComponent<GameManager>().IsPaused()) {
+        if (!GameSystem.IsPaused()) {
             transform.position += new Vector3(drift, speed - gravity, 0);
             gravity += gravityForce;
         }

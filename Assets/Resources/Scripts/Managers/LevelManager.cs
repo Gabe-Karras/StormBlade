@@ -74,7 +74,7 @@ public class LevelManager : MonoBehaviour
     private PlayerController playerController;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         TOP = new Vector3(0, GameSystem.Y_ACTION_BOUNDARY, 0);
         TOP_LEFT = new Vector3(-0.53f, GameSystem.Y_ACTION_BOUNDARY, 0);
@@ -387,53 +387,223 @@ public class LevelManager : MonoBehaviour
             case 2: // LEVEL 2 --------------------------------------------------------------------------------
 
                 // Dragonflies and bombs
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 3));
+                result.AddEntity(new LevelEntity(dragonfly, TOP));
+                result.AddEntity(new LevelEntity(bomb, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(dragonfly, TOP_LEFT));
+                result.AddEntity(new LevelEntity(dragonfly, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(bomb, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(dragonfly, TOP_LEFT_CORNER));
+                result.AddEntity(new LevelEntity(dragonfly, TOP_RIGHT_CORNER));
+                result.AddEntity(new LevelEntity(dragonfly, TOP));
+                result.AddEntity(new LevelEntity(bomb, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
 
                 // Kamikazes
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
 
                 // Blaster 2
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(blaster, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+
+                result.AddEntity(new LevelEntity(kamikaze, TOP_LEFT));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_LEFT_CORNER));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_LEFT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(kamikaze, TOP));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(kamikaze, TOP_RIGHT_CORNER));
 
                 // Introduction to UFOs
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 2));
+                result.AddEntity(new LevelEntity(ufo, TOP));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                
+                result.AddEntity(new LevelEntity(ufo, LEFT));
+                result.AddEntity(new LevelEntity(ufo, RIGHT));
 
                 // Weavers and UFO
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(weaver, TOP_LEFT));
+                result.AddEntity(new LevelEntity(weaver, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(weaverLv2, TOP_LEFT));
+                result.AddEntity(new LevelEntity(weaverLv2, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(ufo, TOP_LEFT_CORNER));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(weaverLv2, TOP));
 
                 // Lightning
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(lightning, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(lightning, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 3));
 
                 // Dragonflies and UFO
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(ufo, BOTTOM));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
 
                 // Blaster 3
+                result.AddEntity(new LevelEntity(blaster, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(weaver, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(weaver, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(lightning, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(lightning, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(lightning, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
 
                 // Stalker and UFO
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(stalker, TOP));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(ufo, TOP));
 
                 // Introduction to Chompers
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(lightning, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(lightning, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1.5f));
+                result.AddEntity(new LevelEntity(chomper, BOTTOM));
+
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(chomper, BOTTOM_LEFT));
+                result.AddEntity(new LevelEntity(chomper, LEFT - new Vector3(0, HALF, 0)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(chomper, BOTTOM_RIGHT));
+                result.AddEntity(new LevelEntity(chomper, RIGHT - new Vector3(0, HALF, 0)));
 
                 // Chompers and Shufflers
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(shuffler, TOP));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(bomb, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(chomper, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 3));
+                result.AddEntity(new LevelEntity(shuffler, TOP));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(chomper, TOP));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 3));
+                result.AddEntity(new LevelEntity(lightning, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(shuffler, TOP));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(chomper, TOP_LEFT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 3));
 
                 // Shield
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(shield, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 3));
 
                 // Chompers and Dragonflies
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(chomper, LEFT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(chomper, RIGHT));
 
                 // Blaster 4
+                result.AddEntity(new LevelEntity(blaster, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(chomper, LEFT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(dragonfly, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(chomper, RIGHT));
 
                 // Introduction to Jugglers
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(juggler, TOP_LEFT_CORNER - new Vector3(0, HALF * 3, 0)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(juggler, RIGHT + new Vector3(0, HALF, 0)));
 
                 // Jugglers and Kamikazes
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
+                result.AddEntity(new LevelEntity(juggler, TOP_RIGHT_CORNER - new Vector3(0, HALF * 3, 0)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(lightning, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(shield, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(lightning, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+
+                result.AddEntity(new LevelEntity(juggler, TOP_LEFT_CORNER - new Vector3(0, HALF * 3, 0)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0.5f));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
 
                 // Jugglers and Shufflers
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(shuffler, TOP_LEFT));
+                result.AddEntity(new LevelEntity(shuffler, TOP_RIGHT));
+
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(juggler, TOP_RIGHT_CORNER - new Vector3(0, HALF * 3, 0)));
+                result.AddEntity(new LevelEntity(juggler, TOP_LEFT_CORNER - new Vector3(0, HALF * 3, 0)));
 
                 // Blaster 5
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+
+                result.AddEntity(new LevelEntity(shuffler, TOP_LEFT));
+                result.AddEntity(new LevelEntity(shuffler, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(juggler, RIGHT + new Vector3(0, HALF, 0)));
+                result.AddEntity(new LevelEntity(juggler, LEFT + new Vector3(0, HALF, 0)));
 
                 // Chompers and UFO
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(ufo, TOP_LEFT));
+                result.AddEntity(new LevelEntity(ufo, TOP_RIGHT));
+                result.AddEntity(new LevelEntity(chomper, BOTTOM_RIGHT_CORNER));
+                result.AddEntity(new LevelEntity(chomper, BOTTOM_LEFT_CORNER));
 
                 // Two Stalkers
+                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
+                result.AddEntity(new LevelEntity(stalker, TOP_LEFT_CORNER));
+                result.AddEntity(new LevelEntity(stalker, TOP_RIGHT_CORNER));
 
                 // Boss
-
-
-                result.AddEntity(new LevelEntity(waveTimer, transform.position, 3));
-                result.AddEntity(new LevelEntity(chomper, BOTTOM));
-                result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
-                result.AddEntity(new LevelEntity(juggler, GameSystem.RandomPoint(LEFT, TOP_LEFT_CORNER - new Vector3(0, 0.64f, 0))));
-
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 5));
                 break;

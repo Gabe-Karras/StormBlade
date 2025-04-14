@@ -18,20 +18,16 @@ public class Shrapnel : MonoBehaviour
     [SerializeField]
     private float angle;
 
-    private GameManager gameManager;
-
     // Start is called before the first frame update
     void Start()
     {
         speed /= 50;
-
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!gameManager.IsPaused()) {
+        if (!GameSystem.IsPaused()) {
             // Move in direction of angle
             transform.position += GameSystem.MoveAtAngle(angle, speed);
 

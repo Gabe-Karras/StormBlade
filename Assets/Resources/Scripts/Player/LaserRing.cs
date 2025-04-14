@@ -39,7 +39,7 @@ public class LaserRing : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!gameManager.IsPaused()) {
+        if (!GameSystem.IsPaused()) {
             // Always circle around the target
             transform.position = target.transform.position;
 

@@ -51,10 +51,10 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!gameManager.GetComponent<GameManager>().IsPaused()) {
+        if (!GameSystem.IsPaused()) {
             if (!dead) {
                 // Face player if required
-                if (facePlayer) {
+                if (facePlayer && transform.position != player.transform.position) {
                     transform.rotation = Quaternion.Euler(0, 0, GameSystem.FacePoint(transform.position, player.transform.position));
                 }
 
@@ -85,10 +85,12 @@ public class Enemy : MonoBehaviour
                 System.Random r = new System.Random();
                 int chance = r.Next(1, 101);
 
-                if (chance <= 5) // 5% chance
+                if (chance <= 4) // 5% chance
                     Instantiate(Resources.Load<GameObject>("Prefabs/Items/Pickups/BigHealthItem"), transform.position, Quaternion.Euler(0, 0, 0));
-                else if (chance <= 15) // 10% chance
+                else if (chance <= 14) // 10% chance
                     Instantiate(Resources.Load<GameObject>("Prefabs/Items/Pickups/SmallHealthItem"), transform.position, Quaternion.Euler(0, 0, 0));
+                else if (chance <= 15) // 1% chance
+                    Instantiate(Resources.Load<GameObject>("Prefabs/Items/Pickups/BlasterItem"), transform.position, Quaternion.Euler(0, 0, 0));
                 
                 return;
             }

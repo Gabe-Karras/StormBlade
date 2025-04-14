@@ -29,6 +29,8 @@ public class UIManager : MonoBehaviour
     // Screenfade when paused
     [SerializeField]
     private GameObject pauseFade;
+    [SerializeField]
+    private float fadeOpacity;
 
     // UI canvases
     private GameObject actionCanvas;
@@ -84,7 +86,7 @@ public class UIManager : MonoBehaviour
     private int enemySelectorPosition = 0;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         // Get game manager
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -664,10 +666,10 @@ public class UIManager : MonoBehaviour
     public void UpdatePauseFade() {
         Color temp = pauseFade.GetComponent<SpriteRenderer>().color;
 
-        if (!gameManager.IsPaused())
+        if (!GameSystem.IsPaused())
             temp.a = 0;
         else
-            temp.a = 0.5f;
+            temp.a = fadeOpacity;
 
         pauseFade.GetComponent<SpriteRenderer>().color = temp;
     }

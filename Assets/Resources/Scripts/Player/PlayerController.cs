@@ -137,7 +137,7 @@ public class PlayerController : MonoBehaviour
             if (hasControl) {
                 PauseGame();
 
-                if (!gameManager.IsPaused()) {
+                if (!GameSystem.IsPaused()) {
                     MovePlayer();
 
                     // Get current animation
@@ -314,12 +314,12 @@ public class PlayerController : MonoBehaviour
     private void PauseGame() {
         if (Input.GetKeyDown(KeyCode.Return)) {
             // If game is running, pause
-            if (!gameManager.IsPaused()) {
+            if (!GameSystem.IsPaused()) {
                 // Set timescale to 0
                 Time.timeScale = 0;
 
                 // Set pause boolean
-                gameManager.SetPaused(true);
+                GameSystem.SetPaused(true);
 
                 // Pause music
                 musicManager.PauseMusic();
@@ -330,7 +330,7 @@ public class PlayerController : MonoBehaviour
             // If game is paused, resume
             else {
                 Time.timeScale = 1;
-                gameManager.SetPaused(false);
+                GameSystem.SetPaused(false);
                 musicManager.ResumeMusic();
                 uiManager.UpdatePauseFade();
             }

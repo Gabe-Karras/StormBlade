@@ -30,7 +30,7 @@ public class WaveLaser : Laser
     // Update is called once per frame
     protected override void Update()
     {
-        if (!gameManager.GetComponent<GameManager>().IsPaused()) {
+        if (!GameSystem.IsPaused()) {
             // Reverse direction if speed gets too great
             if (realSpeed >= horizontalSpeed) {
                 velocity *= -1;

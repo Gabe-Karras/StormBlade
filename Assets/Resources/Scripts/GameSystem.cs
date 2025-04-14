@@ -33,6 +33,9 @@ public class GameSystem : MonoBehaviour
     // Ratio between UI canvas positioning and in-game positioning
     public const float CANVAS_RATIO = 3.13f;
 
+    // Whether the game is paused or not. Signals to update methods
+    private static bool paused = false;
+
     // Return a movement of the specified distance and angle
     public static Vector3 MoveAtAngle(float angle, float distance) {
         // Adjust because unity rotation is counterclockwise
@@ -257,5 +260,14 @@ public class GameSystem : MonoBehaviour
 
         Vector3 result = new Vector3(Math.Min(point1.x, point2.x) + xDistance, Math.Min(point1.y, point2.y) + yDistance, 0);
         return result;
+    }
+
+    // Pause/Unpause game
+    public static void SetPaused(bool p) {
+        paused = p;
+    }
+
+    public static bool IsPaused() {
+        return paused;
     }
 }

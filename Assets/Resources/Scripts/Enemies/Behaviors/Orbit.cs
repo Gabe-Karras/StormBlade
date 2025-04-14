@@ -32,7 +32,6 @@ public class Orbit : EnemyBehavior
 
     // From which direction to begin orbiting
     private float entryAngle;
-
     private bool orbiting = false;
 
     private GameObject player;
@@ -58,6 +57,7 @@ public class Orbit : EnemyBehavior
             // Target point is radius distance from player along angle
             float xTarget = player.transform.position.x + (float) (radius * Math.Sin(angle * (Math.PI / 180))); // Convert to radians
             float yTarget = player.transform.position.y + (float) (radius * Math.Cos(angle * (Math.PI / 180)));
+            xTarget *= -1; // <-- Idk why I have to do this but it works
             Vector3 target = new Vector3(xTarget, yTarget, 0);
 
             // Move towards target
@@ -66,7 +66,7 @@ public class Orbit : EnemyBehavior
             // If reached point, switch to orbit mode
             if (transform.position.Equals(target)) {
                 orbiting = true;
-                entryAngle = angle;
+                entryAngle = angle - (angle * 2);
             }
         } 
         // Orbit mode: orbit around player at radius

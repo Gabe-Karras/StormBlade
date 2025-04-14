@@ -29,8 +29,6 @@ public class Bomb : MonoBehaviour
     // player reference
     private PlayerMoves playerMoves;
 
-    private GameManager gameManager;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -40,14 +38,12 @@ public class Bomb : MonoBehaviour
         startPos = transform.position.y;
 
         playerMoves = GameObject.Find("Player").GetComponent<PlayerMoves>();
-
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!gameManager.IsPaused()) {
+        if (!GameSystem.IsPaused()) {
             // Move forwards until travel distance is achieved
             if (transform.position.y - startPos < travelDistance) {
                 transform.position += new Vector3(0, travelSpeed, 0);

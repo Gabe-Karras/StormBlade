@@ -68,7 +68,7 @@ public class CutsceneManager : MonoBehaviour
     private GameObject boss;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         flyUpSpeed /= GameSystem.SPEED_DIVISOR;
         flyDownSpeed /= GameSystem.SPEED_DIVISOR;
@@ -92,6 +92,10 @@ public class CutsceneManager : MonoBehaviour
         } else {
             uiManager.SetActionAlpha(0);
         }
+
+        // Tweak boss position for each level
+        if (gameManager.GetLevel() == 2)
+            bossTarget += 0.15f;
     }
 
     // Update is called once per frame
@@ -175,7 +179,7 @@ public class CutsceneManager : MonoBehaviour
     public void IntroCutscene() {
         // Position player accordingly
         player.GetComponent<PlayerController>().SetHasControl(false);
-        player.transform.position = new Vector3(0, GameSystem.Y_ACTION_BOUNDARY * -1 - 0.1f, 0);
+        player.transform.position = new Vector3(0, GameSystem.Y_ACTION_BOUNDARY * -1 - 0.3f, 0);
 
         // Start scrollmanager at 0 speed and UI at 0 alpha
         float tempScrollSpeed = scrollManager.GetScrollSpeed();
@@ -231,6 +235,7 @@ public class CutsceneManager : MonoBehaviour
 
         GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Other/FlyByShort"), GetComponent<AudioSource>(), 0);
         yield return new WaitForSeconds(0.2f);
+        player.transform.position = new Vector3(0, GameSystem.Y_ACTION_BOUNDARY * -1 - 0.1f, 0);
         flyUp = true;
         StartCoroutine(scrollManager.ScreenShake());
     }
@@ -253,13 +258,19 @@ public class CutsceneManager : MonoBehaviour
         
     }
 
-    // Fade in Action UI, display start message
+    // Fade in Action UI, display start message, and start music
     private IEnumerator FadeInUI() {
         yield return new WaitForSeconds(8);
         uiTarget = 1;
 
         yield return new WaitForSeconds(1);
         Instantiate(startMessage, new Vector3(0, 0.5f, 0), Quaternion.Euler(0, 0, 0));
+
+        // If intro exists for level, play it!
+        AudioClip intro = Resources.Load<AudioClip>("Music/Level" + gameManager.GetLevel() + "Intro");
+        if (intro != null)
+            musicManager.PlayIntro(intro);
+        // Then enqueue main level music
         musicManager.PlayMusic(Resources.Load<AudioClip>("Music/Level" + gameManager.GetLevel()));
         player.GetComponent<PlayerController>().SetHasControl(true);
     }

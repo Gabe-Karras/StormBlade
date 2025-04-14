@@ -50,6 +50,7 @@ MonoBehaviour:
   damageText: {fileID: 8217607108981262167, guid: 8e1ac6c181f094e638182c2132fa5a82, type: 3}
   select: {fileID: 8300000, guid: 777c26d6f0eea4dfda2eb4c6c1badddc, type: 3}
   pauseFade: {fileID: 4398435107922119095, guid: 16a133dda244548b9977b4f09ceedd3c, type: 3}
+  fadeOpacity: 0.25
 --- !u!82 &5242041801393382031
 AudioSource:
   m_ObjectHideFlags: 0
