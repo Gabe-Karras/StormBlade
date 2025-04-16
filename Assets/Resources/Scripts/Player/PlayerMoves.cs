@@ -334,7 +334,11 @@ public class PlayerMoves : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         // Create shield object
-        Instantiate(shield, transform.position, Quaternion.Euler(0, 0, 0));
+        GameObject temp = Instantiate(shield, transform.position, Quaternion.Euler(0, 0, 0));
+        // Overwrite current active shield
+        if (gameManager.GetActiveShield() != null)
+            Destroy(gameManager.GetActiveShield());
+        gameManager.SetActiveShield(temp);
 
         // Play shield noise
         GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Shield"), healSource, 0);

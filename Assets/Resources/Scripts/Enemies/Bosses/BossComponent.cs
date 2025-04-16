@@ -133,4 +133,8 @@ public class BossComponent : MonoBehaviour
     public string GetName() {
         return componentName;
     }
+
+    public void SetBoss(Boss b) {
+        boss = b;
+    }
 }

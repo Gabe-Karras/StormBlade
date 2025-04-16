@@ -65,4 +65,8 @@ public class DataManager : MonoBehaviour
     public bool Won() {
         return won;
     }
+
+    public int GetLevel() {
+        return level;
+    }
 }

@@ -74,16 +74,20 @@ public class GameSystem : MonoBehaviour
     }
 
     // Returns a new angle a step closer to the desired angle at specified speed
-    public static Quaternion TurnToAngle(float current, float target, float speed) {
+    public static Quaternion TurnToAngle(float current, float target, float speed, int direction=0) {
         float result = 0;
         float distance = Math.Abs(target - current);
         if (distance < speed)
             speed = distance;
 
-        if (target < current)
-            result = current - speed;
-        else if (target > current)
-            result = current + speed;
+        if (direction == 0) {
+            if (target < current)
+                result = current - speed;
+            else if (target > current)
+                result = current + speed;
+        } else {
+            result = current + speed * direction;
+        }
 
         return Quaternion.Euler(0, 0, result);
     }

@@ -507,6 +507,30 @@ PrefabInstance:
       propertyPath: level
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7005170259837200758, guid: 416f1f641b53a4325b3da75736b85f88, type: 3}
+      propertyPath: bombCount
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7005170259837200758, guid: 416f1f641b53a4325b3da75736b85f88, type: 3}
+      propertyPath: shieldCount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7005170259837200758, guid: 416f1f641b53a4325b3da75736b85f88, type: 3}
+      propertyPath: missileCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7005170259837200758, guid: 416f1f641b53a4325b3da75736b85f88, type: 3}
+      propertyPath: bigHealthCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7005170259837200758, guid: 416f1f641b53a4325b3da75736b85f88, type: 3}
+      propertyPath: lightningCount
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7005170259837200758, guid: 416f1f641b53a4325b3da75736b85f88, type: 3}
+      propertyPath: smallHealthCount
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7005170259837200759, guid: 416f1f641b53a4325b3da75736b85f88, type: 3}
       propertyPath: m_RootOrder
       value: 4

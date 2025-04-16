@@ -108,7 +108,10 @@ public class TransitionScreen : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
             // If continue is selected, go to current level
             if (mainSelection == 0) {
-                SceneManager.LoadScene("Level");
+                if (DataManager.Instance.GetLevel() < 3)
+                    SceneManager.LoadScene("Level");
+                else
+                    SceneManager.LoadScene("DemoEnd");
             }
             // If return to title is selected, open quit menu
             else if (mainSelection == 1) {

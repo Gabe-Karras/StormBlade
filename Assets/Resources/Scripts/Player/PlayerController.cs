@@ -515,7 +515,7 @@ public class PlayerController : MonoBehaviour
     // Flash sprite alpha for given seconds, then remove invincibility
     IEnumerator InvincibleFlash(float seconds) {
         // Don't flash the ship if the shield still exists!
-        if (gameManager.GetActiveShield() == null)
+        if (gameManager.GetActiveShield() == null || gameManager.GetGameMode() == 1)
             StartCoroutine(GameSystem.FlickerSprite(GetComponent<SpriteRenderer>(), seconds));
             
         yield return new WaitForSeconds(seconds);

@@ -30,7 +30,7 @@ public class HomingLaser : Laser
             // Move towards/face target
             if (target != null) {
                 // Set target to null if enemy is dead in action mode
-                if (gameManager.GetComponent<GameManager>().GetGameMode() == 0 && target.GetComponent<Enemy>().IsDead())
+                if (gameManager.GetComponent<GameManager>().GetGameMode() == 0 && target.GetComponent<HomingBomb>() == null && target.GetComponent<Enemy>().IsDead())
                     target = null;
                 else {
                     currentMovement = GameSystem.MoveTowardsPointWithMomentum(transform.position, target.transform.position, speed, previousMovement);

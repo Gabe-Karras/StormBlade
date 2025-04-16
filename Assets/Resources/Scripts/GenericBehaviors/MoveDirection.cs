@@ -6,9 +6,9 @@ using UnityEngine;
 public class MoveDirection : MonoBehaviour
 {
     [SerializeField]
-    private float angle;
+    private float angle = 0;
     [SerializeField]
-    private float speed;
+    private float speed = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -21,5 +21,13 @@ public class MoveDirection : MonoBehaviour
     {
         if (!GameSystem.IsPaused())
             transform.position += GameSystem.MoveAtAngle(angle, speed);
+    }
+
+    public void SetAngle(float a) {
+        angle = a;
+    }
+
+    public void SetSpeed(float s) {
+        speed = s / GameSystem.SPEED_DIVISOR;
     }
 }

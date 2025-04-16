@@ -66,6 +66,9 @@ public class GameManager : MonoBehaviour
     private bool bossTurn = false;
     private bool levelEnded = false;
 
+    // Current status effect
+    private StatusEffect statusEffect;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -156,9 +159,34 @@ public class GameManager : MonoBehaviour
         uiManager.GetComponent<UIManager>().SetUIMode(1);
     }
 
+    private IEnumerator WaitForTurn() {
+        // Make sure status effect has concluded before starting player turn
+        if (statusEffect != null) {
+            statusEffect.ExecuteEffect();
+
+            while (statusEffect.EffectInProgress()) {
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            statusEffect.SpendTurn();
+        }
+
+        TakeTurn();
+        yield break;
+    }
+
     // Spawn in the boss above camera
     public void SpawnBoss() {
         boss = Instantiate(boss, new Vector3(0, GameSystem.Y_ACTION_BOUNDARY * 2, 0), Quaternion.Euler(0, 0, 0));
+    }
+
+    // Apply status effect to player (overwrites current effect if any)
+    // The effect needs to be added as a component to the player, then passed here
+    public void ApplyStatusEffect(StatusEffect s) {
+        if (statusEffect != null)
+            Destroy(statusEffect);
+
+        statusEffect = s;
     }
 
     // GETTERS AND SETTERS
@@ -196,18 +224,18 @@ public class GameManager : MonoBehaviour
     }
 
     // Getters and setters for hp/bp
-    public void UpdateHp(int hpChange) {
+    public int UpdateHp(int hpChange) {
         // In action mode, getting hit reduces your blaster points and death is immediate
         if (gameMode == 0) {
             // Check if HP is being subtracted from, and only allow it if player is not invincible
             if (hpChange < 0) {
                 if (player.GetComponent<PlayerController>().GetIframes())
-                    return;
+                    return 0;
                 
                 if (activeShield != null) {
                     activeShield.GetComponent<Shield>().UpdateShieldState(-1);
                     player.GetComponent<PlayerController>().SetHit(true);
-                    return;
+                    return 0;
                 }
                 
                 // Notify player and subtract from blaster points
@@ -257,6 +285,8 @@ public class GameManager : MonoBehaviour
 
             hp = KeepInBounds(hp + hpChange, 0, MAX_TURN_HP);
         }
+
+        return hpChange;
     }
 
     public void UpdateBp(int bpChange) {
@@ -359,7 +389,7 @@ public class GameManager : MonoBehaviour
 
         // Take player turn if set to false
         if (turn == false)
-            TakeTurn();
+            StartCoroutine(WaitForTurn());
     }
 
     // Method to keep value between given bounds

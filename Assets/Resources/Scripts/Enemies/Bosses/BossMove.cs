@@ -16,7 +16,7 @@ public abstract class BossMove : MonoBehaviour
 
     // How much damage to inflict (or heal)
     [SerializeField]
-    protected int damage = 60;
+    protected int damage;
 
     // This should be used by all child classes to communicate with the parent boss!
     protected bool moveFinished;
