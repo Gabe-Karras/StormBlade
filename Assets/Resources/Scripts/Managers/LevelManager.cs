@@ -385,7 +385,7 @@ public class LevelManager : MonoBehaviour
                 break;
 
             case 2: // LEVEL 2 --------------------------------------------------------------------------------
-
+            
                 // Dragonflies and bombs
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 3));
                 result.AddEntity(new LevelEntity(dragonfly, TOP));
@@ -583,7 +583,7 @@ public class LevelManager : MonoBehaviour
 
                 // Blaster 5
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
-                result.AddEntity(new LevelEntity(kamikaze, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
+                result.AddEntity(new LevelEntity(blaster, GameSystem.RandomPoint(TOP_LEFT_CORNER, TOP_RIGHT_CORNER)));
 
                 result.AddEntity(new LevelEntity(shuffler, TOP_LEFT));
                 result.AddEntity(new LevelEntity(shuffler, TOP_RIGHT));
@@ -602,7 +602,7 @@ public class LevelManager : MonoBehaviour
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
                 result.AddEntity(new LevelEntity(stalker, TOP_LEFT_CORNER));
                 result.AddEntity(new LevelEntity(stalker, TOP_RIGHT_CORNER));
-
+                
                 // Boss
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 5));

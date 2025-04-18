@@ -93,7 +93,7 @@ public class BossComponent : MonoBehaviour
     }
 
     // Sets sprite to be white briefly and gives iframes
-    public IEnumerator FlashWhite(float time=0) {
+    public IEnumerator FlashWhite(float time=0.05f) {
         if (iframes) {
             yield break;
         }

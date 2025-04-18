@@ -7,10 +7,15 @@ using System;
 public class GameSystem : MonoBehaviour
 {
     // Frames per second!!!
-    public const int FRAME_RATE = 60;
+    public static float FRAME_RATE = 144;
+
+    public static bool gameInitialized = false;
 
     // Divide all serialized speeds by this to get appropriate frame speed for in-game physics
-    public const int SPEED_DIVISOR = 50;
+    public static float SPEED_DIVISOR = 50;
+    public static float ROTATION_DIVISOR = 1;
+    public const float FRAME_SPEED_RATIO = 1.2f;
+    public static float FRAME_TIME_RATIO = 1;
 
     // Boundaries of action game screen
     public const float X_ACTION_BOUNDARY = 1;
@@ -31,10 +36,19 @@ public class GameSystem : MonoBehaviour
     public const float BOSS_POSITION = 0.48f;
 
     // Ratio between UI canvas positioning and in-game positioning
-    public const float CANVAS_RATIO = 3.13f;
+    public static float CANVAS_RATIO = 3.33f;
 
     // Whether the game is paused or not. Signals to update methods
     private static bool paused = false;
+
+    // Return correct velocity value that will work with any frame rate
+    public static float CalculateAcceleration(float maxSpeed, float acceleration) {
+        return maxSpeed / (maxSpeed / acceleration * (FRAME_RATE / 60));
+    }
+    // The same but uses ratio instead of acceleration value (use whichever you have the numbers for)
+    public static float CalculateAccelerationWithRatio(float maxSpeed, float ratio) {
+        return maxSpeed / (ratio * (FRAME_RATE / 60));
+    }
 
     // Return a movement of the specified distance and angle
     public static Vector3 MoveAtAngle(float angle, float distance) {
@@ -49,8 +63,7 @@ public class GameSystem : MonoBehaviour
     // Movement considering previous acceleration
     public static Vector3 MoveAtAngleWithMomentum(float angle, float distance, Vector3 previousMovement) {
         Vector3 result = MoveAtAngle(angle, distance);
-        Vector3 temp = new Vector3(previousMovement.x / ACCELERATION_DIVISOR, previousMovement.y / ACCELERATION_DIVISOR, previousMovement.z / ACCELERATION_DIVISOR);
-        result += temp;
+        result += previousMovement;
 
         return result;
     }

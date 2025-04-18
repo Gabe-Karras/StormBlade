@@ -21,7 +21,8 @@ public class Shrapnel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        speed /= 50;
+        speed /= GameSystem.SPEED_DIVISOR;
+        rotSpeed /= GameSystem.ROTATION_DIVISOR;
     }
 
     // Update is called once per frame

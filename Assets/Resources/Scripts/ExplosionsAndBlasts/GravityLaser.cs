@@ -20,6 +20,8 @@ public class GravityLaser : Laser
         base.Start();
 
         maxDrift /= GameSystem.SPEED_DIVISOR;
+        gravityForce /= GameSystem.SPEED_DIVISOR;
+        gravityForce *= 50;
         drift = maxDrift * GameSystem.RandomPercentage() * GameSystem.RandomSign();
     }
 
@@ -27,7 +29,7 @@ public class GravityLaser : Laser
     protected override void Update()
     {
         if (!GameSystem.IsPaused()) {
-            transform.position += new Vector3(drift, speed - gravity, 0);
+            transform.position += new Vector3(drift, speed - (gravity / (GameSystem.FRAME_RATE / 60)), 0);
             gravity += gravityForce;
         }
     }

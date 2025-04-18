@@ -132,6 +132,9 @@ public class UIManager : MonoBehaviour
         playerController = player.GetComponent<PlayerController>();
 
         SetUIMode(1);
+
+        // Always keep healthbar updated
+        StartCoroutine(UpdateHealthBar());
     }
 
     // Update is called once per frame
@@ -159,9 +162,6 @@ public class UIManager : MonoBehaviour
                     break;
             }
         }
-
-        // Always keep healthbar updated
-        UpdateHealthBar();
     }
 
     // Retrieve array of item symbols for given canvas
@@ -237,16 +237,21 @@ public class UIManager : MonoBehaviour
     }
 
     // Keep player healthbar in turn-based mode active
-    private void UpdateHealthBar() {
-        healthBarText.GetComponent<TextMeshProUGUI>().text = healthBarValue + "/500";
-        healthBar.transform.localScale = new Vector3(1 / 500f * healthBarValue, 1, 1);
+    private IEnumerator UpdateHealthBar() {
+        while (true) {
+            healthBarText.GetComponent<TextMeshProUGUI>().text = healthBarValue + "/500";
+            healthBar.transform.localScale = new Vector3(1 / 500f * healthBarValue, 1, 1);
 
-        if (Math.Abs(healthBarValue - gameManager.GetHp()) < healthBarSpeed) {
-            healthBarValue = gameManager.GetHp();
-        } else if (healthBarValue < gameManager.GetHp()) {
-            healthBarValue += healthBarSpeed;
-        } else if (healthBarValue > gameManager.GetHp()) {
-            healthBarValue -= healthBarSpeed;
+            if (Math.Abs(healthBarValue - gameManager.GetHp()) < healthBarSpeed) {
+                healthBarValue = gameManager.GetHp();
+            } else if (healthBarValue < gameManager.GetHp()) {
+                healthBarValue += healthBarSpeed;
+            } else if (healthBarValue > gameManager.GetHp()) {
+                healthBarValue -= healthBarSpeed;
+            }
+
+            // Simulate 60 fps
+            yield return new WaitForSeconds(0.015f);
         }
     }
 

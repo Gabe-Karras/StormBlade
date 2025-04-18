@@ -25,22 +25,16 @@ public class Kamikaze : EnemyBehavior
     void Start()
     {
         speed /= GameSystem.SPEED_DIVISOR;
+        // 60 fps momentum
+        speed *= GameSystem.FRAME_RATE / 60;
         downSpeed /= GameSystem.SPEED_DIVISOR;
         currentMovement = new Vector3(0, 0, 0);
 
         player = GameObject.Find("Player");
+        StartCoroutine(Momentum60Fps());
     }
 
     public override void ExecuteBehavior() {
-        previousMovement = currentMovement;
-
-        // Move to be aligned with player
-        Vector3 target = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
-        if (transform.position != target)
-            currentMovement = GameSystem.MoveTowardsPointWithMomentum(transform.position, target, speed, previousMovement);
-
-        transform.position += currentMovement;
-
         // Move down
         transform.position -= new Vector3(0, downSpeed, 0);
 
@@ -56,6 +50,23 @@ public class Kamikaze : EnemyBehavior
 
             // Slight delay to let other enemy collision code occur
             StartCoroutine(GameSystem.DelayedDestroy(gameObject, 0.05f));
+        }
+    }
+
+    private IEnumerator Momentum60Fps() {
+        while (!GetComponent<Enemy>().IsDead()) {
+            if (!GameSystem.IsPaused()) {
+                previousMovement = currentMovement;
+
+                // Move to be aligned with player
+                Vector3 target = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
+                if (transform.position != target)
+                    currentMovement = GameSystem.MoveTowardsPointWithMomentum(transform.position, target, speed, previousMovement);
+
+                transform.position += currentMovement;
+            }
+
+            yield return new WaitForSecondsRealtime(0.01f);
         }
     }
 }

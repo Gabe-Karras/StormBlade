@@ -43,7 +43,7 @@ public class WaveLaser : Laser
             // Move in wave
             base.MoveForward();
             transform.position += transform.right * realSpeed;
-            realSpeed += velocity;
+            realSpeed += GameSystem.CalculateAcceleration(horizontalSpeed, velocity);
         }
     }
 

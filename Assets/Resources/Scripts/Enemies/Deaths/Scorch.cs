@@ -10,7 +10,7 @@ public class Scorch : EnemyDeath
 
     // Delay before falling off screen
     [SerializeField]
-    private float waitSeconds = 1;
+    private float waitSeconds = 0.5f;
     private bool readyToFall = false;
 
     [SerializeField]
@@ -25,11 +25,14 @@ public class Scorch : EnemyDeath
     void Start()
     {
         fallSpeed /= GameSystem.SPEED_DIVISOR;
+        // 60 fps momentum
+        fallSpeed *= GameSystem.FRAME_RATE / 60;
 
         // Slightly randomize variables
         waitSeconds += waitSeconds / 3 * GameSystem.RandomPercentage() * GameSystem.RandomSign();
         rotSpeed += rotSpeed / 3 * GameSystem.RandomPercentage() * GameSystem.RandomSign();
         rotSpeed *= GameSystem.RandomSign();
+        rotSpeed /= GameSystem.ROTATION_DIVISOR;
 
         // Turn sprite black
         GetComponent<SpriteRenderer>().material = Resources.Load<Material>("Materials/SolidBlack");
@@ -37,6 +40,7 @@ public class Scorch : EnemyDeath
 
         // Hover in place before falling
         StartCoroutine(WaitForFall());
+        StartCoroutine(Momentum60Fps());
     }
 
     // Update is called once per frame
@@ -56,16 +60,24 @@ public class Scorch : EnemyDeath
         // Rotate sprite
         transform.rotation = Quaternion.Euler(0, 0, currentRotation);
         currentRotation = (currentRotation + rotSpeed) % 360;
-
-        if (readyToFall) {
-            // Fall off the screen
-            currentMovement = GameSystem.MoveAtAngleWithMomentum(180, fallSpeed, previousMovement);
-            previousMovement = currentMovement;
-            transform.position += currentMovement;
-        }
         
         // Despawn when it disappears
         if (GameSystem.OutOfBounds(gameObject))
             Destroy(gameObject);
+    }
+
+    private IEnumerator Momentum60Fps() {
+        while (true) {
+            if (!GameSystem.IsPaused()) {
+                if (readyToFall) {
+                    // Fall off the screen
+                    currentMovement = GameSystem.MoveAtAngleWithMomentum(180, fallSpeed, previousMovement);
+                    previousMovement = currentMovement;
+                    transform.position += currentMovement;
+                }
+            }
+
+            yield return new WaitForSecondsRealtime(0.01f);
+        }
     }
 }

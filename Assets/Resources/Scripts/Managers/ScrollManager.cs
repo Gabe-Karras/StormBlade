@@ -20,7 +20,7 @@ public class ScrollManager : MonoBehaviour
     private int level;
 
     // Vars used in screenshake
-    private float shakeSpeed = 4;
+    private float shakeSpeed = 5;
     private int shakeFactor = 0;
 
     // How fast to increase speed for other layers
@@ -52,6 +52,8 @@ public class ScrollManager : MonoBehaviour
 
         scrollSpeed /= GameSystem.SPEED_DIVISOR;
         shakeSpeed /= GameSystem.SPEED_DIVISOR;
+        // 60 fps momentum
+        shakeSpeed *= GameSystem.FRAME_RATE / 60;
 
         // Instantiate backgrounds
         backgrounds[0] = Instantiate(background0, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));

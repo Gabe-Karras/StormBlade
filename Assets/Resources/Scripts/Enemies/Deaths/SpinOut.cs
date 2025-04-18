@@ -28,6 +28,7 @@ public class SpinOut : EnemyDeath
         System.Random rand = new System.Random();
 
         throwSpeed /= GameSystem.SPEED_DIVISOR;
+        spinSpeed /= GameSystem.ROTATION_DIVISOR;
 
         // Get random direction
         if (spinDirection != 1 && spinDirection != -1)

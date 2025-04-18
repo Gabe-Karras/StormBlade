@@ -54,7 +54,9 @@ public class SawAttack1 : BossMove
         rightArmPosition = rightArm.transform.position.x;
 
         armSpeed /= GameSystem.SPEED_DIVISOR;
+        armSpeed *= GameSystem.FRAME_RATE / 60;
         bodySpeed /= GameSystem.SPEED_DIVISOR;
+        bodySpeed *= GameSystem.FRAME_RATE / 60;
 
         // Used in door closing animation
         doorSprite = doors.GetComponent<SpriteRenderer>();

@@ -52,9 +52,6 @@ public class TitleScreen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Create star background
-        StartCoroutine(SpawnStars());
-
         // Instantiate title screen canvas
         titleCanvas = Instantiate(titleCanvas);
 
@@ -84,51 +81,92 @@ public class TitleScreen : MonoBehaviour
 
         source = GetComponent<AudioSource>();
 
-        // Play cutscene
-        StartCoroutine(PlayTitleCutscene());
+        // Initialize the game!!
+        StartCoroutine(FullGameInitialization());
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Operate UI based on state
-        if (state == 0) {
-            // Skip cutscene and immediately activate canvas if player presses enter
-            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
-                // Stop sound effect
-                source.Stop();
+        // Only allow player interaction once game is officially initialized
+        if (GameSystem.gameInitialized) {
+            // Operate UI based on state
+            if (state == 0) {
+                // Skip cutscene and immediately activate canvas if player presses enter
+                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
+                    // Stop sound effect
+                    source.Stop();
 
-                StartCoroutine(ActivateCanvas());
+                    StartCoroutine(ActivateCanvas());
+                }
+            } else if (state == 1) {
+                // Wait for enter press to move to next state
+                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
+                    state = 2;
+                    // Set enter text to blank
+                    enterText.text = "";
+                    // Bring forward options text
+                    newGame.GetComponent<TextMeshProUGUI>().text = "New Game";
+                    quit.GetComponent<TextMeshProUGUI>().text = "Quit";
+                    // Make selector visible
+                    Color temp = selector.GetComponent<Image>().color;
+                    temp.a = 1;
+                    selector.GetComponent<Image>().color = temp;
+                    return;
+                }
+
+                // Flash text
+                if (!textFlashing)
+                    StartCoroutine(flashText());
+            } else if (state == 2) {
+                // Allow player to select options
+                MoveSelector();
+
+                // Give selector correct position
+                if (selection == 0)
+                    selector.transform.position = new Vector3(selector.transform.position.x, newGame.transform.position.y, 0);
+                else if (selection == 1)
+                    selector.transform.position = new Vector3(selector.transform.position.x, quit.transform.position.y, 0);
             }
-        } else if (state == 1) {
-            // Wait for enter press to move to next state
-            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
-                state = 2;
-                // Set enter text to blank
-                enterText.text = "";
-                // Bring forward options text
-                newGame.GetComponent<TextMeshProUGUI>().text = "New Game";
-                quit.GetComponent<TextMeshProUGUI>().text = "Quit";
-                // Make selector visible
-                Color temp = selector.GetComponent<Image>().color;
-                temp.a = 1;
-                selector.GetComponent<Image>().color = temp;
-                return;
-            }
-
-            // Flash text
-            if (!textFlashing)
-                StartCoroutine(flashText());
-        } else if (state == 2) {
-            // Allow player to select options
-            MoveSelector();
-
-            // Give selector correct position
-            if (selection == 0)
-                selector.transform.position = new Vector3(selector.transform.position.x, newGame.transform.position.y, 0);
-            else if (selection == 1)
-                selector.transform.position = new Vector3(selector.transform.position.x, quit.transform.position.y, 0);
         }
+    }
+
+    // Fully initialize all important stats of the game on startup!
+    // This gains the framerate through delta time and sets up the correct canvas-to-game ratio
+    private IEnumerator FullGameInitialization() {
+        if (!GameSystem.gameInitialized) {
+            // Wait for a short period to avoid weird framerates on startup
+            yield return new WaitForSeconds(0.2f);
+
+            // Spend one second gathering 50 pieces of framerate data
+            float totalTime = 0;
+            float avgFrameRate = 0;
+            while (totalTime < 1) {
+                avgFrameRate += 1.0f / Time.deltaTime;
+
+                totalTime += 0.02f; // 1 50th of a second
+                yield return new WaitForSeconds(0.02f);
+            }
+
+            // Average it all out to get core frame rate
+            avgFrameRate /= 50;
+            GameSystem.FRAME_RATE = avgFrameRate;
+            GameSystem.SPEED_DIVISOR = avgFrameRate / GameSystem.FRAME_SPEED_RATIO;
+            GameSystem.ROTATION_DIVISOR = avgFrameRate / 60;
+
+            Debug.Log("Frame rate: " + avgFrameRate + "\nSpeed divisor: " + GameSystem.SPEED_DIVISOR);
+
+            // Get canvas size and set ratio
+
+            GameSystem.gameInitialized = true;
+        }
+
+        // Create star background
+        StartCoroutine(SpawnStars());
+        // Play cutscene
+        StartCoroutine(PlayTitleCutscene());
+
+        yield break;
     }
 
     // Spawn scrolling stars on right side of screen

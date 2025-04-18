@@ -41,6 +41,7 @@ public class CutsceneManager : MonoBehaviour
     // Other values pertaining to cutscene behavior
     private float flyUpSpeed = 8;
     private float flyDownSpeed = 3;
+    private float maxDownSpeed;
     private float flyNormalSpeed = 1;
 
     private float scrollTarget = 0;
@@ -75,6 +76,8 @@ public class CutsceneManager : MonoBehaviour
         flyNormalSpeed /= GameSystem.SPEED_DIVISOR;
         uiBarSpeed /= GameSystem.SPEED_DIVISOR;
         bossSpeed /= GameSystem.SPEED_DIVISOR;
+
+        maxDownSpeed = flyDownSpeed;
 
         // Grab references to managers
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -111,7 +114,7 @@ public class CutsceneManager : MonoBehaviour
         // Fly ship down to center screen
         if (flyDown) {
             player.transform.position += new Vector3(0, -1 * flyDownSpeed, 0);
-            flyDownSpeed -= 0.001f;
+            flyDownSpeed -= GameSystem.CalculateAcceleration(maxDownSpeed, 0.05f / GameSystem.SPEED_DIVISOR);
             if (flyDownSpeed <= 0)
                 flyDown = false;
         }
@@ -183,7 +186,7 @@ public class CutsceneManager : MonoBehaviour
 
         // Start scrollmanager at 0 speed and UI at 0 alpha
         float tempScrollSpeed = scrollManager.GetScrollSpeed();
-        scrollChange = tempScrollSpeed / 83;
+        scrollChange = GameSystem.CalculateAccelerationWithRatio(tempScrollSpeed, 83);
         
         uiManager.SetActionAlpha(0);
         uiManager.SetTurnAlpha(0);

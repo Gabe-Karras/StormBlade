@@ -9,6 +9,10 @@ public class Rotate : MonoBehaviour
     private float rotSpeed;
     private float currentRotation = 0f;
 
+    private void Start() {
+        rotSpeed /= GameSystem.ROTATION_DIVISOR;
+    }
+
     // Update is called once per frame
     void Update()
     {

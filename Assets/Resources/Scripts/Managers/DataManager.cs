@@ -33,7 +33,8 @@ public class DataManager : MonoBehaviour
     // Make object persistent
     private void Awake() {
         // Set framerate
-        Application.targetFrameRate = GameSystem.FRAME_RATE;
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = (int) GameSystem.FRAME_RATE;
 
         Instance = this;
         DontDestroyOnLoad(gameObject);

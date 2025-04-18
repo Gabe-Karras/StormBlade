@@ -16,42 +16,23 @@ public class HomingLaser : Laser
     protected override void Start()
     {
         base.Start();
+        // 60 fps momentum
+        speed *= GameSystem.FRAME_RATE / 60;
+
         currentMovement = new Vector3(0, 0, 0);
         StartCoroutine(WaitToSeek());
+        StartCoroutine(Momentum60Fps());
     }
 
     // Update is called once per frame
     protected override void Update()
     {
-        if (!GameSystem.IsPaused()) {
-            // Update previous movement
-            previousMovement = currentMovement;
+        if (readyToSeek && target == null) {
+            FindTarget();
 
-            // Move towards/face target
-            if (target != null) {
-                // Set target to null if enemy is dead in action mode
-                if (gameManager.GetComponent<GameManager>().GetGameMode() == 0 && target.GetComponent<HomingBomb>() == null && target.GetComponent<Enemy>().IsDead())
-                    target = null;
-                else {
-                    currentMovement = GameSystem.MoveTowardsPointWithMomentum(transform.position, target.transform.position, speed, previousMovement);
-                    transform.rotation = Quaternion.Euler(0, 0, GameSystem.FacePoint(transform.position, target.transform.position));
-                }
-            }
-            // If no target, move up and look for new target
-            else {
-                currentMovement = transform.up * speed + previousMovement;
-
-                if (readyToSeek) {
-                    FindTarget();
-
-                    // If out of bounds without a target, destroy
-                    if (target == null && GameSystem.OutOfBounds(gameObject))
-                        Destroy(gameObject);
-                }
-            }
-
-            // Commit to movement
-            transform.position += currentMovement;
+            // If out of bounds without a target, destroy
+            if (target == null && GameSystem.OutOfBounds(gameObject))
+                Destroy(gameObject);
         }
     }
 
@@ -89,5 +70,34 @@ public class HomingLaser : Laser
     // Manually set a target for animation purposes
     public void SetHomingTarget(GameObject obj) {
         target = obj;
+    }
+
+    private IEnumerator Momentum60Fps() {
+        while (true) {
+            if (!GameSystem.IsPaused()) {
+                // Update previous movement
+                previousMovement = currentMovement;
+
+                // Move towards/face target
+                if (target != null) {
+                    // Set target to null if enemy is dead in action mode
+                    if (gameManager.GetComponent<GameManager>().GetGameMode() == 0 && target.GetComponent<HomingBomb>() == null && target.GetComponent<Enemy>().IsDead())
+                        target = null;
+                    else {
+                        currentMovement = GameSystem.MoveTowardsPointWithMomentum(transform.position, target.transform.position, speed, previousMovement);
+                        transform.rotation = Quaternion.Euler(0, 0, GameSystem.FacePoint(transform.position, target.transform.position));
+                    }
+                }
+                // If no target, move up and look for new target
+                else {
+                    currentMovement = transform.up * speed + previousMovement;
+                }
+
+                // Commit to movement
+                transform.position += currentMovement;
+            }
+
+            yield return new WaitForSecondsRealtime(0.015f);
+        }
     }
 }

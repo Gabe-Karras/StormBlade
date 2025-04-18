@@ -19,6 +19,12 @@ public class TurretAttack1 : BossMove
     [SerializeField]
     private float rotSpeed = 5;
 
+    protected override void Start() {
+        base.Start();
+
+        rotSpeed /= GameSystem.ROTATION_DIVISOR;
+    }
+
     // Update is called once per frame
     protected override void Update()
     {

@@ -42,6 +42,7 @@ public class Orbit : EnemyBehavior
         chaseSpeed /= GameSystem.SPEED_DIVISOR;
         radiusSpeed /= GameSystem.SPEED_DIVISOR;
         radius /= GameSystem.PIXELS_PER_UNIT;
+        orbitSpeed /= GameSystem.ROTATION_DIVISOR;
 
         player = GameObject.Find("Player");
     }

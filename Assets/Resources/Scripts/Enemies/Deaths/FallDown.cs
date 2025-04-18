@@ -23,11 +23,14 @@ public class FallDown : EnemyDeath
     void Start()
     {
         fallSpeed /= GameSystem.SPEED_DIVISOR;
+        // 60 fps momentum
+        fallSpeed *= GameSystem.FRAME_RATE / 60;
         sRenderer = GetComponent<SpriteRenderer>();
 
         // Slightly randomize variables
         rotSpeed += rotSpeed / 3 * GameSystem.RandomPercentage() * GameSystem.RandomSign();
         rotSpeed *= GameSystem.RandomSign();
+        rotSpeed /= GameSystem.ROTATION_DIVISOR;
     }
 
     // Happens every frame. Accelerate off the screen, then destroy
@@ -38,19 +41,30 @@ public class FallDown : EnemyDeath
             StartCoroutine(GameSystem.StartExploding(sRenderer, (GameObject) Resources.Load("Prefabs/Explosions/SmallExplosion")));
             currentRotation = transform.rotation.eulerAngles.z;
             startDying = false;
+            StartCoroutine(Momentum60Fps());
         }
 
         // Rotate sprite
         transform.rotation = Quaternion.Euler(0, 0, currentRotation);
         currentRotation = (currentRotation + rotSpeed) % 360;
         
-        // Fall off the screen
-        currentMovement = GameSystem.MoveAtAngleWithMomentum(180, fallSpeed, previousMovement);
-        previousMovement = currentMovement;
-        transform.position += currentMovement;
-        
         // Despawn when it disappears
         if (GameSystem.OutOfBounds(gameObject))
             Destroy(gameObject);
+    }
+
+    // Execute momentum movement as if it were 60 frames a second
+    private IEnumerator Momentum60Fps() {
+        while (true) {
+            if (!GameSystem.IsPaused()) {
+                // Fall off the screen
+                currentMovement = GameSystem.MoveAtAngleWithMomentum(180, fallSpeed, previousMovement);
+                previousMovement = currentMovement;
+                transform.position += currentMovement;
+            }
+
+            // About 1 60th of a second
+            yield return new WaitForSecondsRealtime(0.01f);
+        }
     }
 }

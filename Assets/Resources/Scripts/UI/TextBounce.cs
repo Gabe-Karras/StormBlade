@@ -38,6 +38,18 @@ public class TextBounce : MonoBehaviour
         rect = GetComponent<RectTransform>();
         initialY = rect.anchoredPosition.y;
 
+        // Set up correct values for canvas size
+        float ratio = GameObject.Find("TurnBasedCanvas").GetComponent<RectTransform>().rect.width / 1000;
+        jumpSpeed = (jumpSpeed * 50) / GameSystem.SPEED_DIVISOR;
+        gravityForce = (gravityForce * 50) / GameSystem.SPEED_DIVISOR;
+        maxDrift = (maxDrift * 50) / GameSystem.SPEED_DIVISOR;
+
+        Debug.Log("Ratio: " + ratio + "\nSpeed: " + jumpSpeed);
+        jumpSpeed /= ratio;
+        gravityForce /= ratio;
+        maxDrift /= ratio;
+        maxStopPoint /= ratio;
+
         drift = maxDrift * GameSystem.RandomPercentage() * GameSystem.RandomSign();
         stopPoint = maxStopPoint * GameSystem.RandomPercentage();
     }
@@ -46,7 +58,7 @@ public class TextBounce : MonoBehaviour
     void Update()
     {
         if (!hasBounced) {
-            rect.anchoredPosition += new Vector2(drift, jumpSpeed - gravity);
+            rect.anchoredPosition += new Vector2(drift, jumpSpeed - (gravity / (GameSystem.FRAME_RATE / 60)));
             gravity += gravityForce;
 
             if (rect.anchoredPosition.y < initialY - stopPoint)

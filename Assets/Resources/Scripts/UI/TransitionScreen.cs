@@ -37,7 +37,7 @@ public class TransitionScreen : MonoBehaviour
     private int quitSelection = 0;
 
     // X distance from options for quit menu
-    private const float quitDistance = 145;
+    private float quitDistance;
 
     // Start is called before the first frame update
     void Start()
@@ -60,6 +60,7 @@ public class TransitionScreen : MonoBehaviour
         noText = GameObject.Find("No");
         mainMenu = GameObject.Find("MainMenu").GetComponent<CanvasGroup>();
         quitMenu = GameObject.Find("QuitMenu").GetComponent<CanvasGroup>();
+        quitDistance = yesText.GetComponent<RectTransform>().rect.width * 0.66f;
 
         // Get reference to audio source
         source = GetComponent<AudioSource>();

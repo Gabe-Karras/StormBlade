@@ -34,6 +34,7 @@ public class Bomb : MonoBehaviour
     {
         travelSpeed /= GameSystem.SPEED_DIVISOR;
         travelDistance /= GameSystem.PIXELS_PER_UNIT;
+        spinSpeed /= GameSystem.ROTATION_DIVISOR;
 
         startPos = transform.position.y;
 
@@ -73,6 +74,10 @@ public class Bomb : MonoBehaviour
         // Spin sprite with rotation speed
         transform.rotation = Quaternion.Euler(0, 0, currentRotation);
         currentRotation = (currentRotation + spinSpeed) % 360;
+
+        // If on final rotation and about to hit zero, snap to it
+        if (finalRotation && currentRotation >= 360 - spinSpeed)
+            currentRotation = 0;
 
         if (currentRotation == 0 && finalRotation)
             StartCoroutine(lightEffect());

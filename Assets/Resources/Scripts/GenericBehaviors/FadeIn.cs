@@ -12,6 +12,9 @@ public class FadeIn : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        fadeSpeed *= 50;
+        fadeSpeed /= GameSystem.SPEED_DIVISOR;
+
         sRenderer = GetComponent<SpriteRenderer>();
         Color temp = sRenderer.color;
         temp.a = 0;

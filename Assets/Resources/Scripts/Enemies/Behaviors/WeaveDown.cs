@@ -49,7 +49,7 @@ public class WeaveDown : EnemyBehavior
         // Move in wave
         transform.position += new Vector3(0, -1 * downSpeed, 0);
         transform.position += transform.right * realSpeed;
-        realSpeed += velocity;
+        realSpeed += GameSystem.CalculateAcceleration(horizontalSpeed, velocity);
 
         // Attack when the time is right
         if (!attacking && attack != null) {

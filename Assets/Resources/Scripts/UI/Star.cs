@@ -39,7 +39,7 @@ public class Star : MonoBehaviour
         transform.position -= new Vector3(speed, 0, 0);
     }
 
-    // Destroy once of screen
+    // Destroy once off screen
     private void OnBecameInvisible() {
         Destroy(gameObject);
     }
