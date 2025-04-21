@@ -50,7 +50,7 @@ public class MissileAttack1 : BossMove
         // Launch missile from silo
         yield return new WaitForSeconds(0.5f);
         Instantiate(missile, transform.position, transform.rotation);
-        GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Missile"), GetComponent<AudioSource>(), 0, volume: 0.4f);
+        GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Missile"), GetComponent<AudioSource>(), 0, volume: 0.2f);
 
         // Bring exploding missile down
         yield return new WaitForSeconds(0.8f);

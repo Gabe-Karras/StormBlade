@@ -107,7 +107,7 @@ public class SawAttack1 : BossMove
             if (body.transform.position.y - bodyHeight < player.transform.position.y + player.GetComponent<SpriteRenderer>().bounds.extents.y - 0.02f && !player.GetComponent<PlayerController>().GetIframes())
                 player.GetComponent<PlayerController>().Invincibility(1f);
 
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(0.015f);
         }
 
         yield return new WaitForSeconds(0.3f);

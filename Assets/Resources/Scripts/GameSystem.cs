@@ -7,7 +7,7 @@ using System;
 public class GameSystem : MonoBehaviour
 {
     // Frames per second!!!
-    public static float FRAME_RATE = 144;
+    public static float FRAME_RATE = 60;
 
     public static bool gameInitialized = false;
 
@@ -26,7 +26,7 @@ public class GameSystem : MonoBehaviour
     public const float PIXELS_PER_UNIT = 100;
 
     // Volume to play sound effects
-    public const float SOUND_EFFECT_VOLUME = 0.2f;
+    public const float SOUND_EFFECT_VOLUME = 0.13f;
 
     // Number to divide previous movement by in momentum calculations
     public const float ACCELERATION_DIVISOR = 1;

@@ -79,11 +79,11 @@ public class BossComponent : MonoBehaviour
         float textX = transform.position.x * GameSystem.CANVAS_RATIO * GameSystem.PIXELS_PER_UNIT;
         float textY = transform.position.y * GameSystem.CANVAS_RATIO * GameSystem.PIXELS_PER_UNIT;
 
-        GameObject damageText = Instantiate(uiManager.GetDamageText());
+        GameObject damageText = Instantiate(uiManager.GetDamageText(), uiManager.GetTurnCanvas().transform);
         damageText.GetComponent<TextMeshProUGUI>().text = Math.Abs(change) + "";
         damageText.GetComponent<TextMeshProUGUI>().color = textColor;
 
-        damageText.transform.SetParent(uiManager.GetTurnCanvas().transform);
+        //damageText.transform.SetParent(uiManager.GetTurnCanvas().transform);
         damageText.GetComponent<RectTransform>().anchoredPosition = new Vector2(textX, textY);
 
         if (hasTotalBossHealth)

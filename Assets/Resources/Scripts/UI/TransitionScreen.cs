@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 // This class controls the between levels transition screen
 public class TransitionScreen : MonoBehaviour
@@ -10,7 +11,8 @@ public class TransitionScreen : MonoBehaviour
     [SerializeField]
     private GameObject canvas;
     private GameObject mainSelector;
-    private GameObject quitSelector;
+    private GameObject quitSelectorYes;
+    private GameObject quitSelectorNo;
     private GameObject continueText;
     private GameObject titleText;
     private GameObject yesText;
@@ -36,9 +38,6 @@ public class TransitionScreen : MonoBehaviour
     private int mainSelection = 0;
     private int quitSelection = 0;
 
-    // X distance from options for quit menu
-    private float quitDistance;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -53,14 +52,14 @@ public class TransitionScreen : MonoBehaviour
 
         // Get canvas elements
         mainSelector = GameObject.Find("MainSelector");
-        quitSelector = GameObject.Find("QuitSelector");
+        quitSelectorYes = GameObject.Find("QuitSelectorYes");
+        quitSelectorNo = GameObject.Find("QuitSelectorNo");
         continueText = GameObject.Find("Continue");
         titleText = GameObject.Find("ReturnToTitle");
         yesText = GameObject.Find("Yes");
         noText = GameObject.Find("No");
         mainMenu = GameObject.Find("MainMenu").GetComponent<CanvasGroup>();
         quitMenu = GameObject.Find("QuitMenu").GetComponent<CanvasGroup>();
-        quitDistance = yesText.GetComponent<RectTransform>().rect.width * 0.66f;
 
         // Get reference to audio source
         source = GetComponent<AudioSource>();
@@ -78,10 +77,22 @@ public class TransitionScreen : MonoBehaviour
         else
             mainSelector.transform.position = new Vector3(mainSelector.transform.position.x, titleText.transform.position.y, 0);
 
-        if (quitSelection == 0)
-            quitSelector.transform.position = new Vector3(yesText.transform.position.x - quitDistance, quitSelector.transform.position.y, 0);
-        else
-            quitSelector.transform.position = new Vector3(noText.transform.position.x - quitDistance, quitSelector.transform.position.y, 0);
+        if (quitSelection == 0) {
+            Color temp = quitSelectorYes.GetComponent<Image>().color;
+            temp.a = 1;
+            quitSelectorYes.GetComponent<Image>().color = temp;
+            temp = quitSelectorNo.GetComponent<Image>().color;
+            temp.a = 0;
+            quitSelectorNo.GetComponent<Image>().color = temp;
+        }
+        else {
+            Color temp = quitSelectorYes.GetComponent<Image>().color;
+            temp.a = 0;
+            quitSelectorYes.GetComponent<Image>().color = temp;
+            temp = quitSelectorNo.GetComponent<Image>().color;
+            temp.a = 1;
+            quitSelectorNo.GetComponent<Image>().color = temp;
+        }
 
         // Allow player to use correct selectors
         if (menuMode == 0)
@@ -152,7 +163,7 @@ public class TransitionScreen : MonoBehaviour
         }
 
         // Also return to main menu if player presses escape
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab)) {
             SwitchMenuModes(0);
             GameSystem.PlaySoundEffect(select, source, 0);
         }

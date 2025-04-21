@@ -545,7 +545,7 @@ public class LevelManager : MonoBehaviour
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 1));
                 result.AddEntity(new LevelEntity(juggler, TOP_LEFT_CORNER - new Vector3(0, HALF * 3, 0)));
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
-                result.AddEntity(new LevelEntity(juggler, RIGHT + new Vector3(0, HALF, 0)));
+                result.AddEntity(new LevelEntity(juggler, TOP_RIGHT_CORNER - new Vector3(0, HALF * 3, 0)));
 
                 // Jugglers and Kamikazes
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
@@ -588,8 +588,8 @@ public class LevelManager : MonoBehaviour
                 result.AddEntity(new LevelEntity(shuffler, TOP_LEFT));
                 result.AddEntity(new LevelEntity(shuffler, TOP_RIGHT));
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));
-                result.AddEntity(new LevelEntity(juggler, RIGHT + new Vector3(0, HALF, 0)));
-                result.AddEntity(new LevelEntity(juggler, LEFT + new Vector3(0, HALF, 0)));
+                result.AddEntity(new LevelEntity(juggler, TOP_RIGHT_CORNER - new Vector3(0, HALF * 3, 0)));
+                result.AddEntity(new LevelEntity(juggler, TOP_LEFT_CORNER - new Vector3(0, HALF * 3, 0)));
 
                 // Chompers and UFO
                 result.AddEntity(new LevelEntity(waveTimer, transform.position, 0));

@@ -256,7 +256,7 @@ public class PlayerMoves : MonoBehaviour
         // Unleash attack
         GameObject temp = Instantiate(lightning, transform.position, Quaternion.Euler(0, 0, 0));
         temp.GetComponent<Laser>().SetComponents(gameManager.GetBoss().GetActiveComponents());
-        GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Lightning"), healSource, 0, volume: 0.5f);
+        GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Lightning"), healSource, 0, volume: 0.2f);
 
         // Move back to center
         yield return new WaitForSeconds(1);
@@ -305,7 +305,7 @@ public class PlayerMoves : MonoBehaviour
             Instantiate(missile, transform.position, Quaternion.Euler(0, 0, temp));
         }
 
-        GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Missile"), healSource, 0, volume: 0.5f);
+        GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Missile"), healSource, 0, volume: 0.2f);
 
         // Wait a second, then create missiles that fall to the target components
         yield return new WaitForSeconds(1.5f);

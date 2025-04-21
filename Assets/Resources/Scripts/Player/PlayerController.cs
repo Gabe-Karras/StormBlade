@@ -473,7 +473,7 @@ public class PlayerController : MonoBehaviour
                 case 3: // Shield
                     // Only spawn shield if one is not already active
                     if (gameManager.GetActiveShield() == null) {
-                        GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Shield"), laserSource, 0, volume: 0.5f);
+                        GameSystem.PlaySoundEffect(Resources.Load<AudioClip>("SoundEffects/Items/Shield"), healSource, 0, volume: 0.5f);
                         gameManager.SetActiveShield(Instantiate(shield, transform.position, transform.rotation));
                         gameManager.UpdateShieldCount(-1);
                     }

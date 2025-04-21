@@ -55,6 +55,7 @@ public class UIManager : MonoBehaviour
     private GameObject menuSelector;
     private GameObject turnItemSelector;
     private int turnSelectorPosition = 0;
+    private int menuSelectorPosition = 0;
 
     private int healthBarValue;
     private int healthBarSpeed = 2; // How fast the health bar fills up
@@ -296,7 +297,7 @@ public class UIManager : MonoBehaviour
             GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
 
         // If player presses esc, go back
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab)) {
             SetUIMode(1);
             GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
             return;
@@ -343,19 +344,21 @@ public class UIManager : MonoBehaviour
     // Move menu selector for attack/item
     private void MoveMenuSelector() {
         // Use up and down arrows
-        if (Input.GetKeyDown(KeyCode.DownArrow) && menuSelector.transform.position.y == attackText.transform.position.y) {
+        if (Input.GetKeyDown(KeyCode.DownArrow) && menuSelectorPosition == 0) {
             // Move down
             menuSelector.transform.position = new Vector3(menuSelector.transform.position.x, itemText.transform.position.y, 0);
             GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
-        } else if (Input.GetKeyDown(KeyCode.UpArrow) && menuSelector.transform.position.y == itemText.transform.position.y) {
+            menuSelectorPosition = 1;
+        } else if (Input.GetKeyDown(KeyCode.UpArrow) && menuSelectorPosition == 1) {
             // Move up
             menuSelector.transform.position = new Vector3(menuSelector.transform.position.x, attackText.transform.position.y, 0);
             GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
+            menuSelectorPosition = 0;
         }
 
         // Enter/Space to confirm
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
-            if (menuSelector.transform.position.y == attackText.transform.position.y) {
+            if (menuSelectorPosition == 0) {
                 // Switch straight to mode three with intent to attack
                 GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
                 playerMove = 6; // Normal attack
@@ -419,7 +422,7 @@ public class UIManager : MonoBehaviour
         }
 
         // Back out to previous menu if esc is pressed
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab)) {
             GameSystem.PlaySoundEffect(select, GetComponent<AudioSource>(), 0);
 
             // Back out to correct menu

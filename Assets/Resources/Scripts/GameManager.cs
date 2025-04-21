@@ -276,11 +276,10 @@ public class GameManager : MonoBehaviour
             float textX = player.transform.position.x * GameSystem.CANVAS_RATIO * GameSystem.PIXELS_PER_UNIT;
             float textY = player.transform.position.y * GameSystem.CANVAS_RATIO * GameSystem.PIXELS_PER_UNIT;
 
-            GameObject damageText = Instantiate(uiManager.GetComponent<UIManager>().GetDamageText());
+            GameObject damageText = Instantiate(uiManager.GetComponent<UIManager>().GetDamageText(), uiManager.GetComponent<UIManager>().GetTurnCanvas().transform);
             damageText.GetComponent<TextMeshProUGUI>().text = Math.Abs(hpChange) + "";
             damageText.GetComponent<TextMeshProUGUI>().color = textColor;
 
-            damageText.transform.SetParent(uiManager.GetComponent<UIManager>().GetTurnCanvas().transform);
             damageText.GetComponent<RectTransform>().anchoredPosition = new Vector2(textX, textY);
 
             hp = KeepInBounds(hp + hpChange, 0, MAX_TURN_HP);

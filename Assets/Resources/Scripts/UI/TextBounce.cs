@@ -43,8 +43,7 @@ public class TextBounce : MonoBehaviour
         jumpSpeed = (jumpSpeed * 50) / GameSystem.SPEED_DIVISOR;
         gravityForce = (gravityForce * 50) / GameSystem.SPEED_DIVISOR;
         maxDrift = (maxDrift * 50) / GameSystem.SPEED_DIVISOR;
-
-        Debug.Log("Ratio: " + ratio + "\nSpeed: " + jumpSpeed);
+        
         jumpSpeed /= ratio;
         gravityForce /= ratio;
         maxDrift /= ratio;

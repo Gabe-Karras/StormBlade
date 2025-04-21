@@ -46,7 +46,9 @@ public class Scorch : EnemyDeath
     // Update is called once per frame
     void Update()
     {
-        
+        // Despawn when it disappears
+        if (GameSystem.OutOfBounds(gameObject))
+            Destroy(gameObject);
     }
 
     // Delay before falling
@@ -60,10 +62,6 @@ public class Scorch : EnemyDeath
         // Rotate sprite
         transform.rotation = Quaternion.Euler(0, 0, currentRotation);
         currentRotation = (currentRotation + rotSpeed) % 360;
-        
-        // Despawn when it disappears
-        if (GameSystem.OutOfBounds(gameObject))
-            Destroy(gameObject);
     }
 
     private IEnumerator Momentum60Fps() {
