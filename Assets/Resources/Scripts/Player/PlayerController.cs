@@ -39,6 +39,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private GameObject shrapnel;
 
+    // Player smoke effect
+    [SerializeField]
+    private GameObject smoke;
+    [SerializeField]
+    private float smokeTime;
+    private bool readyToSmoke = true;
+
     // Audio sources
     [SerializeField]
     private AudioSource laserSource;
@@ -132,19 +139,15 @@ public class PlayerController : MonoBehaviour
 
         // Animate/control when alive
         if (!dead) {
-
             // Action controls
             if (hasControl) {
                 PauseGame();
-
                 if (!GameSystem.IsPaused()) {
                     MovePlayer();
 
                     // Get current animation
                     currentAnimation = playerAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
-
                     Shoot();
-
                     UseItem();
 
                     // Check if hit and activate iframes
@@ -159,6 +162,12 @@ public class PlayerController : MonoBehaviour
             x = transform.position.x;
             AnimatePlayer();
             previousX = x;
+        }
+
+        // If health is low, emit smoke!!
+        if ((gameManager.GetGameMode() == 0 && gameManager.GetHp() <= 2) || (gameManager.GetGameMode() == 1 && gameManager.GetHp() <= 100)) {
+            if (readyToSmoke)
+                StartCoroutine(EmitSmoke());
         }
     }
 
@@ -573,7 +582,15 @@ public class PlayerController : MonoBehaviour
             cutsceneManager.GameOverCutscene();
         }
     }
-    
+
+    // Pour smoke from player
+    private IEnumerator EmitSmoke() {
+        Instantiate(smoke, transform.position, transform.rotation);
+        readyToSmoke = false;
+
+        yield return new WaitForSeconds(smokeTime);
+        readyToSmoke = true;
+    }
 
     // GETTERS AND SETTERS
     public bool GetIframes() {

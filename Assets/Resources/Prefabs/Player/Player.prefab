@@ -117,6 +117,8 @@ MonoBehaviour:
   smallExplosion: {fileID: 5256562161114831308, guid: 08b61ab70f6464060b4bcc6b06886171, type: 3}
   bigExplosion: {fileID: 97584526808370060, guid: 4d99ecb9240b7469680760a46c7d5afe, type: 3}
   shrapnel: {fileID: 5361370569125482931, guid: 0bd1f5b82e3744c36bd20c8aafb5ecaf, type: 3}
+  smoke: {fileID: 921220849748720976, guid: de987a7e1ee0a429bb5e73290c3bedeb, type: 3}
+  smokeTime: 0.04
   laserSource: {fileID: 1285851870}
   hitSource: {fileID: 1285851871}
   pickupSource: {fileID: 1360842556}
@@ -134,6 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 1
+  afterMoveTime: 2
   laserSource: {fileID: 1285851870}
   laserSound: {fileID: 8300000, guid: f62aa9537551f4c8c8bb2ec98124b78c, type: 3}
   healSource: {fileID: 1360842556}
@@ -142,7 +145,6 @@ MonoBehaviour:
   laser2: {fileID: 7526052961603819522, guid: 62097a9585ef9423dba6851f6c0d0c54, type: 3}
   bomb: {fileID: 3546869775295821023, guid: 4649dd55ea19349e3b77ef3e71da308b, type: 3}
   lightning: {fileID: 7706730008431128638, guid: f52f9448a8ec24aa8b4948b296a40c9c, type: 3}
-  animationMissile: {fileID: 0}
   missile: {fileID: 3877118088410419567, guid: f5d74d45c9b824460a50a9b765f45361, type: 3}
   shield: {fileID: 9192849078587370376, guid: 896d0739268174bf19a51e5a4dc28ec0, type: 3}
 --- !u!95 &636723309313527291
