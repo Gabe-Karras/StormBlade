@@ -137,4 +137,8 @@ public class Enemy : MonoBehaviour
     public int GetHp() {
         return hp;
     }
+
+    public void SetHp(int hp) {
+        this.hp = hp;
+    }
 }

@@ -18,19 +18,30 @@ public class SpaceInvader : EnemyBehavior
     private bool faceDown;
 
     [SerializeField]
+    private bool faceDirection;
+
+    [SerializeField]
     private float attackTime;
+
+    [SerializeField]
+    private bool useColliderBounds = false;
 
     private bool goingDown = true;
     private float distance = 0;
 
     private bool attacking = false;
     private int direction;
+    private float boundsX;
 
     // Start is called before the first frame update
     void Start()
     {
         speed /= GameSystem.SPEED_DIVISOR;
         downDistance /= GameSystem.PIXELS_PER_UNIT;
+        if (!useColliderBounds)
+            boundsX = GetComponent<SpriteRenderer>().bounds.extents.x;
+        else
+            boundsX = GetComponent<CircleCollider2D>().bounds.extents.x;
 
         if (faceDown)
             transform.rotation = Quaternion.Euler(0, 0, 180);
@@ -60,14 +71,14 @@ public class SpaceInvader : EnemyBehavior
             // Check for boundary collision
             SpriteRenderer s = GetComponent<SpriteRenderer>();
             if (direction == -1) {
-                if (transform.position.x - s.bounds.extents.x - speed < -1 * GameSystem.X_ACTION_BOUNDARY) {
-                    transform.position = new Vector3(-1 * GameSystem.X_ACTION_BOUNDARY + s.bounds.extents.x, transform.position.y, transform.position.z);
+                if (transform.position.x - boundsX - speed < -1 * GameSystem.X_ACTION_BOUNDARY) {
+                    transform.position = new Vector3(-1 * GameSystem.X_ACTION_BOUNDARY + boundsX, transform.position.y, transform.position.z);
                     direction = 1;
                     goingDown = true;
                 }
             } else {
-                if (transform.position.x + s.bounds.extents.x + speed > GameSystem.X_ACTION_BOUNDARY) {
-                    transform.position = new Vector3(GameSystem.X_ACTION_BOUNDARY - s.bounds.extents.x, transform.position.y, transform.position.z);
+                if (transform.position.x + boundsX + speed > GameSystem.X_ACTION_BOUNDARY) {
+                    transform.position = new Vector3(GameSystem.X_ACTION_BOUNDARY - boundsX, transform.position.y, transform.position.z);
                     direction = -1;
                     goingDown = true;
                 }
@@ -81,6 +92,14 @@ public class SpaceInvader : EnemyBehavior
         // Attack
         if (!attacking)
             StartCoroutine(AttackWait());
+
+        // Face direction
+        if (goingDown)
+            transform.rotation = Quaternion.Euler(0, 0, 180);
+        else if (direction == -1)
+            transform.rotation = Quaternion.Euler(0, 0, 90);
+        else
+            transform.rotation = Quaternion.Euler(0, 0, 270);
     }
 
     // Attack at set intervals
